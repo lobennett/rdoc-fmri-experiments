@@ -10,9 +10,6 @@ const get_practice_feedback = () => {
   }
 };
 
-const getInstructFeedback = () =>
-  `<div class="centerbox"><p class="center-block-text">${feedbackInstructText}</p></div>`;
-
 const getFeedback = () =>
   `<div class="bigbox"><div class="picture_box"><p class="block-text">${feedbackText}</p></div></div>`;
 
@@ -259,7 +256,6 @@ var choices = ['y', 'g'];
 
 var promptText;
 var promptTextList;
-var feedbackInstructText;
 var speedReminder;
 var feedbackText;
 
@@ -268,16 +264,6 @@ const setText = () => {
   <p class="block-text">
     Try to respond as quickly and accurately as possible.
   </p>
-`;
-
-  feedbackInstructText = `
-  <p class="center-block-text">
-    Welcome! This experiment will take around 11 minutes.
-  </p>
-  <p class="center-block-text">
-    To avoid technical issues, please keep the experiment tab (on Chrome or Firefox) active and fullscreen for the whole duration of each task.
-  </p>
-  <p class="center-block-text"> Press <i>enter</i> to begin.</p>
 `;
 
   promptText = `
@@ -476,18 +462,6 @@ var motor_and_design_perm_block = {
   },
 };
 
-var feedbackInstructBlock = {
-  type: jsPsychHtmlKeyboardResponse,
-  data: {
-    trial_id: 'instruction_feedback',
-    trial_duration: 180000,
-  },
-  choices: ['Enter'],
-  stimulus: getInstructFeedback,
-  trial_duration: 180000,
-};
-
-/* define practice and test blocks */
 var setStimsBlock = {
   type: jsPsychCallFunction,
   data: {

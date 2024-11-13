@@ -22,9 +22,7 @@
     "exp_id": "cued_task_switching_rdoc__fmri",
     "cognitive_atlas_task_id": "trm_566745bbf272a",
     "contributors": ["Patrick Bissett", "Russell Poldrack", "Logan Bennett"],
-    "time": 24,
-    "reference": "http://www.ncbi.nlm.nih.gov/pubmed/21299334",
-    "publish": "True",
+    "time": 11,
     "experiment_variables": [
       {
         "name": "credit_var",
