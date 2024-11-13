@@ -14,6 +14,9 @@
       "static/jspsych7/plugin-survey.js",
       "static/jspsych7/jspsych.css",
       "static/css/default_style.css",
+      "static/jspsych7/poldrack-plugins/fmri_utils.js",
+      "static/jspsych7/poldrack-plugins/sample_iti.js",
+      "static/jspsych7/poldrack-plugins/designs_and_itis.js",
       "style.css",
       "experiment.js"
     ],

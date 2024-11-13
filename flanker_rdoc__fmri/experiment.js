@@ -1,174 +1,3 @@
-/* ************************************ */
-/* fMRI UTILS */
-/* ************************************ */
-var check_index = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: '<div><h1>Please press your index finger.</h1></div>',
-  choices: ['y'],
-  post_trial_gap: 500,
-  data: function () {
-    return {
-      trial_id: 'check_index',
-    };
-  },
-};
-
-var check_middle = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: '<div><h1>Please press your middle finger.</h1></div>',
-  choices: ['g'],
-  post_trial_gap: 500,
-  data: function () {
-    return {
-      trial_id: 'check_middle',
-    };
-  },
-};
-
-var check_fingers_node = {
-  timeline: [check_index, check_middle],
-};
-
-var fmri_wait_block_initial = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus:
-    '<div><h1>Scanner setup.</h1><h1>Stay as still as possible.</h1><h1>Do not swallow.</h1></div>',
-  choices: ['Enter'],
-  data: function () {
-    return {
-      trial_id: 'fmri_wait_block_initial',
-    };
-  },
-  on_finish: function () {
-    console.log('Finished fMRI initial wait block...');
-  },
-};
-
-var fmri_wait_block_trigger_start = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus:
-    '<div><h1>Task about to start!</h1><h1>Stay as still as possible.</h1><h1>Do not swallow.</h1></div>',
-  choices: ['t'],
-  response_ends_trial: true,
-  data: function () {
-    return {
-      trial_id: 'fmri_wait_block_trigger_start',
-    };
-  },
-  on_finish: function () {
-    console.log('Finished fMRI initial trigger block...');
-  },
-};
-
-var fmri_wait_block_trigger_end = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus:
-    '<div><h1>Task about to start!</h1><h1>Stay as still as possible.</h1><h1>Do not swallow.</h1></div>',
-  choices: ['NO_KEYS'],
-  trial_duration: 10880,
-  response_ends_trial: false,
-  data: function () {
-    return {
-      trial_id: 'fmri_wait_block_trigger_end',
-    };
-  },
-  on_finish: function () {
-    console.log('Finished fMRI trigger block...');
-  },
-};
-
-var fmri_wait_block_trigger_node = {
-  timeline: [fmri_wait_block_trigger_start, fmri_wait_block_trigger_end],
-};
-
-var fmri_wait_node = {
-  timeline: [fmri_wait_block_initial, fmri_wait_block_trigger_node],
-};
-
-/* ************************************ */
-/* Define helper functions */
-/* ************************************ */
-// PARAMETERS FOR DECAYING EXPONENTIAL FUNCTION
-// LOADING IN DESIGNS
-const design_path =
-  'http://0.0.0.0:8080/static/experiments/flanker_rdoc__fmri/designs/';
-
-const load_ITIs = async (design_number) => {
-  try {
-    // Start the fetch operation
-    const response = await fetch(
-      `${design_path}/design_${design_number}/ITIs.txt`
-    );
-    if (!response.ok) {
-      throw new Error('Network response was not ok: ' + response.statusText);
-    }
-    const text = await response.text();
-    return text.split('\n');
-  } catch (error) {
-    console.error('There was a problem with the fetch operation:', error);
-    return []; // Optionally return an empty array in case of an error
-  }
-};
-
-const load_motor_perm = () => {};
-
-const load_designs = async (design_number) => {
-  try {
-    // Start the fetch operations concurrently
-    const stimsResponse = fetch(
-      `${design_path}/design_${design_number}/stims.txt`
-    );
-
-    // Wait for both fetches to complete
-    const [stims] = await Promise.all([stimsResponse]);
-
-    // Check both responses for ok status
-    if (!stims.ok) {
-      throw new Error(
-        'Network response was not ok for stims: ' + stims.statusText
-      );
-    }
-
-    // Get text from responses
-    const [stimText] = await Promise.all([stims.text()]);
-    return {
-      stims: stimText.split('\n'),
-    };
-  } catch (error) {
-    console.error('There was a problem with the fetch operations:', error);
-    return { stims: [] }; // Return empty arrays in case of an error
-  }
-};
-
-/* ITIs */
-// for practice block
-var meanITI = 1.0;
-
-function sampleFromDecayingExponential() {
-  // Decay parameter of the exponential distribution λ = 1 / μ
-  var lambdaParam = 1 / meanITI;
-  var minValue = 0.5;
-  var maxValue = 5.5;
-
-  /**
-   * Sample one value with replacement
-   * from a decaying exponential distribution within a specified range.
-   *
-   * @param {number} lambdaParam
-   * - The decay parameter lambda of the exponential distribution.
-   * @param {number} minValue - The minimum value of the range.
-   * @param {number} maxValue - The maximum value of the range.
-   * @returns {number}
-   * A single value sampled from the decaying
-   * exponential distribution within the specified range.
-   */
-  var sample;
-  do {
-    sample = -Math.log(Math.random()) / lambdaParam;
-  } while (sample < minValue || sample > maxValue);
-  return sample;
-}
-
 const get_practice_feedback = () => {
   var last = jsPsych.data.get().last(1).values()[0];
   if (last.response === -1) {
@@ -251,9 +80,6 @@ function appendData() {
   console.log(jsPsych.data.get().last(1).values()[0]);
 }
 
-const getInstructFeedback = () =>
-  `<div class="centerbox"><p class="center-block-text">${feedbackInstructText}</p></div>`;
-
 const getFeedback = () =>
   `<div class="bigbox"><div class="picture_box"><p class="block-text">${feedbackText}</p></div></div>`;
 
@@ -289,27 +115,18 @@ var possibleResponses;
 function getKeyMappingForTask(motor_perm) {
   if (motor_perm % 2 === 0) {
     possibleResponses = [
-      ['index finger', ',', 'comma key (,)'],
-      ['middle finger', '.', 'period key (.)'],
+      ['index finger', 'y', 'index finger'],
+      ['middle finger', 'g', 'middle finger'],
     ];
   } else {
     possibleResponses = [
-      ['middle finger', '.', 'period key (.)'],
-      ['index finger', ',', 'comma key (,)'],
+      ['middle finger', 'g', 'middle finger'],
+      ['index finger', 'y', 'index finger'],
     ];
   }
 }
 
-const choices = [',', '.'];
-
-var feedbackInstructText = `
-  <p class="center-block-text">
-    Welcome! This experiment will take around 7 minutes.
-  </p>
-  <p class="center-block-text">
-    To avoid technical issues, please keep the experiment tab (on Chrome or Firefox) active and in fullscreen mode for the whole duration of each task.
-  </p>
-`;
+const choices = ['y', 'g'];
 
 var expStage = 'practice';
 
@@ -365,10 +182,10 @@ const setText = () => {
     <li>Indicate the identity of the middle letter.</li>
     <li>${
       possibleResponses[0][0] === 'index finger' ? 'H' : 'F'
-    }: comma key (,)</li>
+    }: index finger</li>
     <li>${
       possibleResponses[0][0] === 'index finger' ? 'F' : 'H'
-    }: period key (.)</li>
+    }: middle finger</li>
   </ul>
 `;
 
@@ -377,16 +194,16 @@ const setText = () => {
     <p class="center-block-text" style="font-size:16px; line-height:80%;">Indicate the identity of the middle letter.</p>
     <p class="center-block-text" style="font-size:16px; line-height:80%;">${
       possibleResponses[0][0] === 'index finger' ? 'H' : 'F'
-    }: comma key (,)</p>
+    }: index finger</p>
     <p class="center-block-text" style="font-size:16px; line-height:80%;">${
       possibleResponses[0][0] === 'index finger' ? 'F' : 'H'
-    }: period key (.)</p>
+    }: middle finger</p>
   </div>
 `;
 
   feedbackText = `
   <div class="centerbox">
-    <p class="block-text">Place your <b>index finger</b> on the <b>comma key (,)</b> and your <b>middle finger</b> on the <b>period key (.)</b></p>
+    <p class="block-text">Place your <b>index finger</b> on the <b>index finger</b> and your <b>middle finger</b> on the <b>middle finger</b></p>
     <p class="block-text">During this task, on each trial you will see a string of F's and H's. For instance, you might see 'FFFFF' or 'HHFHH'.</p>
     <p class="block-text">Your task is to respond by pressing the key corresponding to the <b>middle</b> letter.</p>
     <p class="block-text">If the middle letter is an <b>${
@@ -484,17 +301,6 @@ images.push(pathSource + 'H.png');
 /* ************************************ */
 /* Set up jsPsych blocks */
 /* ************************************ */
-var feedbackInstructBlock = {
-  type: jsPsychHtmlKeyboardResponse,
-  choices: ['Enter'],
-  data: {
-    trial_id: 'instruction_feedback',
-    trial_duration: 180000,
-  },
-  stimulus: getInstructFeedback,
-  trial_duration: 180000,
-};
-
 var feedbackBlock = {
   type: jsPsychHtmlKeyboardResponse,
   data: function () {
@@ -502,7 +308,7 @@ var feedbackBlock = {
     return {
       trial_id: `${stage}_feedback`,
       exp_stage: stage,
-      trial_duration: 6000,
+      trial_duration: 4000,
       block_num: stage === 'practice' ? 0 : testCount,
     };
   },
@@ -510,7 +316,7 @@ var feedbackBlock = {
   stimulus: getFeedback,
   trial_duration: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_middle' ? undefined : 6000;
+    return trial_id === 'check_middle' ? undefined : 4000;
   },
   response_ends_trial: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
@@ -548,7 +354,7 @@ var ITIBlock = {
   trial_duration: function () {
     ITIms =
       getExpStage() === 'practice'
-        ? sampleFromDecayingExponential()
+        ? sampleFromDecayingExponential(1, 0.5, 5.5)
         : ITIs.shift();
     return ITIms * 1000;
   },
@@ -558,7 +364,6 @@ var ITIBlock = {
   on_finish: function (data) {
     data['trial_duration'] = ITIms * 1000;
     data['stimulus_duration'] = ITIms * 1000;
-    console.log('ITI data: ', data);
   },
 };
 
@@ -744,19 +549,28 @@ var long_fixation = {
     return {
       trial_id: 'test_long_fixation',
       exp_stage: 'test',
-      trial_duration: 4000,
-      stimulus_duration: 4000,
+      trial_duration: 6000,
+      stimulus_duration: 6000,
       block_num: testCount,
     };
   },
-  stimulus_duration: 4000,
-  trial_duration: 4000,
+  stimulus_duration: 6000,
+  trial_duration: 6000,
 };
 
-testTrials.push(long_fixation);
+var long_fixation_node = {
+  timeline: [long_fixation],
+  conditional_function: function () {
+    const { trial_id } = jsPsych.data.get().last().trials[0];
+    if (trial_id === 'fmri_wait_block_trigger_end') return false;
+
+    return true;
+  },
+};
+
 var testCount = 0;
 var testNode = {
-  timeline: [feedback_node].concat(long_fixation, testTrials),
+  timeline: [feedback_node].concat(long_fixation_node, testTrials),
   loop_function: function (data) {
     testCount += 1;
     var sumRT = 0;
@@ -833,27 +647,15 @@ var trial_designs = [];
 var fullscreen = {
   type: jsPsychFullscreen,
   fullscreen_mode: true,
-  on_finish: function () {
-    (async () => {
-      try {
-        ITIs = await load_ITIs(design_perm);
-        const { stims } = await load_designs(design_perm);
-        console.log(ITIs);
-        console.log(stims);
-
-        stim_designs = stims;
-        console.log(stim_designs);
-
-        // creating trial desgins
-        if (ITIs.length !== stims.length) {
-          throw new Error('ITIs must be same length as number of stimuli. ');
-        }
-
-        console.log('Starting trial designs: ', trial_designs);
-      } catch (error) {
-        console.error('Error loading ITIs:', error);
-      }
-    })();
+  on_finish: async function () {
+    console.log('Reading in designs and ITIs...');
+    const design_path =
+      'http://0.0.0.0:8080/static/experiments/flanker_rdoc__fmri/designs';
+    const results = await loadDesignsAndITIs(design_perm, design_path, [
+      'stims',
+    ]);
+    ITIs = results.ITIs;
+    stim_designs = results.stims;
   },
 };
 
@@ -864,7 +666,7 @@ var exitFullscreen = {
 
 var expID = 'flanker_rdoc__fmri';
 var endText = `
-  <div class="centerbox">
+  <div class="centerbox" style="height: 50vh;">
     <p class="center-block-text">Thanks for completing this task!</p>
      <p class="center-block-text">Please remain still for the remainder of the scan!</p>
   </div>`;
@@ -889,9 +691,11 @@ var flanker_rdoc__fmri_init = () => {
   flanker_rdoc__fmri_experiment.push(motor_and_design_perm_block);
   flanker_rdoc__fmri_experiment.push(fullscreen);
   flanker_rdoc__fmri_experiment.push(check_fingers_node);
+  // practice block
   flanker_rdoc__fmri_experiment.push(practiceNode);
   flanker_rdoc__fmri_experiment.push(feedbackBlock);
   flanker_rdoc__fmri_experiment.push(fmri_wait_node);
+  // test block
   flanker_rdoc__fmri_experiment.push(testNode);
   flanker_rdoc__fmri_experiment.push(endBlock);
   flanker_rdoc__fmri_experiment.push(exitFullscreen);
