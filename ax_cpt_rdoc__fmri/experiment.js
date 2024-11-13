@@ -699,7 +699,8 @@ var fullscreen = {
   type: jsPsychFullscreen,
   fullscreen_mode: true,
   on_finish: async function () {
-    /*This is where the designs and ITIs are read in
+    /*
+     * This is where the designs and ITIs are read in
      * Uses the design number from a global variable
      */
     console.log('Reading in designs and ITIs...');
