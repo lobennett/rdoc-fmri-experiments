@@ -4,8 +4,6 @@
 
 ## Instructions
 
-- [run.sh](./clone_and_create_env.sh)
-
 ```bash
-chmod +x ./run.sh && ./run.sh
+chmod +x ./clone_and_create_env.sh && ./clone_and_create_env.sh
 ```
