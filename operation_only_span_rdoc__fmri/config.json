@@ -1,0 +1,36 @@
+[
+  {
+    "name": "Operation Only Span",
+    "template": "jspsych",
+    "run": [
+      "static/js/math.min.js",
+      "static/jspsych7/jspsych.js",
+      "static/jspsych7/plugin-instructions.js",
+      "static/jspsych7/plugin-html-keyboard-response.js",
+      "static/jspsych7/plugin-html-button-response.js",
+      "static/jspsych7/plugin-survey-text.js",
+      "static/jspsych7/plugin-fullscreen.js",
+      "static/jspsych7/plugin-call-function.js",
+      "static/jspsych7/poldrack-plugins/plugin-attention-check.js",
+      "static/jspsych7/jspsych.css",
+      "static/jspsych7/plugin-survey.js",
+      "static/jspsych7/poldrack-plugins/fmri_utils.js",
+      "static/jspsych7/poldrack-plugins/sample_iti.js",
+      "static/jspsych7/poldrack-plugins/designs_and_itis.js",
+      "static/css/default_style.css",
+      "style.css",
+      "experiment.js"
+    ],
+    "exp_id": "operation_only_span_rdoc",
+    "cognitive_atlas_task_id": "tsk_4a57abb949a0d",
+    "contributors": ["Patrick Bissett", "Russell Poldrack", "Logan Bennett"],
+    "time": 10,
+    "deployment_variables": {
+      "jspsych_init": {
+        "fullscreen": true,
+        "display_element": "getDisplayElement",
+        "on_trial_finish": "addID('operation_only_span_rdoc')"
+      }
+    }
+  }
+]
