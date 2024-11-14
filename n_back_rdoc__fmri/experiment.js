@@ -265,6 +265,16 @@ var long_fixation = {
   trial_duration: 500,
 };
 
+var long_fixation_node = {
+  timeline: [long_fixation],
+  conditional_function: function () {
+    const { trial_id } = jsPsych.data.get().last().trials[0];
+    if (trial_id === 'fmri_wait_block_trigger_end') return false;
+
+    return true;
+  },
+};
+
 var feedback_node = {
   timeline: [feedbackBlock],
   conditional_function: function () {
@@ -388,6 +398,16 @@ var feedbackBlock = {
   },
 };
 
+var feedback_node = {
+  timeline: [feedbackBlock],
+  conditional_function: function () {
+    const { trial_id } = jsPsych.data.get().last().trials[0];
+    if (trial_id === 'fmri_wait_block_trigger_end') return false;
+
+    return true;
+  },
+};
+
 var ITIms = null;
 
 // *** ITI *** //
@@ -436,11 +456,11 @@ for (i = 0; i < practiceLen + 2; i++) {
     data: {
       trial_id: 'practice_trial',
       exp_stage: 'practice',
-      choices: choices,
+      choices: () => choices,
       trial_duration: stimTrialDuration,
       stimulus_duration: stimStimulusDuration,
     },
-    choices: choices,
+    choices: () => choices,
     stimulus_duration: stimStimulusDuration, // 1000
     trial_duration: stimTrialDuration, // 1500
     response_ends_trial: false,
@@ -542,15 +562,16 @@ var practiceNode = {
 
     delay = current_delay;
 
+    console.log('First delay of practice blocks === ', delay);
+
     feedbackText += `<p class="block-text">We are now going to start the task. You will start with a delay of ${delay}</p>`;
     expStage = 'test';
     return false;
   },
 };
 
-// TODO: handle test trials for different nodes based on delay
 const create_test_trials = (delay) => {
-  var testTrials = [];
+  let testTrials = [];
   for (i = 0; i < numTrialsPerBlock + delay; i++) {
     var testTrial = {
       type: jsPsychHtmlKeyboardResponse,
@@ -558,11 +579,11 @@ const create_test_trials = (delay) => {
       data: {
         trial_id: 'test_trial',
         exp_stage: 'test',
-        choices: choices,
+        choices: () => choices,
         trial_duration: stimTrialDuration,
         stimulus_duration: stimStimulusDuration,
       },
-      choices: choices,
+      choices: () => choices,
       stimulus_duration: stimStimulusDuration, // 1000
       trial_duration: stimTrialDuration, // 1500
       response_ends_trial: false,
@@ -573,19 +594,34 @@ const create_test_trials = (delay) => {
   return testTrials;
 };
 
-var feedback_node = {
-  timeline: [feedbackBlock],
-  conditional_function: function () {
-    const { trial_id } = jsPsych.data.get().last().trials[0];
-    if (trial_id === 'fmri_wait_block_trigger_end') return false;
+var one_back_trials = create_test_trials(1);
+var two_back_trials = create_test_trials(2);
 
-    return true;
+var one_back_conditional_node = {
+  timeline: one_back_trials,
+  conditional_function: function () {
+    if (delay === 1) return true;
+
+    return false;
+  },
+};
+
+var two_back_conditional_node = {
+  timeline: two_back_trials,
+  conditional_function: function () {
+    if (delay === 2) return true;
+
+    return false;
   },
 };
 
 var testCount = 0;
 var testNode = {
-  timeline: [feedback_node].concat(long_fixation, create_test_trials(delay)),
+  timeline: [feedback_node].concat(
+    long_fixation_node,
+    one_back_conditional_node,
+    two_back_conditional_node
+  ),
   loop_function: function (data) {
     testCount += 1;
 
@@ -628,6 +664,14 @@ var testNode = {
 
       feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
 
+      // I can just do this differently given it alternates now
+      console.log(stims);
+      console.log(
+        'Determining delay by stimulus conditions, ',
+        stims[0].condition,
+        stims[1].condition
+      );
+
       let current_delay =
         stims[0].condition === 'starter_trial' &&
         stims[1].condition === 'starter_trial'
@@ -635,6 +679,8 @@ var testNode = {
           : 1;
 
       delay = current_delay;
+
+      console.log('Delay moving into next test block === ', delay);
 
       feedbackText += `<p class=block-text><b>Your delay for this next block is ${delay}</b>.</p>`;
 
@@ -684,8 +730,6 @@ var fullscreen = {
     ITIs = results.ITIs;
     let testConditions = create_conditions_from_designs(results.stims);
     stim_designs = create_trial_types(testConditions);
-    console.log(ITIs);
-    console.log(stim_designs);
   },
 };
 
