@@ -382,7 +382,7 @@ var feedbackBlock = {
     return {
       trial_id: `${stage}_feedback`,
       exp_stage: stage,
-      trial_duration: 6000,
+      trial_duration: 4000,
       block_num: stage === 'practice' ? 0 : testCount,
     };
   },
@@ -390,7 +390,7 @@ var feedbackBlock = {
   stimulus: getFeedback,
   trial_duration: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_middle' ? undefined : 6000;
+    return trial_id === 'check_middle' ? undefined : 4000;
   },
   response_ends_trial: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
