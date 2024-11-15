@@ -352,7 +352,7 @@ var ITIBlock = {
   trial_duration: function () {
     ITIms =
       getExpStage() === 'practice'
-        ? sampleFromDecayingExponential()
+        ? sampleFromDecayingExponential(1, 0.5, 5.5)
         : ITIs.shift();
     return ITIms * 1000;
   },
