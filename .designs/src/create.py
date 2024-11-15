@@ -89,11 +89,8 @@ def main():
     for design_dir in design_dirs:
         task_name = design_dir.split("/")[-1]
 
-        if task_name == "ax_cpt":
+        if task_name ==  "ax_cpt_4lev_first_2lev_second":
             continue
-
-        if task_name == "ax_cpt_4lev_first_2lev_second":
-            task_name = "ax_cpt"
 
         if args.task:
             if not task_name == args.task:
