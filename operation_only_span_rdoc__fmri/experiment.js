@@ -7193,6 +7193,7 @@ var initializingTrialIDs = new Set([
   'practice_ITI',
   'test_ITI',
   'test_long_fixation',
+  'fmri_wait_block_trigger_end',
 ]);
 
 var timerInitializingTrialIDs = new Set([
