@@ -1,0 +1,301 @@
+/*******************************************************/
+/*********    RDoC/Network Default CSS Styles    *******/
+/*******************************************************/
+
+body {
+  background-color: #707070;
+  color: white;
+}
+
+.fb_box {
+  width: 35vw;
+  height: 20vh;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -175%);
+}
+
+.picture_box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-right: 0%;
+  background-color: none;
+  text-align: center;
+}
+
+.fixation {
+  text-align: center;
+  font-size: 60px;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  color: white;
+}
+
+.cue-text {
+  width: 20vw;
+  height: 20vh;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+
+.bigbox {
+  width: 100%;
+  margin: auto;
+  min-height: 100%;
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  margin-right: 0%;
+  background-color: none;
+  text-align: center;
+}
+
+.instructBox {
+  width: 80vw;
+  height: 10vw;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  margin-right: 0%;
+  transform: translate(-50%, -50%);
+  background-color: none;
+  font-size: 24px;
+}
+
+.prompt_box_simple {
+  width: 75%;
+  height: 20%;
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -45%);
+  margin-right: 0%;
+  background-color: none;
+  text-align: center;
+}
+
+.prompt_box_operation {
+  width: 75%;
+  height: 20%;
+  position: absolute;
+  top: 12.5%;
+  left: 50%;
+  transform: translate(-50%, -45%);
+  margin-right: 0%;
+  background-color: none;
+  text-align: center;
+}
+
+.prompt_box_response {
+  width: 75%;
+  height: 20%;
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-right: 0%;
+  background-color: none;
+  text-align: center;
+}
+
+img.center {
+  height: auto;
+  width: auto\9;
+  /* ie8 */
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  max-height: 65%;
+  height: 120px;
+  width: 120px;
+}
+
+/*******************************************************/
+/************        Span CSS Styles        ************/
+/*******************************************************/
+
+.digit-span-text {
+  text-align: center;
+  font-size: 60px;
+  position: relative;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  color: black;
+}
+
+.numbers {
+  font-weight: 900;
+  text-align: center;
+  font-size: 60px;
+  position: relative;
+  top: 50%;
+}
+
+.active-box {
+  color: white;
+  background-color: black;
+}
+
+.box {
+  width: 50px;
+  height: 50px;
+  border: 1px solid black;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.response-active {
+  border: 8px solid black;
+  background-color: lightgray;
+  /* Color for arrow key navigation */
+}
+
+.active-box {
+  background-color: black;
+  /* Color for arrow key navigation */
+}
+
+.spacebar-box {
+  background-color: white;
+  /* Color for spacebar selection */
+}
+.jspsych-instructions-nav {
+  display: flex !important;
+}
+
+.numbox {
+  width: 30vw;
+  height: 30vw;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+
+.jspsych-content {
+  max-width: 100%;
+}
+
+.first-active {
+  border: 3px solid black;
+  background-color: white;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 75vw;
+  height: 75vh;
+}
+
+.box {
+  flex-basis: 25%;
+  height: 25%;
+  box-sizing: border-box;
+  border: 1px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+}
+
+.distractor-box {
+  flex-basis: 12.5%;
+  height: 12.5%;
+  box-sizing: border-box;
+  border: 1px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.centerbox {
+  height: 70vh !important;
+}
+
+.memory_feedback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.memory_feedback p {
+  font-size: xx-large;
+}
+
+/* survey form styling */
+#sq_101,
+#sq_102 {
+  background-color: #707070 !important ;
+  color: white !important;
+}
+
+#sq_101 fieldset,
+#sq_102 fieldset {
+  display: flex;
+}
+
+.sv_row {
+  background-color: #707070 !important;
+  color: white !important;
+}
+
+.sv_nav {
+  background-color: #707070 !important;
+}
+
+.sv-action-bar {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px !important;
+  padding-top: 24px !important;
+}
+
+.sv_nav_btn {
+  width: 100px !important;
+  border: 1px solid white;
+  border-radius: 2px !important;
+}
+/* Container styling to ensure inline layout */
+.sv_q_radiogroup {
+  display: flex; /* Aligns children inline */
+  flex-direction: row; /* Ensures items are laid out in a row */
+  align-items: center; /* Aligns items vertically in the center */
+  justify-content: center; /* Aligns items to the start of the flex-direction */
+}
+
+/* Label and control styling */
+.sv_q_radiogroup_label {
+  display: flex; /* Allows label and its children to be in a flexbox layout */
+  align-items: center; /* Center items vertically within the label */
+  justify-content: center;
+}
+
+/* Radio button alignment and spacing */
+.sv_q_radiogroup_control_item {
+  margin-right: 5px; /* Adds some space between the radio button and its label */
+}
+
+.sv_q_radiogroup_label span {
+  width: 40px;
+}
