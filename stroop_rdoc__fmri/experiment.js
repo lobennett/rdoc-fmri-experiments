@@ -86,21 +86,19 @@ const fixationDuration = 500;
 var possibleResponses;
 
 function getKeyMappingForTask(motor_perm) {
-  if (Math.floor(motor_perm) % 3 === 0) {
-    // Assuming even motor_perm uses ",", odd motor_perm uses "."
+  if (motor_perm === 0) {
     possibleResponses = [
       ['index finger', 'y', 'index finger'],
       ['middle finger', 'g', 'middle finger'],
       ['ring finger', 'c', 'forward slash key (/)'],
     ];
-  } else if (Math.floor(motor_perm) % 3 === 1) {
-    // Assuming even motor_perm uses ",", odd motor_perm uses "."
+  } else if (motor_perm === 1) {
     possibleResponses = [
       ['middle finger', 'g', 'middle finger'],
       ['index finger', 'y', 'index finger'],
       ['ring finger', 'c', 'forward slash key (/)'],
     ];
-  } else if (Math.floor(motor_perm) % 3 === 2) {
+  } else {
     possibleResponses = [
       ['middle finger', 'g', 'middle finger'],
       ['ring finger', 'c', 'forward slash key (/)'],
@@ -523,7 +521,7 @@ var motor_and_design_perm_block = {
         type: 'multi-choice',
         prompt: 'Select the motor perm:',
         name: 'motor_perm',
-        options: [0, 1],
+        options: [0, 1, 2],
         required: true,
       },
       {
