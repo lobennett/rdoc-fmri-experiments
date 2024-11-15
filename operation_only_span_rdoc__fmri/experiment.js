@@ -7052,7 +7052,7 @@ var practiceThresh = 3;
 var processingChoices;
 
 function getKeyMappingForTask(motor_perm) {
-  if (motor_perm % 2 === 0) {
+  if (motor_perm === 0) {
     processingChoices = [
       { keycode: 'ArrowLeft', keyname: 'left arrow key' },
       { keycode: 'ArrowRight', keyname: 'right arrow key' },
