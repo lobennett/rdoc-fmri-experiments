@@ -14,19 +14,6 @@ function calculate_partial_accuracy(trials) {
   return partialAccuracy;
 }
 
-function shuffleArray(array) {
-  // Create a copy of the original array to avoid modifying it directly
-  const shuffledArray = array.slice();
-
-  // Perform Fisher-Yates shuffle
-  for (let i = shuffledArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-  }
-
-  return shuffledArray;
-}
-
 function generateSpatialTrialValues(n) {
   const possibleValues = Array.from({ length: 16 }, (_, i) => i);
   const randomList = [];
