@@ -227,7 +227,7 @@ var motor_and_design_perm_block = {
         type: 'multi-choice',
         prompt: 'Select the design perm:',
         name: 'design_perm',
-        options: [1, 2, 3, 4, 5],
+        options: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // NOTE: Half start with 1-back, half with 2-back
         required: true,
       },
     ],
@@ -750,9 +750,9 @@ var endBlock = {
   data: {
     trial_id: 'end',
     exp_id: expID,
-    trial_duration: 30_000,
+    trial_duration: 10000,
   },
-  trial_duration: 30_000,
+  trial_duration: 10000,
   stimulus: endText,
   response_ends_trial: false,
   choices: ['Enter'],
