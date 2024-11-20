@@ -26,11 +26,13 @@ def create_new_dirs(outdir: str, task_name: str) -> str:
     return outdir
 
 
-def clean_events(design_path: str, task_name: str, outdir: str, stop: bool) -> None:
+def clean_events(design_path: str, task_name: str, outdir: str) -> None:
     outdir = create_new_dirs(outdir, task_name)
 
     pattern = os.path.join(design_path, "*")
-    files = [f for f in glob.glob(pattern) if not f.endswith("_assessment_values.csv")]
+    files = sorted(
+        [f for f in glob.glob(pattern) if not f.endswith("_assessment_values.csv")]
+    )
 
     func_mapping = {
         "ax_cpt": ax_cpt,
@@ -52,9 +54,6 @@ def clean_events(design_path: str, task_name: str, outdir: str, stop: bool) -> N
 
         func_mapping[task_name](f, outpath)
 
-        if stop:
-            sys.exit()
-
 
 def main():
     # args
@@ -64,11 +63,6 @@ def main():
         type=str,
         default=None,
         help="Name of the task to process",
-    )
-    parser.add_argument(
-        "--stop",
-        action="store_true",
-        help="Stops execution after cleaning a single design file.",
     )
 
     # Parse the arguments
@@ -82,21 +76,19 @@ def main():
         os.makedirs(outdir)
 
     design_path = glob.glob(os.path.join(raw, "*"))
-    design_dirs = sorted(
-        [p for p in design_path if os.path.isdir(p) and "archive" not in p]
-    )
+    design_dirs = sorted([p for p in design_path if os.path.isdir(p)])
 
     for design_dir in design_dirs:
         task_name = design_dir.split("/")[-1]
 
-        if task_name ==  "ax_cpt_4lev_first_2lev_second":
+        if task_name == "ax_cpt_4lev_first_2lev_second":
             continue
 
         if args.task:
             if not task_name == args.task:
                 continue
 
-        clean_events(design_dir, task_name, outdir, args.stop)
+        clean_events(design_dir, task_name, outdir)
 
 
 if __name__ == "__main__":
