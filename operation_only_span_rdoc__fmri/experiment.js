@@ -7717,9 +7717,9 @@ var endBlock = {
   data: {
     trial_id: 'end',
     exp_id: expID,
-    trial_duration: 30_000,
+    trial_duration: 10000,
   },
-  trial_duration: 30_000,
+  trial_duration: 10000,
   stimulus: endText,
   response_ends_trial: false,
   choices: ['Enter'],
