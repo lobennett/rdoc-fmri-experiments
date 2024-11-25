@@ -33,7 +33,8 @@ const create_test_stimuli = (designs) => {
   let stimNums = [];
   let stimTargets = [];
   designs.forEach((d) => {
-    let target = Math.floor(Math.random());
+    let target = Math.round(Math.random());
+
     if (d === 'feat_low') {
       stimConditions.push('feature');
       stimNums.push(8);
@@ -330,8 +331,7 @@ const setText = () => {
 
   choices = [possibleResponses[0][1], possibleResponses[1][1]];
 
-  feedbackText = `<div class="centerbox" style='width: 60vw;'>
-    <p class="block-text">Place your <b>index finger</b> on the <b>index finger</b> and your <b>middle finger</b> on the <b>middle finger</b></p>
+  feedbackText = `<div class="centerbox" style='width: 60vw; height: auto !important;'>
     <p class="block-text">During this task, on each trial rectangles will appear on the screen. The rectangles can be either black or white in color.</p>
     <p class="block-text">On some trials, <b>one</b> of these rectangles will be a <b>vertical white rectangle</b>. We will call this rectangle the 'target'.</p>
     <div style="display: flex; align-items: center; justify-content: center; padding-top: 80px; padding-bottom: 80px;">
@@ -546,10 +546,6 @@ var motor_and_design_perm_block = {
     const { blockStimConditions, blockStimNums, blockStimTargets } =
       createPracticeStimArrays(practiceLen);
 
-    console.log(blockStimNums);
-    console.log(blockStimTargets);
-    console.log(blockStimConditions);
-
     blockStims = getStims(
       blockStimNums,
       blockStimTargets,
@@ -558,7 +554,6 @@ var motor_and_design_perm_block = {
     );
 
     blockStims = jsPsych.randomization.repeat(blockStims, 1);
-    console.log(blockStims);
   },
 };
 
