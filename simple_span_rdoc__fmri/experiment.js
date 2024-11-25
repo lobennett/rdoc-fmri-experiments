@@ -302,15 +302,6 @@ const setText = () => {
 
   promptText = `<div class=prompt_box_operation>
     <p class = center-block-text style = "font-size:16px; line-height:80%%;">Memorize all the black colored cells.</p>
-    <p class = center-block-text style = "font-size:16px; line-height:80%%;">Press <b>"left arrow key"</b> if 8x8 is <b>${
-      processingChoices[0].keyname === 'left arrow key'
-        ? 'symmetric'
-        : 'asymmetric'
-    }</b> and <b>"right arrow key"</b> if <b>${
-    processingChoices[0].keyname === 'left arrow key'
-      ? 'asymmetric'
-      : 'symmetric'
-  }</b>.</p>
   </div>`;
 
   reminderInstruct = `
@@ -321,8 +312,6 @@ const setText = () => {
     <p class="block-text">${speedReminder}</p>
   </div>
 `;
-
-  choices = [processingChoices[0].keycode, processingChoices[1].keycode];
 };
 
 // *Timing:
@@ -338,22 +327,6 @@ var accuracyThresh = 0.6;
 var partialAccuracyThresh = 0.75;
 var missedResponseThresh = 0.1;
 var practiceThresh = 3;
-
-var processingChoices;
-
-function getKeyMappingForTask(motor_perm) {
-  if (motor_perm === 0) {
-    processingChoices = [
-      { keycode: 'ArrowLeft', keyname: 'left arrow key' },
-      { keycode: 'ArrowRight', keyname: 'right arrow key' },
-    ];
-  } else {
-    processingChoices = [
-      { keycode: 'ArrowRight', keyname: 'right arrow key' },
-      { keycode: 'ArrowLeft', keyname: 'left arrow key' },
-    ];
-  }
-}
 
 var practiceLen = 1;
 var numTrialsPerBlock = 8;
@@ -446,13 +419,13 @@ var motor_and_design_perm_block = {
         type: 'html',
         prompt: 'fMRI setup',
       },
-      {
-        type: 'multi-choice',
-        prompt: 'Select the motor perm:',
-        name: 'motor_perm',
-        options: [0, 1],
-        required: true,
-      },
+      // {
+      //   type: 'multi-choice',
+      //   prompt: 'Select the motor perm:',
+      //   name: 'motor_perm',
+      //   options: [0, 1],
+      //   required: true,
+      // },
       {
         type: 'multi-choice',
         prompt: 'Select the design perm:',
@@ -464,12 +437,12 @@ var motor_and_design_perm_block = {
   ],
   button_label_finish: 'Submit',
   on_finish: function (data) {
-    data['motor_perm'] = data.response.motor_perm;
+    // data['motor_perm'] = data.response.motor_perm;
     data['design_perm'] = data.response.design_perm;
-    motor_perm = data.response.motor_perm;
+    // motor_perm = data.response.motor_perm;
     design_perm = data.response.design_perm;
 
-    getKeyMappingForTask(motor_perm);
+    // getKeyMappingForTask(motor_perm);
     setText();
   },
 };

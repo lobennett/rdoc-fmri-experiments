@@ -88,21 +88,40 @@ var possibleResponses;
 function getKeyMappingForTask(motor_perm) {
   if (motor_perm === 0) {
     possibleResponses = [
-      ['index finger', 'y', 'index finger'],
-      ['middle finger', 'g', 'middle finger'],
-      ['ring finger', 'c', 'forward slash key (/)'],
+      ['index finger', 'y', 'index finger'], // red
+      ['middle finger', 'g', 'middle finger'], // blue
+      ['ring finger', 'c', 'forward slash key (/)'], // green
     ];
   } else if (motor_perm === 1) {
     possibleResponses = [
-      ['middle finger', 'g', 'middle finger'],
-      ['index finger', 'y', 'index finger'],
-      ['ring finger', 'c', 'forward slash key (/)'],
+      ['middle finger', 'g', 'middle finger'], // red
+      ['index finger', 'y', 'index finger'], // blue
+      ['ring finger', 'c', 'forward slash key (/)'], // green
+    ];
+  } else if (motor_perm === 2) {
+    possibleResponses = [
+      ['middle finger', 'g', 'middle finger'], // red
+      ['ring finger', 'c', 'forward slash key (/)'], // blue
+      ['index finger', 'y', 'index finger'], // green
+    ];
+  } else if (motor_perm === 3) {
+    possibleResponses = [
+      ['ring finger', 'c', 'forward slash key (/)'], // red
+      ['index finger', 'y', 'index finger'], // blue
+      ['middle finger', 'g', 'middle finger'], // green
+    ];
+  } else if (motor_perm === 4) {
+    possibleResponses = [
+      ['ring finger', 'c', 'forward slash key (/)'], // red
+      ['middle finger', 'g', 'middle finger'], // blue
+      ['index finger', 'y', 'index finger'], // green
     ];
   } else {
+    // motor_perm === 5
     possibleResponses = [
-      ['middle finger', 'g', 'middle finger'],
-      ['ring finger', 'c', 'forward slash key (/)'],
-      ['index finger', 'y', 'index finger'],
+      ['index finger', 'y', 'index finger'], // blue
+      ['ring finger', 'c', 'forward slash key (/)'], // red
+      ['middle finger', 'g', 'middle finger'], // green
     ];
   }
 }
@@ -521,7 +540,7 @@ var motor_and_design_perm_block = {
         type: 'multi-choice',
         prompt: 'Select the motor perm:',
         name: 'motor_perm',
-        options: [0, 1, 2],
+        options: [0, 1, 2, 3, 4, 5],
         required: true,
       },
       {

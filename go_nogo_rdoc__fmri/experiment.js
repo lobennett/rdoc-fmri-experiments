@@ -275,7 +275,7 @@ var motor_and_design_perm_block = {
         type: 'multi-choice',
         prompt: 'Select the design perm:',
         name: 'design_perm',
-        options: Array.from({ length: 15 }, (_, i) => i + 1),
+        options: [1, 2, 3, 4, 5],
         required: true,
       },
     ],
