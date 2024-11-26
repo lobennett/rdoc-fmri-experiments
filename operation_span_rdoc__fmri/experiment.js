@@ -6847,13 +6847,13 @@ var generateGrid = function () {
 
     // Update activeIndex based on arrow key input
     let newActiveIndex = activeIndex;
-    if (key === 'ArrowLeft' && activeIndex % 4 !== 0) {
+    if (key === 'b' && activeIndex % 4 !== 0) {
       newActiveIndex = activeIndex - 1;
-    } else if (key === 'ArrowRight' && activeIndex % 4 !== 3) {
+    } else if (key === 'g' && activeIndex % 4 !== 3) {
       newActiveIndex = activeIndex + 1;
-    } else if (key === 'ArrowUp' && activeIndex >= 4) {
+    } else if (key === 'y' && activeIndex >= 4) {
       newActiveIndex = activeIndex - 4;
-    } else if (key === 'ArrowDown' && activeIndex < 12) {
+    } else if (key === 'r' && activeIndex < 12) {
       newActiveIndex = activeIndex + 4;
     }
 
@@ -6871,7 +6871,7 @@ var generateGrid = function () {
       boxes[activeIndex].classList.add('response-active'); // Add active-box class for arrow key navigation
     }
 
-    if (key === ' ') {
+    if (key === 'e') {
       event.preventDefault(); // handling default behavior on keydown event for spacebar. Prevents scrolling of the page.
       let currentTime = Date.now();
       let timeDifference = currentTime - initialCallTime;
@@ -6889,7 +6889,7 @@ var generateGrid = function () {
       clearTimeout(timeoutId);
 
       timeoutId = setTimeout(() => {
-        if (key !== ' ') {
+        if (key !== 'e') {
           boxes[activeIndex].classList.remove('response-active'); // Remove active-box class if the arrow key was pressed
         }
         boxes[activeIndex].classList.remove('spacebar-box'); // Remove spacebar-box class for spacebar selection
@@ -6967,15 +6967,6 @@ const getExpStage = () => expStage;
 /* Define experimental variables */
 /* ************************************ */
 // common variables
-
-var spanResponses = [
-  'left arrow key',
-  'right arrow key',
-  'up arrow key',
-  'down arrow key',
-  'spacebar',
-];
-
 var speedReminder;
 var promptText;
 var reminderInstruct;
@@ -6987,25 +6978,20 @@ const setText = () => {
 
   feedbackText = `
   <div style='height: 85vh !important; display:flex; flex-direction:column; justify-content: center;' class="centerbox">
-    <p class="block-text">Place your fingers on the arrow keys.</p>
     <p class="block-text">
       During this task, you will first encounter an 8x8 grid filled with black and gray cells. You have to determine if the grid is ${
-        processingChoices[0].keyname === 'left arrow key'
+        processingChoices[0].keyname === 'left button'
           ? 'symmetric'
           : 'asymmetric'
       } or ${
-    processingChoices[0].keyname === 'left arrow key'
-      ? 'asymmetric'
-      : 'symmetric'
+    processingChoices[0].keyname === 'left button' ? 'asymmetric' : 'symmetric'
   }.
-      Press the <b>left arrow key</b> if the grid is <b>${
-        processingChoices[0].keyname === 'left arrow key'
+      Press the <b>left button</b> if the grid is <b>${
+        processingChoices[0].keyname === 'left button'
           ? 'symmetric'
           : 'asymmetric'
-      }</b> and press the <b>right arrow key</b> if it is <b>${
-    processingChoices[0].keyname === 'left arrow key'
-      ? 'asymmetric'
-      : 'symmetric'
+      }</b> and press the <b>right button</b> if it is <b>${
+    processingChoices[0].keyname === 'left button' ? 'asymmetric' : 'symmetric'
   }</b>.
     </p>
     <p class="block-text">
@@ -7018,21 +7004,19 @@ const setText = () => {
       <b>Please note</b>, it's important to be ready to respond promptly when the grid appears, as the screen will move on automatically after a limited time, whether you have responded or not.
     </p>
     <p class="block-text">
-      On the blank 4x4 grid, use the <b>arrow keys</b> to navigate the grid and the <b>spacebar</b> to select the cells you think were colored black in the preceding 4 4x4 grids. Please select them in the order they were shown (i.e., respond with the location of the first black square in the 4x4 grid, then the 2nd, …).
+      On the blank 4x4 grid, use the <b>buttons</b> to navigate the grid and the <b>center button</b> to select the cells you think were colored black in the preceding 4 4x4 grids. Please select them in the order they were shown (i.e., respond with the location of the first black square in the 4x4 grid, then the 2nd, …).
     </p>
   </div>
 `;
 
   promptText = `<div class=prompt_box_operation>
     <p class = center-block-text style = "font-size:16px; line-height:80%%;">Memorize all the black colored cells.</p>
-    <p class = center-block-text style = "font-size:16px; line-height:80%%;">Press <b>"left arrow key"</b> if 8x8 is <b>${
-      processingChoices[0].keyname === 'left arrow key'
+    <p class = center-block-text style = "font-size:16px; line-height:80%%;">Press <b>"left button"</b> if 8x8 is <b>${
+      processingChoices[0].keyname === 'left button'
         ? 'symmetric'
         : 'asymmetric'
-    }</b> and <b>"right arrow key"</b> if <b>${
-    processingChoices[0].keyname === 'left arrow key'
-      ? 'asymmetric'
-      : 'symmetric'
+    }</b> and <b>"right button"</b> if <b>${
+    processingChoices[0].keyname === 'left button' ? 'asymmetric' : 'symmetric'
   }</b>.</p>
   </div>`;
 
@@ -7068,13 +7052,13 @@ var processingChoices;
 function getKeyMappingForTask(motor_perm) {
   if (motor_perm === 0) {
     processingChoices = [
-      { keycode: 'ArrowLeft', keyname: 'left arrow key' },
-      { keycode: 'ArrowRight', keyname: 'right arrow key' },
+      { keycode: 'b', keyname: 'left button' },
+      { keycode: 'g', keyname: 'right button' },
     ];
   } else {
     processingChoices = [
-      { keycode: 'ArrowRight', keyname: 'right arrow key' },
-      { keycode: 'ArrowLeft', keyname: 'left arrow key' },
+      { keycode: 'g', keyname: 'right button' },
+      { keycode: 'b', keyname: 'left button' },
     ];
   }
 }
@@ -7104,7 +7088,7 @@ var expStage = 'practice';
 var currSeq = [];
 
 var practicePromptResponse = `<div class = prompt_box_response>
-  <p class = center-block-text style = "font-size:16px; line-height:80%%;">Use the <b>arrow keys</b> to navigate the grid and the <b>spacebar</b> to select the cells colored black in the order they were shown.
+  <p class = center-block-text style = "font-size:16px; line-height:80%%;">Use the <b>buttons</b> to navigate the grid and the <b>center button</b> to select the cells colored black in the order they were shown.
   </p>
 </div>`;
 
@@ -7599,14 +7583,14 @@ var practiceNode = {
       feedbackText +=
         '<p class = block-text>Your accuracy for the 8x8 grid is low.</p>' +
         `<p class = block-text>Try your best determining if the 8x8 grid is ${
-          processingChoices[0].keyname === 'left arrow key'
+          processingChoices[0].keyname === 'left button'
             ? 'symmetric'
             : 'asymmetric'
-        } (left arrow key) or ${
-          processingChoices[0].keyname === 'left arrow key'
+        } (left button) or ${
+          processingChoices[0].keyname === 'left button'
             ? 'asymmetric'
             : 'symmetric'
-        } (right arrow key).</p>`;
+        } (right button).</p>`;
     }
     if (avgProcessingRT > processingRTThresh) {
       feedbackText +=
@@ -7722,14 +7706,14 @@ var testNode = {
         feedbackText +=
           '<p class = block-text>Your accuracy for the 8x8 grid is low.</p>' +
           `<p class = block-text>Try your best determining if the 8x8 grid is ${
-            processingChoices[0].keyname === 'left arrow key'
+            processingChoices[0].keyname === 'left button'
               ? 'symmetric'
               : 'asymmetric'
-          } (left arrow key) or ${
-            processingChoices[0].keyname === 'left arrow key'
+          } (left button) or ${
+            processingChoices[0].keyname === 'left button'
               ? 'asymmetric'
               : 'symmetric'
-          } (right arrow key).</p>`;
+          } (right button).</p>`;
       }
       if (avgProcessingRT > processingRTThresh) {
         feedbackText +=

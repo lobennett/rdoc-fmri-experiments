@@ -146,13 +146,13 @@ var generateGrid = function () {
 
     // Update activeIndex based on arrow key input
     let newActiveIndex = activeIndex;
-    if (key === 'ArrowLeft' && activeIndex % 4 !== 0) {
+    if (key === 'b' && activeIndex % 4 !== 0) {
       newActiveIndex = activeIndex - 1;
-    } else if (key === 'ArrowRight' && activeIndex % 4 !== 3) {
+    } else if (key === 'g' && activeIndex % 4 !== 3) {
       newActiveIndex = activeIndex + 1;
-    } else if (key === 'ArrowUp' && activeIndex >= 4) {
+    } else if (key === 'y' && activeIndex >= 4) {
       newActiveIndex = activeIndex - 4;
-    } else if (key === 'ArrowDown' && activeIndex < 12) {
+    } else if (key === 'r' && activeIndex < 12) {
       newActiveIndex = activeIndex + 4;
     }
 
@@ -170,7 +170,7 @@ var generateGrid = function () {
       boxes[activeIndex].classList.add('response-active'); // Add active-box class for arrow key navigation
     }
 
-    if (key === ' ') {
+    if (key === 'e') {
       event.preventDefault(); // handling default behavior on keydown event for spacebar. Prevents scrolling of the page.
       let currentTime = Date.now();
       let timeDifference = currentTime - initialCallTime;
@@ -188,7 +188,7 @@ var generateGrid = function () {
       clearTimeout(timeoutId);
 
       timeoutId = setTimeout(() => {
-        if (key !== ' ') {
+        if (key !== 'e') {
           boxes[activeIndex].classList.remove('response-active'); // Remove active-box class if the arrow key was pressed
         }
         boxes[activeIndex].classList.remove('spacebar-box'); // Remove spacebar-box class for spacebar selection
@@ -264,15 +264,6 @@ const getExpStage = () => expStage;
 /* Define experimental variables */
 /* ************************************ */
 // common variables
-
-var spanResponses = [
-  'left arrow key',
-  'right arrow key',
-  'up arrow key',
-  'down arrow key',
-  'spacebar',
-];
-
 var speedReminder;
 var promptText;
 var reminderInstruct;
@@ -284,7 +275,6 @@ const setText = () => {
 
   feedbackText = `
     <div class="centerbox">
-      <p class="block-text">Place your fingers on the arrow keys.</p>
       <p class="block-text">
         During this task, you will see a fixation (****) followed by a 4x4 grid. This 4x4 grid will have one cell colored black. Try to remember the location of the black cell.
       </p>
@@ -292,7 +282,7 @@ const setText = () => {
         This sequence of a fixation (****) and 4x4 grid will alternate four times. After the fourth time, a blank 4x4 grid will be presented.
       </p>
       <p class="block-text">
-        On the blank 4x4 grid, use the <b>arrow keys</b> to navigate the grid and the <b>spacebar</b> to select the cells you think were colored black in the preceding 4 4x4 grids. Please select them in the order they were shown (i.e., respond with the location of the first black square in the 4x4 grid, then the 2nd, …).
+        On the blank 4x4 grid, use the <b>buttons</b> to navigate the grid and the <b>center button</b> to select the cells you think were colored black in the preceding 4 4x4 grids. Please select them in the order they were shown (i.e., respond with the location of the first black square in the 4x4 grid, then the 2nd, …).
       </p>
       <p class='block-text'>
         <b>Please note</b>, it's important to be ready to respond promptly when the grid appears, as the screen will move on automatically after a limited time, whether you have responded or not.
@@ -342,7 +332,7 @@ var expStage = 'practice';
 var currSeq = [];
 
 var practicePromptResponse = `<div class = prompt_box_response>
-  <p class = center-block-text style = "font-size:16px; line-height:80%%;">Use the <b>arrow keys</b> to navigate the grid and the <b>spacebar</b> to select the cells colored black in the order they were shown.
+  <p class = center-block-text style = "font-size:16px; line-height:80%%;">Use the <b>buttons</b> to navigate the grid and the <b>center button</b> to select the cells colored black in the order they were shown.
   </p>
 </div>`;
 
