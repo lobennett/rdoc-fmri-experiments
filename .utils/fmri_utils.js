@@ -71,7 +71,7 @@ var fmri_wait_block_trigger_end = {
   stimulus:
     '<div><h1>Task about to start!</h1><h1>Stay as still as possible.</h1><h1>Do not swallow.</h1></div>',
   choices: ['NO_KEYS'],
-  trial_duration: 10880,
+  trial_duration: 10430, // 1.49s/tr * 7trs * 1000
   response_ends_trial: false,
   data: function () {
     return {
