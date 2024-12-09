@@ -789,7 +789,7 @@ var testNode = {
           <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>`;
       }
 
-      feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
+      feedbackText += '</div>';
 
       let block_designs = stim_designs.slice(0, numTrialsPerBlock);
       stim_designs = stim_designs.slice(numTrialsPerBlock);
