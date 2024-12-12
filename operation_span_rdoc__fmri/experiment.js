@@ -7661,7 +7661,11 @@ var feedback_node = {
 // loop based on criteria
 var testCount = 0;
 var testNode = {
-  timeline: [feedback_node].concat(long_fixation_node, testTrials),
+  timeline: [feedback_node].concat(
+    long_fixation_node,
+    testTrials,
+    long_fixation_node
+  ),
   loop_function: function () {
     var responseGridData = jsPsych.data.get().filter({
       trial_id: 'test_trial',

@@ -620,7 +620,8 @@ var testNode = {
   timeline: [feedback_node].concat(
     long_fixation_node,
     one_back_conditional_node,
-    two_back_conditional_node
+    two_back_conditional_node,
+    long_fixation_node
   ),
   loop_function: function (data) {
     testCount += 1;

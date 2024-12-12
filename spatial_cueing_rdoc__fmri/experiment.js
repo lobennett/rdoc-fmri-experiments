@@ -588,7 +588,11 @@ var feedback_node = {
 
 var testCount = 0;
 var testNode = {
-  timeline: [feedback_node].concat(long_fixation_node, testTrials),
+  timeline: [feedback_node].concat(
+    long_fixation_node,
+    testTrials,
+    long_fixation_node
+  ),
   loop_function: function (data) {
     testCount += 1;
 
