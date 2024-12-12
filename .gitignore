@@ -2,3 +2,5 @@ static
 .DS_Store
 todo.txt
 .output/*
+/surveys/wbhi_base_survey_rdoc
+*test*.py
