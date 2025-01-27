@@ -3,7 +3,7 @@ surveys
 testing
 archive
 .analyze
-.designs/cleaned_designs
+.designs/cleaned_designs/*
 .deploy/expfactory-deploy
 __pycache__
 .venv

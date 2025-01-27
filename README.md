@@ -10,7 +10,7 @@
 
 ### Designs
 
-- [Conversion code](./designs)
+- [Conversion code](./.designs)
 - [Slidedeck](https://docs.google.com/presentation/d/15qc8DHQ_8VCVIX6gASrjQIuLV7KIRNbVxNnqPzLIUC8/edit?usp=sharing)
 
 ### Docs
