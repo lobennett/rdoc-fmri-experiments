@@ -1,0 +1,14 @@
+task_name,design_number,design_name
+ax_cpt_rdoc__fmri,design_3,../ax_cpt_rdoc__fmri/designs/design_3/design.csv
+cued_task_switching_rdoc__fmri,design_3,../cued_task_switching_rdoc__fmri/designs/design_3/design.csv
+flanker_rdoc__fmri,design_5,../flanker_rdoc__fmri/designs/design_5/design.csv
+go_nogo_rdoc__fmri,design_1,../go_nogo_rdoc__fmri/designs/design_1/design.csv
+n_back_rdoc__fmri,design_7,../n_back_rdoc__fmri/designs/design_7/design.csv
+operation_only_span_rdoc__fmri,design_4,../operation_only_span_rdoc__fmri/designs/design_4/design.csv
+operation_span_rdoc__fmri,design_3,../operation_span_rdoc__fmri/designs/design_3/design.csv
+simple_span_rdoc__fmri,design_2,../simple_span_rdoc__fmri/designs/design_2/design.csv
+spatial_cueing_rdoc__fmri,design_2,../spatial_cueing_rdoc__fmri/designs/design_2/design.csv
+spatial_task_switching_rdoc__fmri,design_2,../spatial_task_switching_rdoc__fmri/designs/design_2/design.csv
+stop_signal_rdoc__fmri,design_1,../stop_signal_rdoc__fmri/designs/design_1/design.csv
+stroop_rdoc__fmri,design_4,../stroop_rdoc__fmri/designs/design_4/design.csv
+visual_search_rdoc__fmri,design_2,../visual_search_rdoc__fmri/designs/design_2/design.csv

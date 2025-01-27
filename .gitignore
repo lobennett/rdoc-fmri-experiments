@@ -1,0 +1,12 @@
+static
+surveys
+testing
+archive
+.analyze
+.designs/cleaned_designs
+.deploy/expfactory-deploy
+__pycache__
+.venv
+.output/*
+.DS_Store
+todo.txt
