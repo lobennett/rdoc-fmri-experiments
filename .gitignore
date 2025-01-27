@@ -7,6 +7,7 @@ archive
 .deploy/expfactory-deploy
 __pycache__
 .venv
+.env
 .output/*
 .DS_Store
 todo.txt
