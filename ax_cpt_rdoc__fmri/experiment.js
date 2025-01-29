@@ -509,7 +509,7 @@ var practiceNode = {
 var long_fixation = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   data: function () {
     return {
       trial_id: 'test_long_fixation',
