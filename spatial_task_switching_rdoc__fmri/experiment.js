@@ -946,7 +946,7 @@ var testNode = {
       return false;
     } else {
       feedbackText =
-        '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 1 minute.</p>';
+        '<div class = centerbox><p class = block-text>Please take this time to read your feedback!</p>';
 
       feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
 
