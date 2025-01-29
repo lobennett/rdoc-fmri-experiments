@@ -7,7 +7,7 @@ const get_practice_feedback = () => {
   var last = jsPsych.data.get().last(1).values()[0];
   if (last.response === -1) {
     return '<div class=center-box><div class=center-text><font size =20>Respond Faster!</font></div></div>';
-  } else if (last.correct_trial == 1) {
+  } else if (last.correct_trial === 1) {
     return '<div class=center-box><div class=center-text><font size =20>Correct!</font></div></div>';
   } else {
     return '<div class=center-box><div class=center-text><font size =20>Incorrect</font></div></div>';
@@ -230,7 +230,6 @@ var numTrialsPerBlock = trialProportions.length * 5; // 50 trials per test block
 var practiceLen = trialProportions.length / 2; // 5
 var currCondition = '';
 var expStage = 'practice';
-
 /* ************************************ */
 /* Set up jsPsych blocks */
 /* ************************************ */
@@ -239,7 +238,7 @@ var expStage = 'practice';
 var ISI = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   data: function () {
     const stage = getExpStage();
     return {
@@ -268,8 +267,8 @@ var ITIms = null;
 var ITIBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
+  response_ends_trial: false,
   is_html: true,
-  choices: ['NO_KEYS'],
   data: function () {
     const stage = getExpStage();
     return {
@@ -303,6 +302,7 @@ var ITIBlock = {
 var practiceFeedbackBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: get_practice_feedback,
+  response_ends_trial: false,
   data: function () {
     return {
       exp_stage: 'practice',
@@ -312,7 +312,6 @@ var practiceFeedbackBlock = {
       block_num: practiceCount,
     };
   },
-  choices: ['NO_KEYS'],
   stimulus_duration: 500,
   trial_duration: 500,
   prompt: () => promptText,
@@ -338,6 +337,9 @@ var feedbackBlock = {
   response_ends_trial: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
     return trial_id === 'check_middle';
+  },
+  on_finish: function (data) {
+    data['block_level_feedback'] = block_level_feedback;
   },
 };
 
@@ -424,10 +426,13 @@ for (i = 0; i < practiceLen; i++) {
   );
 }
 
+// Create variable to log block-level feedback
+var block_level_feedback = {};
 var practiceCount = 0;
 var practiceNode = {
   timeline: [feedbackBlock].concat(practiceTrials),
   loop_function: function (data) {
+    let feedback = {};
     var sumRT = 0;
     var sumResponses = 0;
     var correct = 0;
@@ -436,10 +441,10 @@ var practiceNode = {
     for (var i = 0; i < data.trials.length; i++) {
       if (data.trials[i].trial_id == 'practice_trial') {
         totalTrials += 1;
-        if (data.trials[i].rt != null) {
+        if (data.trials[i].rt !== null) {
           sumRT += data.trials[i].rt;
           sumResponses += 1;
-          if (data.trials[i].correct_trial == 1) {
+          if (data.trials[i].correct_trial === 1) {
             correct += 1;
           }
         }
@@ -453,30 +458,47 @@ var practiceNode = {
       '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
 
     if (accuracy < practiceAccuracyThresh) {
-      feedbackText += `
+      let text = `
         <p class = block-text>Your accuracy is low. Remember:</p>
         ${promptTextList}
       `;
+      feedbackText += text;
+      feedback['accuracy'] = {
+        value: accuracy,
+        text: text,
+      };
     }
 
     if (avgRT > rtThresh) {
-      feedbackText += `
+      let text = `
        <p class = block-text>You have been responding too slowly. Try to respond as quickly and accurately as possible.</p>
       `;
+      feedbackText += text;
+      feedback['rt'] = {
+        value: avgRT,
+        text: text,
+      };
     }
 
     if (missedResponses > missedResponseThresh) {
-      feedbackText += `
+      let text = `
         <p class = block-text>You have not been responding to some trials. Please respond on every trial that requires a response.</p>
       `;
+      feedbackText += text;
+      feedback['missed_responses'] = {
+        value: missedResponses,
+        text: text,
+      };
     }
 
     feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
 
     // Here set first block of test trials
     blockList = trial_designs;
-    console.log('Block stimuli (test block): ', blockList);
     expStage = 'test';
+
+    // Set block-level feedback
+    block_level_feedback = feedback;
     return false;
   },
 };
@@ -568,6 +590,7 @@ var testNode = {
     testTrials
   ),
   loop_function: function (data) {
+    feedback = {};
     testCount += 1;
 
     var sumRT = 0;
@@ -577,14 +600,14 @@ var testNode = {
 
     for (var i = 0; i < data.trials.length; i++) {
       if (
-        data.trials[i].trial_id == 'test_trial' &&
-        data.trials[i].block_num == getCurrBlockNum() - 1
+        data.trials[i].trial_id === 'test_trial' &&
+        data.trials[i].block_num === getCurrBlockNum() - 1
       ) {
         totalTrials += 1;
-        if (data.trials[i].rt != null) {
+        if (data.trials[i].rt !== null) {
           sumRT += data.trials[i].rt;
           sumResponses += 1;
-          if (data.trials[i].correct_trial == 1) {
+          if (data.trials[i].correct_trial === 1) {
             correct += 1;
           }
         }
@@ -610,26 +633,41 @@ var testNode = {
       feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
 
       if (accuracy < accuracyThresh) {
-        feedbackText += `
+        let text = `
         <p class = block-text>Your accuracy is low. Remember:</p>
         ${promptTextList}
       `;
+        feedbackText += text;
+        feedback['accuracy'] = {
+          value: accuracy,
+          text: text,
+        };
       }
       if (avgRT > rtThresh) {
-        feedbackText += `
+        let text = `
        <p class = block-text>You have been responding too slowly. Try to respond as quickly and accurately as possible.</p>
       `;
+        feedbackText += text;
+        feedback['rt'] = {
+          value: avgRT,
+          text: text,
+        };
       }
       if (missedResponses > missedResponseThresh) {
-        feedbackText += `
+        let text = `
         <p class = block-text>You have not been responding to some trials. Please respond on every trial that requires a response.</p>
       `;
+        feedbackText += text;
+        feedback['missed_responses'] = {
+          value: missedResponses,
+          text: text,
+        };
       }
 
       feedbackText += '</div>';
 
-      // Set block of test trials
-      console.log('Block stimuli moving into next test block: ', blockList);
+      // Set block-level feedback
+      block_level_feedback = feedback;
 
       return true;
     }
