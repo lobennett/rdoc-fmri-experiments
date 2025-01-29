@@ -7208,6 +7208,7 @@ var timerInitializingTrialIDs = new Set([
   'test_ITI',
   'test_stim',
   'test_long_fixation',
+  'fmri_wait_block_trigger_end',
 ]);
 
 var waitBlock = {
