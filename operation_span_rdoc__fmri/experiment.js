@@ -7156,6 +7156,9 @@ var feedbackBlock = {
     const { trial_id } = jsPsych.data.get().last().trials[0];
     return trial_id === 'check_middle';
   },
+  on_finish: function (data) {
+    data['block_level_feedback'] = block_level_feedback;
+  },
 };
 
 var expStage = 'practice';
@@ -7547,10 +7550,13 @@ function generatePracticeTrials() {
 practiceTrials = generatePracticeTrials();
 
 // loop based on criteria
+// Create variable to log block-level feedback
+var block_level_feedback = {};
 var practiceCount = 0;
 var practiceNode = {
   timeline: [feedbackBlock].concat(practiceTrials),
   loop_function: function () {
+    let feedback = {};
     var responseGridData = jsPsych.data.get().filter({
       trial_id: 'practice_trial',
       condition: getCurrCondition(),
@@ -7575,14 +7581,19 @@ var practiceNode = {
       '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
 
     if (partialAccuracy < partialAccuracyThresh) {
-      feedbackText +=
-        '<p class = block-text>Your accuracy for the 4x4 grid is low.</p>' +
-        '<p class = block-text>Try your best to recall the black colored cells.</p>';
+      let text =
+        `<p class = block-text>Your accuracy for the 4x4 grid is low.</p>` +
+        `<p class = block-text>Try your best to recall the black colored cells.</p>`;
+      feedbackText += text;
+      feedback['accuracy'] = {
+        value: partialAccuracy,
+        text: text,
+      };
     }
 
     if (avgProcessingAcc < processingAccThresh) {
-      feedbackText +=
-        '<p class = block-text>Your accuracy for the 8x8 grid is low.</p>' +
+      let text =
+        `<p class = block-text>Your accuracy for the 8x8 grid is low.</p>` +
         `<p class = block-text>Try your best determining if the 8x8 grid is ${
           processingChoices[0].keyname === 'left button'
             ? 'symmetric'
@@ -7592,14 +7603,26 @@ var practiceNode = {
             ? 'asymmetric'
             : 'symmetric'
         } (right button).</p>`;
+      feedbackText += text;
+      feedback['accuracy'] = {
+        value: avgProcessingAcc,
+        text: text,
+      };
     }
     if (avgProcessingRT > processingRTThresh) {
-      feedbackText +=
-        '<p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>' +
+      let text =
+        `<p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>` +
         `<p class = block-text>Try to respond (left arrow/right arrow) as quickly and accurately as possible.</p>`;
+      feedbackText += text;
+      feedback['rt'] = {
+        value: avgProcessingRT,
+        text: text,
+      };
     }
 
     feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
+
+    block_level_feedback = feedback;
 
     expStage = 'test';
 
@@ -7667,6 +7690,7 @@ var testNode = {
     testTrials
   ),
   loop_function: function () {
+    let feedback = {};
     var responseGridData = jsPsych.data.get().filter({
       trial_id: 'test_trial',
       exp_stage: 'test',
@@ -7689,11 +7713,16 @@ var testNode = {
     );
 
     if (testCount == numTestBlocks) {
-      feedbackText = `
+      let text = `
         <div class=centerbox>
         <p class=block-text>Done with this task.</p>
         </div>
       `;
+      feedbackText += text;
+      feedback['done'] = {
+        value: true,
+        text: text,
+      };
 
       return false;
     } else {
@@ -7703,12 +7732,16 @@ var testNode = {
       feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
 
       if (partialAccuracy < partialAccuracyThresh) {
-        feedbackText +=
-          '<p class = block-text>Your accuracy for the 4x4 grid is low. Try your best to recall all the black colored cells.</p>';
+        let text = `<p class = block-text>Your accuracy for the 4x4 grid is low. Try your best to recall all the black colored cells.</p>`;
+        feedbackText += text;
+        feedback['accuracy'] = {
+          value: partialAccuracy,
+          text: text,
+        };
       }
       if (avgProcessingAcc < processingAccThresh) {
-        feedbackText +=
-          '<p class = block-text>Your accuracy for the 8x8 grid is low.</p>' +
+        let text =
+          `<p class = block-text>Your accuracy for the 8x8 grid is low.</p>` +
           `<p class = block-text>Try your best determining if the 8x8 grid is ${
             processingChoices[0].keyname === 'left button'
               ? 'symmetric'
@@ -7718,14 +7751,26 @@ var testNode = {
               ? 'asymmetric'
               : 'symmetric'
           } (right button).</p>`;
+        feedbackText += text;
+        feedback['accuracy'] = {
+          value: avgProcessingAcc,
+          text: text,
+        };
       }
       if (avgProcessingRT > processingRTThresh) {
-        feedbackText +=
-          '<p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>' +
+        let text =
+          `<p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>` +
           `<p class = block-text>Try to respond (left arrow/right arrow) as quickly and accurately as possible.</p>`;
+        feedbackText += text;
+        feedback['rt'] = {
+          value: avgProcessingRT,
+          text: text,
+        };
       }
 
       feedbackText += '</div>';
+
+      block_level_feedback = feedback;
 
       return true;
     }
