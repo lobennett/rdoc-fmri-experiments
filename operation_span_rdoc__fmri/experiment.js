@@ -7181,7 +7181,7 @@ var stimulusBlock = {
       block_num: stage === 'practice' ? practiceCount : testCount,
     };
   },
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   prompt: function () {
     return getExpStage() === 'practice' ? promptText : '';
   },
@@ -7236,7 +7236,6 @@ var waitBlock = {
   response_ends_trial: true,
   on_start: function () {
     var { trial_id } = jsPsych.data.get().last(1).trials[0];
-    console.log(trial_id);
 
     if (initializingTrialIDs.has(trial_id)) {
       trialList = generateSpatialTrialValues(numStimuli);
@@ -7399,7 +7398,7 @@ var practiceFeedbackBlock = {
       block_num: practiceCount,
     };
   },
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   stimulus_duration: 5000, // changed from 500
   trial_duration: 5000, // changed from 500
 };
@@ -7410,12 +7409,11 @@ var testTrial = {
     activeGrid = generateGrid();
     return activeGrid.html;
   },
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   data: function () {
     return {
       trial_id: getExpStage() == 'test' ? 'test_trial' : 'practice_trial',
       exp_stage: getExpStage(),
-      choices: ['NO_KEYS'],
       trial_duration: responseBlockDuration,
       stimulus_duration: responseBlockDuration,
     };
@@ -7494,7 +7492,7 @@ var ITIBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
   is_html: true,
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   data: function () {
     const stage = getExpStage();
     const commonData = {
@@ -7649,7 +7647,7 @@ testTrials = generateTestTrials();
 var long_fixation = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   data: function () {
     return {
       trial_id: 'test_long_fixation',
@@ -7712,7 +7710,7 @@ var testNode = {
       responseProcessingData
     );
 
-    if (testCount == numTestBlocks) {
+    if (testCount === numTestBlocks) {
       let text = `
         <div class=centerbox>
         <p class=block-text>Done with this task.</p>
@@ -7723,6 +7721,8 @@ var testNode = {
         value: true,
         text: text,
       };
+
+      block_level_feedback = feedback;
 
       return false;
     } else {
