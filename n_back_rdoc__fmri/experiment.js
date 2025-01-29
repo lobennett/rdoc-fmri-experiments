@@ -674,6 +674,8 @@ var testNode = {
         text: text,
       };
 
+      block_level_feedback = feedback;
+
       return false;
     } else {
       feedbackText =

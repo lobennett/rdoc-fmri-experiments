@@ -7663,6 +7663,8 @@ var testNode = {
         text: text,
       };
 
+      block_level_feedback = feedback;
+
       return false;
     } else {
       feedbackText =
@@ -7699,6 +7701,7 @@ var testNode = {
         };
       }
 
+      block_level_feedback = feedback;
       feedbackText += '</div>';
 
       return true;

@@ -629,6 +629,7 @@ var testNode = {
         value: true,
         text: text,
       };
+      block_level_feedback = feedback;
 
       return false;
     } else {
