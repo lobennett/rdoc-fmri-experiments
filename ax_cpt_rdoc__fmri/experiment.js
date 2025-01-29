@@ -619,11 +619,16 @@ var testNode = {
     var avgRT = sumRT / sumResponses;
 
     if (testCount === numTestBlocks) {
-      feedbackText = `
+      let text = `
         <div class=centerbox>
         <p class=block-text>Done with this task.</p>
         </div>
       `;
+      feedbackText += text;
+      feedback['done'] = {
+        value: true,
+        text: text,
+      };
 
       return false;
     } else {
