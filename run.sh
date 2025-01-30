@@ -64,10 +64,30 @@ done
 # Ask for run number
 read -p "Enter run number (e.g., 1): " run_num
 
+while true; do
+    read -p "Skip practice? (y/n): " skip_practice
+    if [[ "$skip_practice" =~ ^[yYnN]$ ]]; then
+        skip_practice=$([ "$skip_practice" = "y" -o "$skip_practice" = "Y" ] && echo "true" || echo "false")
+        break
+    else
+        echo "Invalid input. Please enter 'y' or 'n'."
+    fi
+done
+
+while true; do
+    read -p "Only complete a single block? (y/n): " single_block
+    if [[ "$single_block" =~ ^[yYnN]$ ]]; then
+        single_block=$([ "$single_block" = "y" -o "$single_block" = "Y" ] && echo "true" || echo "false")
+        break
+    else
+        echo "Invalid input. Please enter 'y' or 'n'."
+    fi
+done
+
 echo "Launching experiment $experiment_name with subject $subject_id, session $session_num, and run $run_num"
 
 # Launch with experiment factory deploy local and specify raw and bids directories
 raw_path="$(pwd)/.output/raw"
 bids_path="$(pwd)/.output/bids"
 echo "expfactory_deploy_local -e $experiment_name -raw $raw_path -bids $bids_path -sub $subject_id -ses $session_num -run $run_num"
-expfactory_deploy_local -e "$experiment_name" -raw "$raw_path" -bids "$bids_path" -sub "$subject_id" -ses "$session_num" -run "$run_num"
+expfactory_deploy_local -e "$experiment_name" -raw "$raw_path" -bids "$bids_path" -sub "$subject_id" -ses "$session_num" -run "$run_num" -skip_practice "$skip_practice" -single_block "$single_block"
