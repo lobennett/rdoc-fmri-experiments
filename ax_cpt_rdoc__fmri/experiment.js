@@ -225,11 +225,40 @@ var trialProportions = [
 ];
 
 /* ************ TASK LENGTH SETUP ************ */
-var numTestBlocks = 3; // 3 test blocks - 150 trials total
 var numTrialsPerBlock = trialProportions.length * 5; // 50 trials per test block
 var practiceLen = trialProportions.length / 2; // 5
 var currCondition = '';
-var expStage = 'practice';
+
+function load_context() {
+  return {
+    group_index:
+      typeof window.efVars !== 'undefined' ? window.efVars.group_index : 1,
+    skip_practice:
+      typeof window.efVars !== 'undefined'
+        ? window.efVars.skip_practice
+        : false,
+    single_block:
+      typeof window.efVars !== 'undefined' ? window.efVars.single_block : false,
+  };
+}
+
+var web_context = load_context();
+
+if (web_context.skip_practice) {
+  var expStage = 'test';
+} else {
+  var expStage = 'practice';
+}
+
+if (web_context.single_block) {
+  var numTestBlocks = 1;
+} else {
+  var numTestBlocks = 3; // 3 test blocks - 150 trials total
+}
+
+// TODO: Need trial designs here instead of end of practice block ...
+// - It's a good idea though, to fully customize the experiment from the command line
+
 /* ************************************ */
 /* Set up jsPsych blocks */
 /* ************************************ */
@@ -810,7 +839,9 @@ var ax_cpt_rdoc__fmri_init = () => {
   ax_cpt_rdoc__fmri_experiment.push(check_fingers_node);
 
   // Begin practice block - 1 max
-  ax_cpt_rdoc__fmri_experiment.push(practiceNode);
+  if (!web_context.skip_practice) {
+    ax_cpt_rdoc__fmri_experiment.push(practiceNode);
+  }
   ax_cpt_rdoc__fmri_experiment.push(feedbackBlock);
 
   // Prep scan
