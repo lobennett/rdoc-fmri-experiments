@@ -6600,7 +6600,7 @@ const OG_CHEIN_SYMM_GRIDS = [
     'black',
   ],
 ];
-function calculate_partial_accuracy(trials) {
+function calculate_accuracy_irrespective_of_cell_order(trials) {
   if (trials.length === 0) return 0; // Handle case where trials array is empty
 
   const totalAccuracy = trials.reduce((acc, trial) => {
@@ -6612,8 +6612,8 @@ function calculate_partial_accuracy(trials) {
     return acc + accuracy;
   }, 0);
 
-  const partialAccuracy = totalAccuracy / trials.length;
-  return partialAccuracy;
+  const accuracy_irrespective_of_cell_order = totalAccuracy / trials.length;
+  return accuracy_irrespective_of_cell_order;
 }
 
 const calculate_processing_accuracy = (trials) => {
@@ -7040,12 +7040,7 @@ const processingStimulusDuration = 2500; // changed from 3000
 const processingTrialDuration = 2500; // changed from 3000
 const responseBlockDuration = 7000; // changed from 5000
 
-var runAttentionChecks = true;
-var sumInstructTime = 0; // ms
-var instructTimeThresh = 5; // /in seconds
-
-var partialAccuracyThresh = 0.75;
-var practiceThresh = 3;
+var accuracy_irrespective_of_cell_order_thresh = 0.75;
 
 var processingChoices;
 
@@ -7555,43 +7550,49 @@ var practiceNode = {
   timeline: [feedbackBlock].concat(practiceTrials),
   loop_function: function () {
     let feedback = {};
-    var responseGridData = jsPsych.data.get().filter({
-      trial_id: 'practice_trial',
-      condition: getCurrCondition(),
-      block_num: getCurrBlockNum(),
-    }).trials;
-
-    var partialAccuracy = calculate_partial_accuracy(responseGridData);
-
     practiceCount += 1;
 
+    // 8x8 Processing trials
     var responseProcessingData = jsPsych.data.get().filter({
       trial_id: 'practice_inter-stimulus',
-      condition: 'operation',
       block_num: getCurrBlockNum() - 1, // since already indexed block above
     }).trials;
 
+    // Get accuracy and RT for 8x8 Processing trials
     const { avgProcessingAcc, avgProcessingRT } = calculate_processing_accuracy(
       responseProcessingData
     );
 
+    // 4x4 Grid trials
+    var responseGridData = jsPsych.data.get().filter({
+      trial_id: 'practice_trial',
+      block_num: getCurrBlockNum() - 1,
+    }).trials;
+
+    var accuracy_irrespective_of_cell_order =
+      calculate_accuracy_irrespective_of_cell_order(responseGridData);
+
     feedbackText =
       '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
 
-    if (partialAccuracy < partialAccuracyThresh) {
+    if (
+      accuracy_irrespective_of_cell_order <
+      accuracy_irrespective_of_cell_order_thresh
+    ) {
       let text =
-        `<p class = block-text>Your accuracy for the 4x4 grid is low.</p>` +
-        `<p class = block-text>Try your best to recall the black colored cells.</p>`;
+        '<p class = block-text>Your accuracy for the 4x4 grid is low.</p>' +
+        '<p class = block-text>Try your best to recall the black colored cells.</p>';
       feedbackText += text;
-      feedback['accuracy'] = {
-        value: partialAccuracy,
+      feedback['accuracy_irrespective_of_cell_order'] = {
+        value: accuracy_irrespective_of_cell_order,
         text: text,
       };
     }
 
     if (avgProcessingAcc < processingAccThresh) {
       let text =
-        `<p class = block-text>Your accuracy for the 8x8 grid is low.</p>` +
+        `
+        <p class = block-text>Your accuracy for the 8x8 grid is low.</p>` +
         `<p class = block-text>Try your best determining if the 8x8 grid is ${
           processingChoices[0].keyname === 'left button'
             ? 'symmetric'
@@ -7602,17 +7603,18 @@ var practiceNode = {
             : 'symmetric'
         } (right button).</p>`;
       feedbackText += text;
-      feedback['accuracy'] = {
+      feedback['processing_accuracy'] = {
         value: avgProcessingAcc,
         text: text,
       };
     }
     if (avgProcessingRT > processingRTThresh) {
       let text =
-        `<p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>` +
+        `
+        <p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>` +
         `<p class = block-text>Try to respond (left arrow/right arrow) as quickly and accurately as possible.</p>`;
       feedbackText += text;
-      feedback['rt'] = {
+      feedback['processing_rt'] = {
         value: avgProcessingRT,
         text: text,
       };
@@ -7623,7 +7625,6 @@ var practiceNode = {
     block_level_feedback = feedback;
 
     expStage = 'test';
-
     return false;
   },
 };
@@ -7689,20 +7690,21 @@ var testNode = {
   ),
   loop_function: function () {
     let feedback = {};
+    testCount += 1;
+
+    // 4x4 Grid trials
     var responseGridData = jsPsych.data.get().filter({
       trial_id: 'test_trial',
       exp_stage: 'test',
-      condition: getCurrCondition(),
-      block_num: getCurrBlockNum(),
+      block_num: getCurrBlockNum() - 1,
     }).trials;
 
-    var partialAccuracy = calculate_partial_accuracy(responseGridData);
+    var accuracy_irrespective_of_cell_order =
+      calculate_accuracy_irrespective_of_cell_order(responseGridData);
 
-    testCount += 1;
-
+    // 8x8 Processing trials
     var responseProcessingData = jsPsych.data.get().filter({
       trial_id: 'test_inter-stimulus',
-      condition: 'operation',
       block_num: getCurrBlockNum() - 1, // since already indexed block above
     }).trials;
 
@@ -7731,14 +7733,18 @@ var testNode = {
 
       feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
 
-      if (partialAccuracy < partialAccuracyThresh) {
+      if (
+        accuracy_irrespective_of_cell_order <
+        accuracy_irrespective_of_cell_order_thresh
+      ) {
         let text = `<p class = block-text>Your accuracy for the 4x4 grid is low. Try your best to recall all the black colored cells.</p>`;
         feedbackText += text;
-        feedback['accuracy'] = {
-          value: partialAccuracy,
+        feedback['accuracy_irrespective_of_cell_order'] = {
+          value: accuracy_irrespective_of_cell_order,
           text: text,
         };
       }
+
       if (avgProcessingAcc < processingAccThresh) {
         let text =
           `<p class = block-text>Your accuracy for the 8x8 grid is low.</p>` +
@@ -7752,17 +7758,18 @@ var testNode = {
               : 'symmetric'
           } (right button).</p>`;
         feedbackText += text;
-        feedback['accuracy'] = {
+        feedback['processing_accuracy'] = {
           value: avgProcessingAcc,
           text: text,
         };
       }
+
       if (avgProcessingRT > processingRTThresh) {
         let text =
           `<p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>` +
           `<p class = block-text>Try to respond (left arrow/right arrow) as quickly and accurately as possible.</p>`;
         feedbackText += text;
-        feedback['rt'] = {
+        feedback['processing_rt'] = {
           value: avgProcessingRT,
           text: text,
         };

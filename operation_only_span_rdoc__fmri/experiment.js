@@ -6601,22 +6601,6 @@ const OG_CHEIN_SYMM_GRIDS = [
   ],
 ];
 
-function calculate_partial_accuracy(trials) {
-  if (trials.length === 0) return 0; // Handle case where trials array is empty
-
-  const totalAccuracy = trials.reduce((acc, trial) => {
-    const { response, spatial_sequence } = trial;
-    const correctCount = spatial_sequence.filter((item) =>
-      response.includes(item)
-    ).length;
-    const accuracy = correctCount / spatial_sequence.length;
-    return acc + accuracy;
-  }, 0);
-
-  const partialAccuracy = totalAccuracy / trials.length;
-  return partialAccuracy;
-}
-
 const calculate_processing_accuracy = (trials) => {
   var correct_trials = 0;
   var total_trials = 0;
@@ -7027,12 +7011,6 @@ const processingStimulusDuration = 2500; // changed from 3000
 const processingTrialDuration = 2500; // changed from 3000
 const responseBlockDuration = 7000; // changed from 5000
 
-var sumInstructTime = 0; // ms
-var instructTimeThresh = 5; // /in seconds
-
-var partialAccuracyThresh = 0.75;
-var practiceThresh = 3;
-
 var processingChoices;
 
 function getKeyMappingForTask(motor_perm) {
@@ -7051,7 +7029,6 @@ function getKeyMappingForTask(motor_perm) {
 
 var processingAccThresh = 0.85;
 var processingRTThresh = 1000;
-var processingMissedThresh = 0.1;
 
 var practiceLen = 1;
 var numTrialsPerBlock = 8;
@@ -7338,7 +7315,6 @@ var practiceFeedbackBlock = {
   stimulus: function () {
     var responseProcessingData = jsPsych.data.get().filter({
       trial_id: 'practice_inter-stimulus',
-      condition: 'operation',
       block_num: getCurrBlockNum(),
     }).trials;
 
@@ -7525,12 +7501,13 @@ var practiceNode = {
     let feedback = {};
     practiceCount += 1;
 
+    // 8x8 Processing trials
     var responseProcessingData = jsPsych.data.get().filter({
       trial_id: 'practice_inter-stimulus',
-      condition: 'operation',
       block_num: getCurrBlockNum() - 1, // since already indexed block above
     }).trials;
 
+    // Get accuracy and RT for 8x8 Processing trials
     const { avgProcessingAcc, avgProcessingRT } = calculate_processing_accuracy(
       responseProcessingData
     );
@@ -7552,7 +7529,7 @@ var practiceNode = {
             : 'symmetric'
         } (right button).</p>`;
       feedbackText += text;
-      feedback['accuracy'] = {
+      feedback['processing_accuracy'] = {
         value: avgProcessingAcc,
         text: text,
       };
@@ -7563,7 +7540,7 @@ var practiceNode = {
         <p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>` +
         `<p class = block-text>Try to respond (left arrow/right arrow) as quickly and accurately as possible.</p>`;
       feedbackText += text;
-      feedback['rt'] = {
+      feedback['processing_rt'] = {
         value: avgProcessingRT,
         text: text,
       };
@@ -7641,12 +7618,13 @@ var testNode = {
     let feedback = {};
     testCount += 1;
 
+    // 8x8 Processing trials
     var responseProcessingData = jsPsych.data.get().filter({
       trial_id: 'test_inter-stimulus',
-      condition: 'operation',
       block_num: getCurrBlockNum() - 1, // since already indexed block above
     }).trials;
 
+    // Get accuracy and RT for 8x8 Processing trials
     const { avgProcessingAcc, avgProcessingRT } = calculate_processing_accuracy(
       responseProcessingData
     );
@@ -7685,7 +7663,7 @@ var testNode = {
               : 'symmetric'
           } (right button).</p>`;
         feedbackText += text;
-        feedback['accuracy'] = {
+        feedback['processing_accuracy'] = {
           value: avgProcessingAcc,
           text: text,
         };
@@ -7695,7 +7673,7 @@ var testNode = {
           `<p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>` +
           `<p class = block-text>Try to respond (left arrow/right arrow) as quickly and accurately as possible.</p>`;
         feedbackText += text;
-        feedback['rt'] = {
+        feedback['processing_rt'] = {
           value: avgProcessingRT,
           text: text,
         };
