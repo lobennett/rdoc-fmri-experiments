@@ -657,16 +657,15 @@ for (i = 0; i < practiceLen + 1; i++) {
   var practice_cue_block = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getCue,
-    choices: ['NO_KEYS'],
+    response_ends_trial: false,
     data: {
       exp_stage: 'practice',
       trial_id: 'practice_cue',
       trial_duration: 150,
       stimulus_duration: 150,
     },
-    trial_duration: 150, // getCTI
-    stimulus_duration: 150, // getCTI
-
+    trial_duration: 150,
+    stimulus_duration: 150,
     prompt: () => prompt_text,
     on_finish: (data) => (data['block_num'] = practiceCount),
   };
@@ -696,7 +695,7 @@ for (i = 0; i < practiceLen + 1; i++) {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
     is_html: true,
-    choices: ['NO_KEYS'],
+    response_ends_trial: false,
     data: function () {
       const stage = getExpStage();
       return {
@@ -747,7 +746,7 @@ for (i = 0; i < practiceLen + 1; i++) {
         block_num: practiceCount,
       };
     },
-    choices: ['NO_KEYS'],
+    response_ends_trial: false,
     stimulus_duration: 500,
     trial_duration: 500,
     prompt: () => prompt_text,
@@ -760,12 +759,13 @@ for (i = 0; i < practiceLen + 1; i++) {
   );
 }
 
+var block_level_feedback = {};
 var practiceCount = 0;
 var practiceNode = {
   timeline: [feedbackBlock].concat(practiceTrials),
   loop_function: function (data) {
+    let feedback = {};
     practiceCount += 1;
-
     current_trial = 0;
 
     var sum_rt = 0;
@@ -779,10 +779,10 @@ var practiceNode = {
         data.trials[i].block_num == getCurrBlockNum() - 1
       ) {
         total_trials += 1;
-        if (data.trials[i].rt != null) {
+        if (data.trials[i].rt !== null) {
           sum_rt += data.trials[i].rt;
           sum_responses += 1;
-          if (data.trials[i].response == data.trials[i].correct_response) {
+          if (data.trials[i].response === data.trials[i].correct_response) {
             correct += 1;
           }
         }
@@ -797,22 +797,37 @@ var practiceNode = {
       '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
 
     if (accuracy < practice_accuracy_thresh) {
-      feedbackText += `
+      let text = `
           <p class="block-text">Your accuracy is low. Remember:</p>
           ${prompt_text_list}
         `;
+      feedbackText += text;
+      feedback['accuracy'] = {
+        value: accuracy,
+        text: text,
+      };
     }
 
     if (ave_rt > rt_thresh) {
-      feedbackText += `
+      let text = `
         <p class="block-text">You have been responding too slowly.${speedReminder}</p>
       `;
+      feedbackText += text;
+      feedback['rt'] = {
+        value: ave_rt,
+        text: text,
+      };
     }
 
     if (missed_responses > missed_response_thresh) {
-      feedbackText += `
+      let text = `
           <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>
         `;
+      feedbackText += text;
+      feedback['missed_responses'] = {
+        value: missed_responses,
+        text: text,
+      };
     }
 
     feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
@@ -823,6 +838,7 @@ var practiceNode = {
     task_switches = trial_designs;
     stims = createTrialTypes(task_switches);
     expStage = 'test';
+    block_level_feedback = feedback;
     return false;
   },
 };
@@ -841,16 +857,15 @@ for (i = 0; i < numTrialsPerBlock + 1; i++) {
   var cue_block = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getCue,
-    choices: ['NO_KEYS'],
+    response_ends_trial: false,
     data: {
       exp_stage: 'test',
       trial_id: 'test_cue',
       trial_duration: 150,
       stimulus_duration: 150,
     },
-    trial_duration: 150, // getCTI
-    stimulus_duration: 150, // getCTI
-
+    trial_duration: 150,
+    stimulus_duration: 150,
     on_finish: (data) => (data['block_num'] = practiceCount),
   };
 
@@ -879,7 +894,7 @@ for (i = 0; i < numTrialsPerBlock + 1; i++) {
 var long_fixation = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   data: function () {
     return {
       trial_id: 'test_long_fixation',
@@ -910,6 +925,7 @@ var testNode = {
     testTrials
   ),
   loop_function: function (data) {
+    let feedback = {};
     testCount += 1;
     current_trial = 0;
 
@@ -939,9 +955,15 @@ var testNode = {
     var ave_rt = sum_rt / sum_responses;
 
     if (testCount === numTestBlocks) {
-      feedbackText = `<div class=centerbox>
+      let text = `<div class=centerbox>
         <p class=block-text>Done with this task.</p>
         </div>`;
+      feedbackText += text;
+      feedback['done'] = {
+        value: true,
+        text: text,
+      };
+      block_level_feedback = feedback;
 
       return false;
     } else {
@@ -951,22 +973,37 @@ var testNode = {
       feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
 
       if (accuracy < accuracy_thresh) {
-        feedbackText += `
+        let text = `
           <p class="block-text">Your accuracy is low. Remember:</p>
           ${prompt_text_list}
         `;
+        feedbackText += text;
+        feedback['accuracy'] = {
+          value: accuracy,
+          text: text,
+        };
       }
 
       if (ave_rt > rt_thresh) {
-        feedbackText += `
-        <p class="block-text">You have been responding too slowly.${speedReminder}</p>
-      `;
+        let text = `
+          <p class="block-text">You have been responding too slowly.${speedReminder}</p>
+        `;
+        feedbackText += text;
+        feedback['rt'] = {
+          value: ave_rt,
+          text: text,
+        };
       }
 
       if (missed_responses > missed_response_thresh) {
-        feedbackText += `
+        let text = `
           <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>
         `;
+        feedbackText += text;
+        feedback['missed_responses'] = {
+          value: missed_responses,
+          text: text,
+        };
       }
 
       feedbackText += '</div>';
@@ -976,6 +1013,7 @@ var testNode = {
       trial_designs = parse_design(trial_designs);
       task_switches = trial_designs;
       stims = createTrialTypes(task_switches);
+      block_level_feedback = feedback;
       return true;
     }
   },
