@@ -7065,7 +7065,6 @@ getKeyMappingForTask(group_index);
 
 var processingAccThresh = 0.85;
 var processingRTThresh = 1000;
-var processingMissedThresh = 0.1;
 
 var practiceLen = 1;
 var numTrialsPerBlock = 8;

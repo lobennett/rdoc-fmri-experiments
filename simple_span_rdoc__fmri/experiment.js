@@ -312,7 +312,6 @@ const responseBlockDuration = 7000; // changed from 5000
 
 var accuracyThresh = 0.6;
 var partialAccuracyThresh = 0.75;
-var missedResponseThresh = 0.1;
 
 var practiceLen = 1;
 var numTrialsPerBlock = 8;
