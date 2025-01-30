@@ -227,7 +227,6 @@ const setText = () => {
 
 var practiceFeedbackBlock = {
   type: jsPsychHtmlKeyboardResponse,
-  on_load: () => console.log('loading'),
   stimulus: function () {
     var last = jsPsych.data.get().last(1).trials[0];
     if (last.response == null) {
@@ -262,7 +261,7 @@ var practiceFeedbackBlock = {
       block_num: practiceCount,
     };
   },
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   stimulus_duration: 500,
   trial_duration: 500,
   prompt: () => promptText,
@@ -289,9 +288,11 @@ var feedbackBlock = {
     const { trial_id } = jsPsych.data.get().last().trials[0];
     return trial_id === 'check_middle';
   },
+  on_finish: function (data) {
+    data['block_level_feedback'] = block_level_feedback;
+  },
 };
 
-var motor_perm = null;
 var design_perm = null;
 var motor_and_design_perm_block = {
   type: jsPsychSurvey,
@@ -300,13 +301,6 @@ var motor_and_design_perm_block = {
       {
         type: 'html',
         prompt: 'fMRI setup',
-      },
-      {
-        type: 'multi-choice',
-        prompt: 'Select the motor perm:',
-        name: 'motor_perm',
-        options: [0],
-        required: true,
       },
       {
         type: 'multi-choice',
@@ -319,9 +313,7 @@ var motor_and_design_perm_block = {
   ],
   button_label_finish: 'Submit',
   on_finish: function (data) {
-    data['motor_perm'] = data.response.motor_perm;
     data['design_perm'] = data.response.design_perm;
-    motor_perm = data.response.motor_perm;
     design_perm = data.response.design_perm;
 
     setText();
@@ -335,7 +327,7 @@ var ITIBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: images.left.box + images.right.box + fixation,
   is_html: true,
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   data: function () {
     const stage = getExpStage();
     return {
@@ -370,7 +362,7 @@ for (let i = 0; i < practiceLen; i++) {
   var cueBlock = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getCue,
-    choices: ['NO_KEYS'],
+    response_ends_trial: false,
     data: function () {
       return {
         trial_id: 'practice_cue',
@@ -387,7 +379,7 @@ for (let i = 0; i < practiceLen; i++) {
   var ctiBlock = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: images.left.box + images.right.box + fixation,
-    choices: ['NO_KEYS'],
+    response_ends_trial: false,
     data: {
       trial_id: 'practice_CTI',
       exp_stage: 'practice',
@@ -432,10 +424,12 @@ for (let i = 0; i < practiceLen; i++) {
 }
 
 // loop based on criteria
+var block_level_feedback = {};
 var practiceCount = 0;
 var practiceNode = {
   timeline: [feedbackBlock].concat(practiceTrials),
   loop_function: function (data) {
+    let feedback = {};
     practiceCount += 1;
 
     var sumRT = 0;
@@ -449,10 +443,10 @@ var practiceNode = {
         data.trials[i].block_num == getCurrBlockNum() - 1
       ) {
         totalTrials += 1;
-        if (data.trials[i].rt != null) {
+        if (data.trials[i].rt !== null) {
           sumRT += data.trials[i].rt;
           sumResponses += 1;
-          if (data.trials[i].correct_trial == 1) {
+          if (data.trials[i].correct_trial === 1) {
             correct += 1;
           }
         }
@@ -466,22 +460,37 @@ var practiceNode = {
       '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
 
     if (accuracy < practiceAccuracyThresh) {
-      feedbackText += `
+      let text = `
         <p class="block-text">Your accuracy is low. Remember: </p>
         ${responseKeys}
       `;
+      feedbackText += text;
+      block_level_feedback['accuracy'] = {
+        value: accuracy,
+        text: text,
+      };
     }
 
     if (avgRT > rtThresh) {
-      feedbackText += `
+      let text = `
         <p class="block-text">You have been responding too slowly. Try to respond as quickly and accurately as possible.</p>
       `;
+      feedbackText += text;
+      block_level_feedback['rt'] = {
+        value: avgRT,
+        text: text,
+      };
     }
 
     if (missedResponses > missedResponseThresh) {
-      feedbackText += `
+      let text = `
         <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>
       `;
+      feedbackText += text;
+      block_level_feedback['missed_responses'] = {
+        value: missedResponses,
+        text: text,
+      };
     }
 
     feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
@@ -489,6 +498,7 @@ var practiceNode = {
     expStage = 'test';
 
     blockStims = stim_designs;
+    block_level_feedback = feedback;
 
     return false;
   },
@@ -499,7 +509,7 @@ for (i = 0; i < numTrialsPerBlock; i++) {
   var cueBlock = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getCue,
-    choices: ['NO_KEYS'],
+    response_ends_trial: false,
     data: function () {
       return {
         trial_id: 'test_cue',
@@ -515,7 +525,7 @@ for (i = 0; i < numTrialsPerBlock; i++) {
   var ctiBlock = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: images.left.box + images.right.box + fixation,
-    choices: ['NO_KEYS'],
+    response_ends_trial: false,
     data: {
       trial_id: 'test_CTI',
       exp_stage: 'test',
@@ -553,7 +563,7 @@ for (i = 0; i < numTrialsPerBlock; i++) {
 var long_fixation = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   data: function () {
     return {
       trial_id: 'test_long_fixation',
@@ -606,10 +616,10 @@ var testNode = {
         data.trials[i].block_num == getCurrBlockNum() - 1
       ) {
         totalTrials += 1;
-        if (data.trials[i].rt != null) {
+        if (data.trials[i].rt !== null) {
           sumRT += data.trials[i].rt;
           sumResponses += 1;
-          if (data.trials[i].correct_trial == 1) {
+          if (data.trials[i].correct_trial === 1) {
             correct += 1;
           }
         }
@@ -621,11 +631,16 @@ var testNode = {
     var avgRT = sumRT / sumResponses;
 
     if (testCount === numTestBlocks) {
-      feedbackText = `
+      text = `
         <div class=centerbox>
         <p class=block-text>Done with this task.</p>
         </div>
       `;
+      feedbackText += text;
+      block_level_feedback['done'] = {
+        value: true,
+        text: text,
+      };
       return false;
     } else {
       feedbackText =
@@ -634,22 +649,37 @@ var testNode = {
       feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
 
       if (accuracy < accuracyThresh) {
-        feedbackText += `
+        let text = `
         <p class="block-text">Your accuracy is low. Remember: </p>
         ${responseKeys}
       `;
+        feedbackText += text;
+        block_level_feedback['accuracy'] = {
+          value: accuracy,
+          text: text,
+        };
       }
 
       if (avgRT > rtThresh) {
-        feedbackText += `
+        let text = `
         <p class="block-text">You have been responding too slowly. Try to respond as quickly and accurately as possible.</p>
       `;
+        feedbackText += text;
+        block_level_feedback['rt'] = {
+          value: avgRT,
+          text: text,
+        };
       }
 
       if (missedResponses > missedResponseThresh) {
-        feedbackText += `
+        let text = `
         <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>
       `;
+        feedbackText += text;
+        block_level_feedback['missed_responses'] = {
+          value: missedResponses,
+          text: text,
+        };
       }
 
       feedbackText += '</div>';
