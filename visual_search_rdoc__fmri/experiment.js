@@ -594,7 +594,7 @@ var practiceTrials = [];
 for (let i = 0; i < practiceLen; i++) {
   practiceTrials.push(ITIBlock, testTrial, practiceFeedbackBlock);
 }
-
+var block_level_feedback = {};
 var practiceNode = {
   timeline: [feedbackBlock].concat(practiceTrials),
   loop_function: function (data) {
