@@ -34,8 +34,9 @@ function remove_extra_designs {
             remove_designs 6 10
         fi
         if [[ "$dir" == "../n_back_rdoc__fmri" ]]; then
-            echo "Found n_back_rdoc__fmri directory"
-            remove_designs 11 20
+            echo "Skipping n_back_rdoc__fmri directory"
+            remove_designs 10 10
+            remove_designs 12 20
         fi
         if [[ "$dir" == "../operation_only_span_rdoc__fmri" ]]; then
             echo "Found operation_only_span_rdoc__fmri directory"
@@ -108,6 +109,28 @@ function rename_remaining_designs {
                 mv "$dir/designs/design_8" "$dir/designs/design_3"
                 mv "$dir/designs/design_9" "$dir/designs/design_4"
                 mv "$dir/designs/design_10" "$dir/designs/design_5"
+            fi
+            if [[ "$dir" == "../n_back_rdoc__fmri" ]]; then
+                # Rename to make all odd designs starting with 1-back and even designs starting with 2-back
+                # - doing odd first 
+                # mv "$dir/designs/design_1" "$dir/designs/design_1"
+                mv "$dir/designs/design_2" "$dir/designs/design_03"
+                mv "$dir/designs/design_3" "$dir/designs/design_05"
+                mv "$dir/designs/design_4" "$dir/designs/design_07"
+                mv "$dir/designs/design_11" "$dir/designs/design_09"
+
+                # - doing even next
+                mv "$dir/designs/design_5" "$dir/designs/design_2"
+                mv "$dir/designs/design_6" "$dir/designs/design_4"
+                mv "$dir/designs/design_7" "$dir/designs/design_6"
+                # mv "$dir/designs/design_8" "$dir/designs/design_8"
+                mv "$dir/designs/design_9" "$dir/designs/design_10"
+
+                # - renaming because otherwise would've conflicted with 1-back designs
+                mv "$dir/designs/design_03" "$dir/designs/design_3"
+                mv "$dir/designs/design_05" "$dir/designs/design_5"
+                mv "$dir/designs/design_07" "$dir/designs/design_7"
+                mv "$dir/designs/design_09" "$dir/designs/design_9"
             fi
         fi
     done
