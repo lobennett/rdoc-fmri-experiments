@@ -116,13 +116,14 @@ function getKeyMappingForTask(motor_perm) {
       ['middle finger', 'g', 'middle finger'], // blue
       ['index finger', 'y', 'index finger'], // green
     ];
-  } else {
-    // motor_perm === 5
+  } else if (motor_perm === 5) {
     possibleResponses = [
       ['index finger', 'y', 'index finger'], // blue
       ['ring finger', 'c', 'ring finger'], // red
       ['middle finger', 'g', 'middle finger'], // green
     ];
+  } else {
+    throw new Error('Invalid motor perm');
   }
 }
 
