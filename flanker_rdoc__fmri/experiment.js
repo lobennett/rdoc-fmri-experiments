@@ -548,8 +548,8 @@ for (i = 0; i < numTrialsPerBlock; i++) {
         trial_id: 'test_trial',
         exp_stage: 'test',
         choices: choices,
-        trial_duration: stimStimulusDuration,
-        stimulus_duration: stimTrialDuration,
+        trial_duration: stimTrialDuration,
+        stimulus_duration: stimStimulusDuration,
         block_num: testCount,
       });
     },
