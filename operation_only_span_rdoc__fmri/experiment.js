@@ -6601,22 +6601,6 @@ const OG_CHEIN_SYMM_GRIDS = [
   ],
 ];
 
-function calculate_partial_accuracy(trials) {
-  if (trials.length === 0) return 0; // Handle case where trials array is empty
-
-  const totalAccuracy = trials.reduce((acc, trial) => {
-    const { response, spatial_sequence } = trial;
-    const correctCount = spatial_sequence.filter((item) =>
-      response.includes(item)
-    ).length;
-    const accuracy = correctCount / spatial_sequence.length;
-    return acc + accuracy;
-  }, 0);
-
-  const partialAccuracy = totalAccuracy / trials.length;
-  return partialAccuracy;
-}
-
 const calculate_processing_accuracy = (trials) => {
   var correct_trials = 0;
   var total_trials = 0;
@@ -7027,12 +7011,6 @@ const processingStimulusDuration = 2500; // changed from 3000
 const processingTrialDuration = 2500; // changed from 3000
 const responseBlockDuration = 7000; // changed from 5000
 
-var sumInstructTime = 0; // ms
-var instructTimeThresh = 5; // /in seconds
-
-var partialAccuracyThresh = 0.75;
-var practiceThresh = 3;
-
 var processingChoices;
 
 function getKeyMappingForTask(motor_perm) {
@@ -7051,7 +7029,6 @@ function getKeyMappingForTask(motor_perm) {
 
 var processingAccThresh = 0.85;
 var processingRTThresh = 1000;
-var processingMissedThresh = 0.1;
 
 var practiceLen = 1;
 var numTrialsPerBlock = 8;
@@ -7137,6 +7114,9 @@ var feedbackBlock = {
     const { trial_id } = jsPsych.data.get().last().trials[0];
     return trial_id === 'check_middle';
   },
+  on_finish: function (data) {
+    data['block_level_feedback'] = block_level_feedback;
+  },
 };
 
 var expStage = 'practice';
@@ -7157,7 +7137,7 @@ var stimulusBlock = {
       block_num: stage === 'practice' ? practiceCount : testCount,
     };
   },
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   prompt: function () {
     return getExpStage() === 'practice' ? promptText : '';
   },
@@ -7187,6 +7167,7 @@ var timerInitializingTrialIDs = new Set([
   'test_ITI',
   'test_stim',
   'test_long_fixation',
+  'fmri_wait_block_trigger_end',
 ]);
 
 var waitBlock = {
@@ -7334,7 +7315,6 @@ var practiceFeedbackBlock = {
   stimulus: function () {
     var responseProcessingData = jsPsych.data.get().filter({
       trial_id: 'practice_inter-stimulus',
-      condition: 'operation',
       block_num: getCurrBlockNum(),
     }).trials;
 
@@ -7361,7 +7341,7 @@ var practiceFeedbackBlock = {
       block_num: practiceCount,
     };
   },
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   stimulus_duration: 5000, // changed from 500
   trial_duration: 5000, // changed from 500
 };
@@ -7372,12 +7352,11 @@ var testTrial = {
     activeGrid = generateGrid();
     return activeGrid.html;
   },
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   data: function () {
     return {
       trial_id: getExpStage() == 'test' ? 'test_trial' : 'practice_trial',
       exp_stage: getExpStage(),
-      choices: ['NO_KEYS'],
       trial_duration: responseBlockDuration,
       stimulus_duration: responseBlockDuration,
     };
@@ -7457,7 +7436,7 @@ var ITIBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
   is_html: true,
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   data: function () {
     const stage = getExpStage();
     const commonData = {
@@ -7513,18 +7492,22 @@ function generatePracticeTrials() {
 practiceTrials = generatePracticeTrials();
 
 // loop based on criteria
+// Create variable to log block-level feedback
+var block_level_feedback = {};
 var practiceCount = 0;
 var practiceNode = {
   timeline: [feedbackBlock].concat(practiceTrials),
   loop_function: function () {
+    let feedback = {};
     practiceCount += 1;
 
+    // 8x8 Processing trials
     var responseProcessingData = jsPsych.data.get().filter({
       trial_id: 'practice_inter-stimulus',
-      condition: 'operation',
       block_num: getCurrBlockNum() - 1, // since already indexed block above
     }).trials;
 
+    // Get accuracy and RT for 8x8 Processing trials
     const { avgProcessingAcc, avgProcessingRT } = calculate_processing_accuracy(
       responseProcessingData
     );
@@ -7533,8 +7516,9 @@ var practiceNode = {
       '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
 
     if (avgProcessingAcc < processingAccThresh) {
-      feedbackText +=
-        '<p class = block-text>Your accuracy for the 8x8 grid is low.</p>' +
+      let text =
+        `
+        <p class = block-text>Your accuracy for the 8x8 grid is low.</p>` +
         `<p class = block-text>Try your best determining if the 8x8 grid is ${
           processingChoices[0].keyname === 'left button'
             ? 'symmetric'
@@ -7544,14 +7528,27 @@ var practiceNode = {
             ? 'asymmetric'
             : 'symmetric'
         } (right button).</p>`;
+      feedbackText += text;
+      feedback['processing_accuracy'] = {
+        value: avgProcessingAcc,
+        text: text,
+      };
     }
     if (avgProcessingRT > processingRTThresh) {
-      feedbackText +=
-        '<p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>' +
+      let text =
+        `
+        <p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>` +
         `<p class = block-text>Try to respond (left arrow/right arrow) as quickly and accurately as possible.</p>`;
+      feedbackText += text;
+      feedback['processing_rt'] = {
+        value: avgProcessingRT,
+        text: text,
+      };
     }
 
     feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
+
+    block_level_feedback = feedback;
 
     expStage = 'test';
     return false;
@@ -7577,7 +7574,7 @@ testTrials = generateTestTrials();
 var long_fixation = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   data: function () {
     return {
       trial_id: 'test_long_fixation',
@@ -7618,24 +7615,33 @@ var testNode = {
     testTrials
   ),
   loop_function: function () {
+    let feedback = {};
     testCount += 1;
 
+    // 8x8 Processing trials
     var responseProcessingData = jsPsych.data.get().filter({
       trial_id: 'test_inter-stimulus',
-      condition: 'operation',
       block_num: getCurrBlockNum() - 1, // since already indexed block above
     }).trials;
 
+    // Get accuracy and RT for 8x8 Processing trials
     const { avgProcessingAcc, avgProcessingRT } = calculate_processing_accuracy(
       responseProcessingData
     );
 
     if (testCount === numTestBlocks) {
-      feedbackText = `
+      let text = `
         <div class=centerbox>
         <p class=block-text>Done with this task.</p>
         </div>
       `;
+      feedbackText += text;
+      feedback['done'] = {
+        value: true,
+        text: text,
+      };
+
+      block_level_feedback = feedback;
 
       return false;
     } else {
@@ -7645,7 +7651,7 @@ var testNode = {
       feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
 
       if (avgProcessingAcc < processingAccThresh) {
-        feedbackText +=
+        let text =
           '<p class = block-text>Your accuracy for the 8x8 grid is low.</p>' +
           `<p class = block-text>Try your best determining if the 8x8 grid is ${
             processingChoices[0].keyname === 'left button'
@@ -7656,13 +7662,24 @@ var testNode = {
               ? 'asymmetric'
               : 'symmetric'
           } (right button).</p>`;
+        feedbackText += text;
+        feedback['processing_accuracy'] = {
+          value: avgProcessingAcc,
+          text: text,
+        };
       }
       if (avgProcessingRT > processingRTThresh) {
-        feedbackText +=
-          '<p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>' +
+        let text =
+          `<p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>` +
           `<p class = block-text>Try to respond (left arrow/right arrow) as quickly and accurately as possible.</p>`;
+        feedbackText += text;
+        feedback['processing_rt'] = {
+          value: avgProcessingRT,
+          text: text,
+        };
       }
 
+      block_level_feedback = feedback;
       feedbackText += '</div>';
 
       return true;

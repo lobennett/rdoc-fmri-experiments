@@ -116,13 +116,14 @@ function getKeyMappingForTask(motor_perm) {
       ['middle finger', 'g', 'middle finger'], // blue
       ['index finger', 'y', 'index finger'], // green
     ];
-  } else {
-    // motor_perm === 5
+  } else if (motor_perm === 5) {
     possibleResponses = [
       ['index finger', 'y', 'index finger'], // blue
       ['ring finger', 'c', 'ring finger'], // red
       ['middle finger', 'g', 'middle finger'], // green
     ];
+  } else {
+    throw new Error('Invalid motor perm');
   }
 }
 
@@ -422,7 +423,7 @@ var feedbackInstructBlock = {
 var fixationBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class="centerbox"><div class="fixation">+</div></div>',
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   data: {
     trial_id: 'test_fixation',
     exp_stage: 'test',
@@ -437,7 +438,7 @@ var fixationBlock = {
 var practiceFixationBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class="centerbox"><div class="fixation">+</div></div>',
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   data: {
     trial_id: 'practice_fixation',
     exp_stage: 'practice',
@@ -462,7 +463,7 @@ var practiceFeedbackBlock = {
       block_num: practiceCount,
     };
   },
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   stimulus_duration: 500,
   trial_duration: 500,
   prompt: () => promptText,
@@ -489,6 +490,9 @@ var feedbackBlock = {
     const { trial_id } = jsPsych.data.get().last().trials[0];
     return trial_id === 'check_middle';
   },
+  on_finish: function (data) {
+    data['block_level_feedback'] = block_level_feedback;
+  },
 };
 
 var ITIms = null;
@@ -498,7 +502,7 @@ var ITIBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
   is_html: true,
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   data: function () {
     const stage = getExpStage();
     return {
@@ -606,10 +610,12 @@ for (i = 0; i < practiceLen; i++) {
 }
 
 // loop based on criteria
+var block_level_feedback = {};
 var practiceCount = 0;
 var practiceNode = {
   timeline: [feedbackBlock].concat(practiceTrials),
   loop_function: function (data) {
+    let feedback = {};
     practiceCount += 1;
 
     var sumRT = 0;
@@ -623,7 +629,7 @@ var practiceNode = {
         data.trials[i].block_num == getCurrBlockNum() - 1
       ) {
         totalTrials += 1;
-        if (data.trials[i].rt != null) {
+        if (data.trials[i].rt !== null) {
           sumRT += data.trials[i].rt;
           sumResponses += 1;
           if (data.trials[i].correct_trial === 1) {
@@ -640,19 +646,34 @@ var practiceNode = {
       '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
 
     if (accuracy < practiceAccuracyThresh) {
-      feedbackText += `
+      let text = `
           <p class="block-text">Your accuracy is low. Remember:</p>
           ${responseKeys}`;
+      feedbackText += text;
+      feedback['accuracy'] = {
+        value: accuracy,
+        text: text,
+      };
     }
 
     if (avgRT > rtThresh) {
-      feedbackText += `
+      let text = `
           <p class="block-text">You have been responding too slowly. Try to respond as quickly and accurately as possible.</p>`;
+      feedbackText += text;
+      feedback['rt'] = {
+        value: avgRT,
+        text: text,
+      };
     }
 
     if (missedResponses > missedResponseThresh) {
-      feedbackText += `
+      let text = `
           <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>`;
+      feedbackText += text;
+      feedback['missed_responses'] = {
+        value: missedResponses,
+        text: text,
+      };
     }
 
     feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
@@ -661,6 +682,8 @@ var practiceNode = {
 
     let block_designs = stim_designs.slice(0, numTrialsPerBlock);
     stim_designs = stim_designs.slice(numTrialsPerBlock);
+
+    block_level_feedback = feedback;
 
     blockStims = create_test_stimuli(block_designs);
 
@@ -707,7 +730,7 @@ var feedback_node = {
 var long_fixation = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   data: function () {
     return {
       trial_id: 'test_long_fixation',
@@ -738,6 +761,7 @@ var testNode = {
     testTrials
   ),
   loop_function: function (data) {
+    let feedback = {};
     testCount += 1;
 
     var sumRT = 0;
@@ -766,33 +790,56 @@ var testNode = {
     var avgRT = sumRT / sumResponses;
 
     if (testCount === numTestBlocks) {
-      feedbackText = `<div class=centerbox>
+      let text = `<div class=centerbox>
         <p class=block-text>Done with this task.</p>
         </div>`;
+      feedbackText = text;
+      feedback['done'] = {
+        value: true,
+        text: text,
+      };
+      block_level_feedback = feedback;
       return false;
     } else {
       feedbackText =
-        '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 1 minute.</p>';
+        '<div class = centerbox><p class = block-text>Please take this time to read your feedback!</p>';
 
       feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
 
       if (accuracy < accuracyThresh) {
-        feedbackText += `
+        let text = `
           <p class="block-text">Your accuracy is low. Remember:</p>
           ${responseKeys}`;
+        feedbackText += text;
+        feedback['accuracy'] = {
+          value: accuracy,
+          text: text,
+        };
       }
 
       if (avgRT > rtThresh) {
-        feedbackText += `
+        let text = `
           <p class="block-text">You have been responding too slowly. Try to respond as quickly and accurately as possible.</p>`;
+        feedbackText += text;
+        feedback['rt'] = {
+          value: avgRT,
+          text: text,
+        };
       }
 
       if (missedResponses > missedResponseThresh) {
-        feedbackText += `
+        let text = `
           <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>`;
+        feedbackText += text;
+        feedback['missed_responses'] = {
+          value: missedResponses,
+          text: text,
+        };
       }
 
       feedbackText += '</div>';
+
+      block_level_feedback = feedback;
 
       let block_designs = stim_designs.slice(0, numTrialsPerBlock);
       stim_designs = stim_designs.slice(numTrialsPerBlock);

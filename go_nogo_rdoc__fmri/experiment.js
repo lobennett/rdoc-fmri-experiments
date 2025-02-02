@@ -226,7 +226,7 @@ var ITIBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
   is_html: true,
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   data: function () {
     const stage = getExpStage();
     return {
@@ -250,7 +250,6 @@ var ITIBlock = {
   on_finish: function (data) {
     data['trial_duration'] = ITIms * 1000;
     data['stimulus_duration'] = ITIms * 1000;
-    console.log('ITI data: ', data);
   },
 };
 
@@ -301,7 +300,7 @@ var motor_and_design_perm_block = {
 var long_fixation = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
-  choices: ['NO_KEYS'],
+  response_ends_trial: false,
   data: function () {
     return {
       trial_id: 'test_long_fixation',
@@ -372,7 +371,7 @@ for (var i = 0; i < practiceLen; i++) {
         block_num: practiceCount,
       };
     },
-    choices: ['NO_KEYS'],
+    response_ends_trial: false,
     prompt: () => promptText,
     trial_duration: 500,
     stimulus_duration: 500,
@@ -401,12 +400,18 @@ var feedbackBlock = {
     const { trial_id } = jsPsych.data.get().last().trials[0];
     return trial_id === 'check_middle';
   },
+  on_finish: function (data) {
+    data['block_level_feedback'] = block_level_feedback;
+  },
 };
 
+// Create variable to log block-level feedback
+var block_level_feedback = {};
 var practiceCount = 0;
 var practiceNode = {
   timeline: [feedbackBlock].concat(practiceTrials),
   loop_function: function (data) {
+    let feedback = {};
     practiceCount += 1;
     currentTrial = 0;
 
@@ -420,21 +425,21 @@ var practiceNode = {
 
     for (var i = 0; i < data.trials.length; i++) {
       if (
-        data.trials[i].trial_id == 'practice_trial' &&
-        data.trials[i].block_num == getCurrBlockNum() - 1
+        data.trials[i].trial_id === 'practice_trial' &&
+        data.trials[i].block_num === getCurrBlockNum() - 1
       ) {
         totalTrials += 1;
-        if (data.trials[i].rt != null) {
+        if (data.trials[i].rt !== null) {
           sumRT += data.trials[i].rt;
           sumResponses += 1;
         }
-        if (data.trials[i].response == data.trials[i].correct_response) {
+        if (data.trials[i].response === data.trials[i].correct_response) {
           correct += 1;
         }
 
-        if (data.trials[i].condition == 'go') {
+        if (data.trials[i].condition === 'go') {
           totalGoTrials += 1;
-          if (data.trials[i].rt == null) {
+          if (data.trials[i].rt === null) {
             missedResponse += 1;
           }
         }
@@ -449,35 +454,45 @@ var practiceNode = {
       '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
 
     if (accuracy < practiceAccuracyThresh) {
-      feedbackText += `
+      let text = `
        <p class="block-text">Your accuracy is low. Remember: </p>${promptTextList}
       `;
+      feedbackText += text;
+      feedback['accuracy'] = {
+        value: accuracy,
+        text: text,
+      };
     }
 
     if (avgRT > rtThresh) {
-      feedbackText += `
+      let text = `
         <p class="block-text">You have been responding too slowly.${speedReminder}</p>
       `;
+      feedbackText += text;
+      feedback['rt'] = {
+        value: avgRT,
+        text: text,
+      };
     }
 
     if (missedResponses > missedResponseThresh) {
-      feedbackText += `
+      let text = `
         <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>
       `;
+      feedbackText += text;
+      feedback['missed_responses'] = {
+        value: missedResponses,
+        text: text,
+      };
     }
 
     feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
-
-    // blockStims = jsPsych.randomization.repeat(
-    //   practiceStimuli,
-    //   practiceLen / practiceStimuli.length
-    // );
 
     expStage = 'test';
 
     blockStims = stim_designs;
 
-    console.log(blockStims);
+    block_level_feedback = feedback;
 
     return false;
   },
@@ -556,9 +571,16 @@ var testNode = {
     var avgRT = sumRT / sumResponses;
 
     if (testCount === numTestBlocks) {
-      feedbackText = `<div class=centerbox>
+      let text = `<div class=centerbox>
         <p class=block-text>Done with this task.</p>
         </div>`;
+      feedbackText += text;
+      feedback['done'] = {
+        value: true,
+        text: text,
+      };
+
+      block_level_feedback = feedback;
 
       return false;
     } else {
@@ -568,24 +590,41 @@ var testNode = {
       feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
 
       if (accuracy < accuracyThresh) {
-        feedbackText += `
+        let text = `
        <p class="block-text">Your accuracy is low. Remember: </p>${promptTextList}
       `;
+        feedbackText += text;
+        feedback['accuracy'] = {
+          value: accuracy,
+          text: text,
+        };
       }
 
       if (avgRT > rtThresh) {
-        feedbackText += `
+        let text = `
         <p class="block-text">You have been responding too slowly.${speedReminder}</p>
       `;
+        feedbackText += text;
+        feedback['rt'] = {
+          value: avgRT,
+          text: text,
+        };
       }
 
       if (missedResponses > missedResponseThresh) {
-        feedbackText += `
+        let text = `
         <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>
       `;
+        feedbackText += text;
+        feedback['missed_responses'] = {
+          value: missedResponses,
+          text: text,
+        };
       }
 
       feedbackText += '</div>';
+
+      block_level_feedback = feedback;
 
       return true;
     }
