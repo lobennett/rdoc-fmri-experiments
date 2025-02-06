@@ -37,16 +37,6 @@ body {
   color: white;
 }
 
-.cue-text {
-  width: 20vw;
-  height: 20vh;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
-}
-
 .bigbox {
   width: 100%;
   margin: auto;
@@ -83,78 +73,41 @@ body {
   text-align: center;
 }
 
-img.center {
-  height: auto;
-  width: auto\9;
-  /* ie8 */
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-  max-height: 65%;
-  height: 120px;
-  width: 120px;
-}
-
 /*******************************************************/
 /***********        Flanker CSS Styles        **********/
 /*******************************************************/
 
-.flankerLeft_2 {
-  width: 5vw;
-  height: 5vw;
+.centerbox-flex {
+  width: 50vw;
+  height: 60vh;
   position: absolute;
   top: 50%;
   left: 50%;
-  margin-right: 0%;
-  transform: translate(-150%, -50%);
-  background-color: none;
-}
-
-.flankerLeft_1 {
-  width: 5vw;
-  height: 5vw;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-right: 0%;
-  transform: translate(-100%, -50%);
-  background-color: none;
-}
-
-.flankerMiddle {
-  width: 5vw;
-  height: 5vw;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-right: 0%;
+  margin-right: -50%;
   transform: translate(-50%, -50%);
-  background-color: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.flankerRight_1 {
-  width: 5vw;
-  height: 5vw;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-right: 0%;
-  transform: translate(0%, -50%);
-  background-color: none;
-}
-
+.flankerLeft_2,
+.flankerLeft_1,
+.flankerMiddle,
+.flankerRight_1,
 .flankerRight_2 {
-  width: 5vw;
-  height: 5vw;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-right: 0%;
-  transform: translate(50%, -50%);
-  background-color: none;
+  margin: 0 -48px;
+  padding: 0;
+}
+
+.cue-text img {
+  margin: 0;
+  padding: 0;
+}
+
+.stimuli-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* survey form styling */

@@ -149,14 +149,15 @@ var currStim = '';
 var fileTypePNG = '.png"></img>';
 var preFileType =
   '<img class = center src="/static/experiments/flanker_rdoc__fmri/images/';
+
 var flankerBoards = [
   [
-    '<div class = bigbox><div class = centerbox><div class = flankerLeft_2><div class = cue-text>',
+    '<div class="centerbox-flex"><div class="stimuli-container"><div class="flankerLeft_2"><div class="cue-text">',
   ],
-  ['</div></div><div class = flankerLeft_1><div class = cue-text>'],
-  ['</div></div><div class = flankerMiddle><div class = cue-text>'],
-  ['</div></div><div class = flankerRight_1><div class = cue-text>'],
-  ['</div></div><div class = flankerRight_2><div class = cue-text>'],
+  ['</div></div><div class="flankerLeft_1"><div class="cue-text">'],
+  ['</div></div><div class="flankerMiddle"><div class="cue-text">'],
+  ['</div></div><div class="flankerRight_1"><div class="cue-text">'],
+  ['</div></div><div class="flankerRight_2"><div class="cue-text">'],
   ['</div></div></div></div>'],
 ];
 
