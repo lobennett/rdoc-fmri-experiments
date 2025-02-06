@@ -534,7 +534,8 @@ var testNode = {
     long_fixation_node,
     testTrials
   ),
-  loop_function: function (data) {
+  loop_function: function(data) {
+    let feedback = {};
     testCount += 1;
     currentTrial = 0;
 

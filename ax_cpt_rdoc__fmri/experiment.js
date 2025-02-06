@@ -590,7 +590,7 @@ var testNode = {
     testTrials
   ),
   loop_function: function (data) {
-    feedback = {};
+    let feedback = {};
     testCount += 1;
 
     var sumRT = 0;
