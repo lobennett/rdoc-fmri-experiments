@@ -310,16 +310,13 @@ const stimStimulusDuration = 1000;
 const stimTrialDuration = 1000;
 const responseBlockDuration = 7000; // changed from 5000
 
-var accuracyThresh = 0.6;
-var partialAccuracyThresh = 0.75;
+var accuracy_irrespective_of_cell_order_thresh = 0.75;
 
 var practiceLen = 1;
 var numTrialsPerBlock = 8;
 var numTestBlocks = 3;
 
 var trialList;
-
-var currCondition = 'simple';
 
 var numStimuli = 4;
 
