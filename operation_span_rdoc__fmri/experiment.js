@@ -7144,11 +7144,11 @@ var feedbackBlock = {
   stimulus: getFeedback,
   trial_duration: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_middle' ? undefined : 4000;
+    return trial_id === 'check_middle_button' ? undefined : 4000;
   },
   response_ends_trial: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_middle';
+    return trial_id === 'check_middle_button';
   },
   on_finish: function (data) {
     data['block_level_feedback'] = block_level_feedback;
@@ -7829,9 +7829,9 @@ operation_span_rdoc__fmri_experiment = [];
 var operation_span_rdoc__fmri_init = () => {
   operation_span_rdoc__fmri_experiment.push(motor_and_design_perm_block);
   operation_span_rdoc__fmri_experiment.push(fullscreen);
-  operation_span_rdoc__fmri_experiment.push(check_fingers_node);
+  operation_span_rdoc__fmri_experiment.push(check_fingers_node_span);
 
-  // Start practice block
+  // Start practice blocks
   operation_span_rdoc__fmri_experiment.push(practiceNode);
   operation_span_rdoc__fmri_experiment.push(feedbackBlock);
   operation_span_rdoc__fmri_experiment.push(fmri_wait_node);
