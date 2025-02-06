@@ -44,13 +44,9 @@ var choices;
 var correctResponses;
 var practiceStimuli;
 var testStimuliBlock;
-function getKeyMappingForTask(motor_perm) {
-  if (motor_perm === 0) {
-    goResponse = 'y';
-  } else {
-    goResponse = 'g';
-  }
-  choices = ['y', 'g'];
+
+function getKeyMappingForTask() {
+  goResponse = 'y';
 
   correctResponses = [
     ['go', goResponse],
@@ -267,7 +263,7 @@ var motor_and_design_perm_block = {
         type: 'multi-choice',
         prompt: 'Select the motor perm:',
         name: 'motor_perm',
-        options: [0, 1],
+        options: [0],
         required: true,
       },
       {
@@ -332,11 +328,9 @@ for (var i = 0; i < practiceLen; i++) {
     data: function () {
       return Object.assign(getData(), {
         exp_stage: 'practice',
-        choices: choices,
         block_num: practiceCount,
       });
     },
-    choices: choices,
     stimulus_duration: stimStimulusDuration, // 1000,
     trial_duration: stimTrialDuration, // 1500
     response_ends_trial: false,
@@ -503,11 +497,9 @@ for (var i = 0; i < numTrialsPerBlock; i++) {
   var testTrial = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getStim,
-    choices: choices,
     data: function () {
       return Object.assign(getData(), {
         exp_stage: 'test',
-        choices: choices,
         block_num: testCount,
       });
     },
