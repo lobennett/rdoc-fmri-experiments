@@ -368,6 +368,7 @@ for (i = 0; i < practiceLen; i++) {
     stimulus: getStim,
     SS_stimulus: getStopStim,
     SS_trial_type: getCondition,
+    post_trial_gap: 0,
     data: {
       trial_id: 'practice_trial',
       exp_stage: 'practice',
@@ -560,6 +561,7 @@ for (i = 0; i < numTrialsPerBlock; i++) {
     stimulus: getStim,
     SS_stimulus: getStopStim,
     SS_trial_type: getCondition,
+    post_trial_gap: 0,
     data: {
       trial_id: 'test_trial',
       exp_stage: 'test',
