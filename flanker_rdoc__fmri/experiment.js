@@ -203,7 +203,6 @@ const setText = () => {
 
   feedbackText = `
   <div class="centerbox">
-    <p class="block-text">Place your <b>index finger</b> on the <b>index finger</b> and your <b>middle finger</b> on the <b>middle finger</b></p>
     <p class="block-text">During this task, on each trial you will see a string of F's and H's. For instance, you might see 'FFFFF' or 'HHFHH'.</p>
     <p class="block-text">Your task is to respond by pressing the key corresponding to the <b>middle</b> letter.</p>
     <p class="block-text">If the middle letter is an <b>${
