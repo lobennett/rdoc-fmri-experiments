@@ -650,6 +650,9 @@ var feedbackBlock = {
     const { trial_id } = jsPsych.data.get().last().trials[0];
     return trial_id === 'check_middle';
   },
+  on_finish: function (data) {
+    data['block_level_feedback'] = block_level_feedback;
+  },
 };
 
 var practiceTrials = [];
