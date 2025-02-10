@@ -95,7 +95,12 @@ var practiceLen = 4; // reduced from 12 -> showing one of each condition.
 var numTestBlocks = 3;
 var numTrialsPerBlock = 72; // should be multiple of 24
 
-const responseKeys = `<p class='block-text'>Press the <b>${possibleResponses[0][2]}</b> if the star (*) appears in the left box and the <b>${possibleResponses[1][2]}</b> if the star (*) appears in the right box.</p>`;
+const responseKeys = `
+  <ul class='block-text'>
+    <li>Left (*): Index</li>
+    <li>Right (*): Middle</li>
+  </ul>`;
+
 var currStim = '';
 
 var fixation =
@@ -456,14 +461,12 @@ var practiceNode = {
     var missedResponses = (totalTrials - sumResponses) / totalTrials;
     var avgRT = sumRT / sumResponses;
 
-    feedbackText =
-      '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
+    feedbackText = '<div class = centerbox>';
 
     if (accuracy < practiceAccuracyThresh) {
-      let text = `
-        <p class="block-text">Your accuracy is low. Remember: </p>
-        ${responseKeys}
-      `;
+      let text =
+        '<p class="block-text">Your accuracy was low.</p>' + responseKeys;
+
       feedbackText += text;
       block_level_feedback['accuracy'] = {
         value: accuracy,
@@ -472,9 +475,8 @@ var practiceNode = {
     }
 
     if (avgRT > rtThresh) {
-      let text = `
-        <p class="block-text">You have been responding too slowly. Try to respond as quickly and accurately as possible.</p>
-      `;
+      let text =
+        '<p class="block-text">Please respond more quickly without sacrificing accuracy</p>';
       feedbackText += text;
       block_level_feedback['rt'] = {
         value: avgRT,
@@ -483,9 +485,7 @@ var practiceNode = {
     }
 
     if (missedResponses > missedResponseThresh) {
-      let text = `
-        <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>
-      `;
+      let text = '<p class="block-text">Respond on every trial.</p>';
       feedbackText += text;
       block_level_feedback['missed_responses'] = {
         value: missedResponses,
@@ -493,7 +493,7 @@ var practiceNode = {
       };
     }
 
-    feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
+    feedbackText += '</div>';
 
     expStage = 'test';
 
@@ -602,7 +602,7 @@ var testNode = {
     long_fixation_node,
     testTrials
   ),
-  loop_function: function(data) {
+  loop_function: function (data) {
     let feedback = {};
     testCount += 1;
 
@@ -645,16 +645,13 @@ var testNode = {
       block_level_feedback = feedback;
       return false;
     } else {
-      feedbackText =
-        '<div class = centerbox><p class = block-text>Please take this time to read your feedback!</p>';
+      feedbackText = '<div class = centerbox>';
 
-      feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
+      feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
 
       if (accuracy < accuracyThresh) {
-        let text = `
-        <p class="block-text">Your accuracy is low. Remember: </p>
-        ${responseKeys}
-      `;
+        let text =
+          '<p class="block-text">Your accuracy was low.</p>' + responseKeys;
         feedbackText += text;
         block_level_feedback['accuracy'] = {
           value: accuracy,
@@ -663,9 +660,8 @@ var testNode = {
       }
 
       if (avgRT > rtThresh) {
-        let text = `
-        <p class="block-text">You have been responding too slowly. Try to respond as quickly and accurately as possible.</p>
-      `;
+        let text =
+          '<p class="block-text">Please respond more quickly without sacrificing accuracy</p>';
         feedbackText += text;
         block_level_feedback['rt'] = {
           value: avgRT,
@@ -674,9 +670,7 @@ var testNode = {
       }
 
       if (missedResponses > missedResponseThresh) {
-        let text = `
-        <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>
-      `;
+        let text = '<p class="block-text">Respond on every trial.</p>';
         feedbackText += text;
         block_level_feedback['missed_responses'] = {
           value: missedResponses,
