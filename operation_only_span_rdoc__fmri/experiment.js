@@ -6856,6 +6856,19 @@ const setText = () => {
   }</b>.</p>
   </div>`;
 
+  promptTextList = `<ul style="text-align:left;">
+    <li>${
+      processingChoices[0].keyname === 'left button'
+        ? 'Symmetric'
+        : 'Asymmetric'
+    }: Left</li>
+    <li>${
+      processingChoices[0].keyname === 'left button'
+        ? 'Asymmetric'
+        : 'Symmetric'
+    }: Right</li>
+  </ul>`;
+
   fixationPromptText = `<div class=prompt_box_operation>
     <p class = center-block-text style = "font-size:16px; line-height:80%%;"></p>
     <p class = center-block-text style = "font-size:16px; line-height:80%%;">Keep your eyes on the fixation.</p>
@@ -6978,11 +6991,11 @@ var feedbackBlock = {
   stimulus: getFeedback,
   trial_duration: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_middle_button' ? undefined : 4000;
+    return trial_id === 'check_right_button' ? undefined : 4000;
   },
   response_ends_trial: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_middle_button';
+    return trial_id === 'check_right_button';
   },
   on_finish: function (data) {
     data['block_level_feedback'] = block_level_feedback;
@@ -7255,22 +7268,12 @@ var practiceNode = {
       responseProcessingData
     );
 
-    feedbackText =
-      '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
+    feedbackText = '<div class = centerbox>';
 
     if (avgProcessingAcc < processingAccThresh) {
       let text =
-        `
-        <p class = block-text>Your accuracy for the 8x8 grid is low.</p>` +
-        `<p class = block-text>Try your best determining if the 8x8 grid is ${
-          processingChoices[0].keyname === 'left button'
-            ? 'symmetric'
-            : 'asymmetric'
-        } (left button) or ${
-          processingChoices[0].keyname === 'left button'
-            ? 'asymmetric'
-            : 'symmetric'
-        } (right button).</p>`;
+        '<p class = block-text>Your accuracy was low.</p>' + promptTextList;
+
       feedbackText += text;
       feedback['processing_accuracy'] = {
         value: avgProcessingAcc,
@@ -7278,10 +7281,8 @@ var practiceNode = {
       };
     }
     if (avgProcessingRT > processingRTThresh) {
-      let text =
-        `
-        <p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>` +
-        `<p class = block-text>Try to respond (left arrow/right arrow) as quickly and accurately as possible.</p>`;
+      let text = `
+        <p class = block-text>Please respond more quickly without sacrificing accuracy.</p>`;
       feedbackText += text;
       feedback['processing_rt'] = {
         value: avgProcessingRT,
@@ -7289,8 +7290,7 @@ var practiceNode = {
       };
     }
 
-    feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
-
+    feedbackText += '</div>';
     block_level_feedback = feedback;
 
     expStage = 'test';
@@ -7388,23 +7388,14 @@ var testNode = {
 
       return false;
     } else {
-      feedbackText =
-        '<div class = centerbox><p class = block-text>Please take this time to read your feedback!</p>';
+      feedbackText = '<div class = centerbox>';
 
-      feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
+      feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
 
       if (avgProcessingAcc < processingAccThresh) {
         let text =
-          '<p class = block-text>Your accuracy for the 8x8 grid is low.</p>' +
-          `<p class = block-text>Try your best determining if the 8x8 grid is ${
-            processingChoices[0].keyname === 'left button'
-              ? 'symmetric'
-              : 'asymmetric'
-          } (left button) or ${
-            processingChoices[0].keyname === 'left button'
-              ? 'asymmetric'
-              : 'symmetric'
-          } (right button).</p>`;
+          '<p class = block-text>Your accuracy was low.</p>' + promptTextList;
+
         feedbackText += text;
         feedback['processing_accuracy'] = {
           value: avgProcessingAcc,
@@ -7412,9 +7403,7 @@ var testNode = {
         };
       }
       if (avgProcessingRT > processingRTThresh) {
-        let text =
-          `<p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>` +
-          `<p class = block-text>Try to respond (left arrow/right arrow) as quickly and accurately as possible.</p>`;
+        let text = `<p class = block-text>Please respond more quickly without sacrificing accuracy.</p>`;
         feedbackText += text;
         feedback['processing_rt'] = {
           value: avgProcessingRT,
@@ -7476,7 +7465,9 @@ operation_only_span_rdoc__fmri_experiment = [];
 var operation_only_span_rdoc__fmri_init = () => {
   operation_only_span_rdoc__fmri_experiment.push(motor_and_design_perm_block);
   operation_only_span_rdoc__fmri_experiment.push(fullscreen);
-  operation_only_span_rdoc__fmri_experiment.push(check_fingers_node_span);
+  operation_only_span_rdoc__fmri_experiment.push(
+    check_fingers_node_op_only_span
+  );
 
   // Practice block
   operation_only_span_rdoc__fmri_experiment.push(practiceNode);
