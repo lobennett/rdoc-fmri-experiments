@@ -311,22 +311,22 @@ var feedbackText;
 const setText = () => {
   promptTextList = `
     <ul style="text-align: left; font-size: 24px;">
-      <li>Target ${
-        possibleResponses[0][0] === 'index finger' ? 'present' : 'absent'
-      }: index finger</li>
-      <li>Target ${
-        possibleResponses[0][0] === 'index finger' ? 'absent' : 'present'
-      }: middle finger</li>
+      <li>${
+        possibleResponses[0][0] === 'index finger' ? 'Present' : 'Absent'
+      }: Index</li>
+      <li>${
+        possibleResponses[0][0] === 'index finger' ? 'Absent' : 'Present'
+      }: Middle</li>
     </ul>`;
 
   promptText = `
     <div class="prompt_box">
-      <p class="center-block-text" style="font-size: 16px; line-height: 80%;">Target ${
-        possibleResponses[0][0] === 'index finger' ? 'present' : 'absent'
-      }: index finger</p>
-      <p class="center-block-text" style="font-size: 16px; line-height: 80%;">Target ${
-        possibleResponses[0][0] === 'index finger' ? 'absent' : 'present'
-      }: middle finger</p>
+      <p class="center-block-text" style="font-size: 16px; line-height: 80%;">${
+        possibleResponses[0][0] === 'index finger' ? 'Present' : 'Absent'
+      }: Index</p>
+      <p class="center-block-text" style="font-size: 16px; line-height: 80%;">${
+        possibleResponses[0][0] === 'index finger' ? 'Absent' : 'Present'
+      }: Middle</p>
     </div>`;
 
   choices = [possibleResponses[0][1], possibleResponses[1][1]];
@@ -626,12 +626,11 @@ var practiceNode = {
     var missedResponses = (totalTrials - sumResponses) / totalTrials;
     var avgRT = sumRT / sumResponses;
 
-    feedbackText =
-      '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
+    feedbackText = '<div class = centerbox>';
+
     if (accuracy < practiceAccuracyThresh) {
       let text =
-        `<p class="block-text">Your accuracy is low. Remember: </p>` +
-        promptTextList;
+        '<p class="block-text">Your accuracy was low.</p>' + promptTextList;
       feedbackText += text;
       feedback['accuracy'] = {
         value: accuracy,
@@ -639,7 +638,7 @@ var practiceNode = {
       };
     }
     if (avgRT > rtThresh) {
-      let text = `<p class="block-text">You have been responding too slowly. Try to respond as quickly and accurately as possible.</p>`;
+      let text = `<p class="block-text">Please respond more quickly without sacrificing accuracy.</p>`;
       feedbackText += text;
       feedback['rt'] = {
         value: avgRT,
@@ -647,7 +646,7 @@ var practiceNode = {
       };
     }
     if (missedResponses > missedResponseThresh) {
-      let text = `<p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>`;
+      let text = `<p class="block-text">Respond on every trial.</p>`;
       feedbackText += text;
       feedback['missed_responses'] = {
         value: missedResponses,
@@ -655,7 +654,7 @@ var practiceNode = {
       };
     }
 
-    feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
+    feedbackText += '</div>';
 
     blockStims = stim_designs;
     block_level_feedback = feedback;
@@ -752,15 +751,13 @@ var testNode = {
       block_level_feedback = feedback;
       return false;
     } else {
-      feedbackText =
-        '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
+      feedbackText = '<div class = centerbox>';
 
       feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
 
       if (accuracy < accuracyThresh) {
         let text =
-          `<p class="block-text">Your accuracy is low. Remember: </p>` +
-          promptTextList;
+          '<p class="block-text">Your accuracy was low.</p>' + promptTextList;
         feedbackText += text;
         feedback['accuracy'] = {
           value: accuracy,
@@ -768,7 +765,7 @@ var testNode = {
         };
       }
       if (avgRT > rtThresh) {
-        let text = `<p class="block-text">You have been responding too slowly. Try to respond as quickly and accurately as possible.</p>`;
+        let text = `<p class="block-text">Please respond more quickly without sacrificing accuracy.</p>`;
         feedbackText += text;
         feedback['rt'] = {
           value: avgRT,
@@ -776,7 +773,7 @@ var testNode = {
         };
       }
       if (missedResponses > missedResponseThresh) {
-        let text = `<p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>`;
+        let text = `<p class="block-text">Respond on every trial.</p>`;
         feedbackText += text;
         feedback['missed_responses'] = {
           value: missedResponses,
