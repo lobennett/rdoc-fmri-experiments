@@ -84,13 +84,6 @@ body {
   align-items: center;
 }
 
-.prompt_content p {
-  font-size: 16px;
-  text-align: center;
-  display: block;
-  margin: 0 auto;
-}
-
 .prompt_content ul {
   text-align: left;
 }
