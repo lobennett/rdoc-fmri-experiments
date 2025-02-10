@@ -659,16 +659,13 @@ var practiceNode = {
     var accuracy_irrespective_of_cell_order =
       calculate_accuracy_irrespective_of_cell_order(responseGridData);
 
-    feedbackText =
-      '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
+    feedbackText = '<div class = centerbox>';
 
     if (
       accuracy_irrespective_of_cell_order <
       accuracy_irrespective_of_cell_order_thresh
     ) {
-      let text =
-        '<p class = block-text>Your accuracy for the 4x4 grid is low.</p>' +
-        '<p class = block-text>Try your best to recall the black colored cells.</p>';
+      let text = '<p class = block-text>Your accuracy was low.</p>';
       feedbackText += text;
       feedback['accuracy_irrespective_of_cell_order'] = {
         value: accuracy_irrespective_of_cell_order,
@@ -676,8 +673,7 @@ var practiceNode = {
       };
     }
 
-    feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
-
+    feedbackText += '</div>';
     block_level_feedback = feedback;
 
     expStage = 'test';
@@ -772,16 +768,15 @@ var testNode = {
 
       return false;
     } else {
-      feedbackText =
-        '<div class = centerbox><p class = block-text>Please take this time to read your feedback!</p>';
+      feedbackText = '<div class = centerbox>';
 
-      feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
+      feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
 
       if (
         accuracy_irrespective_of_cell_order <
         accuracy_irrespective_of_cell_order_thresh
       ) {
-        let text = `<p class = block-text>Your accuracy for the 4x4 grid is low. Try your best to recall all the black colored cells.</p>`;
+        let text = `<p class = block-text>Your accuracy was low.</p>`;
         feedbackText += text;
         feedback['accuracy_irrespective_of_cell_order'] = {
           value: accuracy_irrespective_of_cell_order,
