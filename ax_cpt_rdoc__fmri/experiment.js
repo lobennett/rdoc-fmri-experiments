@@ -490,6 +490,8 @@ var practiceNode = {
       };
     }
 
+    feedbackText += '</div>';
+
     // Here set first block of test trials
     blockList = trial_designs;
     expStage = 'test';
