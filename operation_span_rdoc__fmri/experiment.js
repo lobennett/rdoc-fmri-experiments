@@ -7019,6 +7019,19 @@ const setText = () => {
   }</b>.</p>
   </div>`;
 
+  promptTextList = `<ul style="text-align:left;">
+    <li>${
+      processingChoices[0].keyname === 'left button'
+        ? 'Symmetric'
+        : 'Asymmetric'
+    }: Left</li>
+    <li>${
+      processingChoices[0].keyname === 'left button'
+        ? 'Asymmetric'
+        : 'Symmetric'
+    }: Right</li>
+  </ul>`;
+
   fixationPromptText = `<div class=prompt_box_operation>
     <p class = center-block-text style = "font-size:16px; line-height:80%%;"></p>
     <p class = center-block-text style = "font-size:16px; line-height:80%%;">Keep your eyes on the fixation.</p>
@@ -7521,16 +7534,16 @@ var practiceNode = {
     var accuracy_irrespective_of_cell_order =
       calculate_accuracy_irrespective_of_cell_order(responseGridData);
 
-    feedbackText =
-      '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
+    feedbackText = '<div class = centerbox>';
 
     if (
       accuracy_irrespective_of_cell_order <
       accuracy_irrespective_of_cell_order_thresh
     ) {
       let text =
-        '<p class = block-text>Your accuracy for the 4x4 grid is low.</p>' +
-        '<p class = block-text>Try your best to recall the black colored cells.</p>';
+        '<p class = block-text>Your accuracy for the 4x4 memory grid was low.</p>' +
+        '<p class = block-text>Remember the location of the black cells.</p>';
+
       feedbackText += text;
       feedback['accuracy_irrespective_of_cell_order'] = {
         value: accuracy_irrespective_of_cell_order,
@@ -7540,17 +7553,9 @@ var practiceNode = {
 
     if (avgProcessingAcc < processingAccThresh) {
       let text =
-        `
-        <p class = block-text>Your accuracy for the 8x8 grid is low.</p>` +
-        `<p class = block-text>Try your best determining if the 8x8 grid is ${
-          processingChoices[0].keyname === 'left button'
-            ? 'symmetric'
-            : 'asymmetric'
-        } (left button) or ${
-          processingChoices[0].keyname === 'left button'
-            ? 'asymmetric'
-            : 'symmetric'
-        } (right button).</p>`;
+        '<p class = block-text>Your accuracy for the symmetry judgement was low.</p>' +
+        promptTextList;
+
       feedbackText += text;
       feedback['processing_accuracy'] = {
         value: avgProcessingAcc,
@@ -7558,10 +7563,7 @@ var practiceNode = {
       };
     }
     if (avgProcessingRT > processingRTThresh) {
-      let text =
-        `
-        <p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>` +
-        `<p class = block-text>Try to respond (left arrow/right arrow) as quickly and accurately as possible.</p>`;
+      let text = `<p class = block-text>Please respond more quickly to the symmetry judgements without sacrificing accuracy.</p>`;
       feedbackText += text;
       feedback['processing_rt'] = {
         value: avgProcessingRT,
@@ -7569,8 +7571,7 @@ var practiceNode = {
       };
     }
 
-    feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
-
+    feedbackText += '</div>';
     block_level_feedback = feedback;
 
     expStage = 'test';
@@ -7677,16 +7678,18 @@ var testNode = {
 
       return false;
     } else {
-      feedbackText =
-        '<div class = centerbox><p class = block-text>Please take this time to read your feedback!</p>';
+      feedbackText = '<div class = centerbox>';
 
-      feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
+      feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
 
       if (
         accuracy_irrespective_of_cell_order <
         accuracy_irrespective_of_cell_order_thresh
       ) {
-        let text = `<p class = block-text>Your accuracy for the 4x4 grid is low. Try your best to recall all the black colored cells.</p>`;
+        let text =
+          '<p class = block-text>Your accuracy for the 4x4 memory grid was low.</p>' +
+          '<p class = block-text>Remember the location of the black cells.</p>';
+
         feedbackText += text;
         feedback['accuracy_irrespective_of_cell_order'] = {
           value: accuracy_irrespective_of_cell_order,
@@ -7696,16 +7699,9 @@ var testNode = {
 
       if (avgProcessingAcc < processingAccThresh) {
         let text =
-          `<p class = block-text>Your accuracy for the 8x8 grid is low.</p>` +
-          `<p class = block-text>Try your best determining if the 8x8 grid is ${
-            processingChoices[0].keyname === 'left button'
-              ? 'symmetric'
-              : 'asymmetric'
-          } (left button) or ${
-            processingChoices[0].keyname === 'left button'
-              ? 'asymmetric'
-              : 'symmetric'
-          } (right button).</p>`;
+          '<p class = block-text>Your accuracy for the symmetry judgement was low.</p>' +
+          promptTextList;
+
         feedbackText += text;
         feedback['processing_accuracy'] = {
           value: avgProcessingAcc,
@@ -7715,8 +7711,7 @@ var testNode = {
 
       if (avgProcessingRT > processingRTThresh) {
         let text =
-          `<p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>` +
-          `<p class = block-text>Try to respond (left arrow/right arrow) as quickly and accurately as possible.</p>`;
+          '<p class = block-text>Please respond more quickly to the symmetry judgements without sacrificing accuracy.</p>';
         feedbackText += text;
         feedback['processing_rt'] = {
           value: avgProcessingRT,
