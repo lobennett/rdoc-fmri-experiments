@@ -793,8 +793,7 @@ var testNode = {
 
       if (avgRT > rtThresh) {
         let text = `
-          <p class="block-text">You have been responding too slowly.</p>
-          ${speedReminder}
+          <p class="block-text">Please respond more quickly without sacrificing accuracy.</p>
         `;
         feedbackText += text;
         feedback['rt'] = {
