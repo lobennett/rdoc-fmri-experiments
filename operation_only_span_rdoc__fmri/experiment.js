@@ -7269,6 +7269,7 @@ var practiceNode = {
     );
 
     feedbackText = '<div class = centerbox>';
+    feedbackText += '<p class = block-text>Please take a short break.</p>';
 
     if (avgProcessingAcc < processingAccThresh) {
       let text =

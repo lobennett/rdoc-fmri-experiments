@@ -7535,6 +7535,7 @@ var practiceNode = {
       calculate_accuracy_irrespective_of_cell_order(responseGridData);
 
     feedbackText = '<div class = centerbox>';
+    feedbackText += '<p class = block-text>Please take a short break.</p>';
 
     if (
       accuracy_irrespective_of_cell_order <

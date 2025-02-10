@@ -527,6 +527,7 @@ var practiceNode = {
     var avgRT = sumRT / sumResponses;
 
     feedbackText = '<div class = centerbox>';
+    feedbackText += '<p class = block-text>Please take a short break.</p>';
 
     if (accuracy < practiceAccuracyThresh) {
       let text = `

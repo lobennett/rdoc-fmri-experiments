@@ -513,6 +513,7 @@ var practiceNode = {
     var stopSignalRespond = numStopResponses / stopLength;
 
     feedbackText = '<div class="centerbox">';
+    feedbackText += '<p class = block-text>Please take a short break.</p>';
 
     if (aveShapeRespondCorrect <= practiceAccuracyThresh) {
       let text =
