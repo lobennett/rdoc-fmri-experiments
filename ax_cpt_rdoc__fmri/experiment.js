@@ -620,7 +620,6 @@ var testNode = {
     var avgRT = sumRT / sumResponses;
 
     feedbackText = '<div class = centerbox>';
-
     feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
 
     if (accuracy < accuracyThresh) {
