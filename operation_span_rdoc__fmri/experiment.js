@@ -6956,8 +6956,6 @@ const getFeedback = () =>
 
 const getCurrSeq = () => currSeq;
 
-const getCurrCondition = () => currCondition;
-
 const getCurrBlockNum = () =>
   getExpStage() === 'practice' ? practiceCount : testCount;
 
@@ -7073,9 +7071,6 @@ var numTestBlocks = 3;
 var trialList;
 
 var spatialAns;
-
-var currCondition = 'operation';
-
 var numStimuli = 4;
 
 var expStage = 'practice';
@@ -7169,7 +7164,7 @@ var stimulusBlock = {
     return {
       trial_id: `${stage}_stim`,
       exp_stage: stage,
-      condition: getCurrCondition(),
+      condition: 'operation',
       trial_duration: stimTrialDuration,
       stimulus_duration: stimStimulusDuration,
       block_num: stage === 'practice' ? practiceCount : testCount,
@@ -7246,11 +7241,8 @@ var waitBlock = {
           ? 'practice_inter-stimulus'
           : 'test_inter-stimulus',
       exp_stage: getExpStage(),
-      condition: getCurrCondition(),
-      choices:
-        getCurrCondition() == 'operation'
-          ? [processingChoices[0].keycode, processingChoices[1].keycode]
-          : '',
+      condition: 'operation',
+      choices: [processingChoices[0].keycode, processingChoices[1].keycode],
       trial_duration: processingTrialDuration,
       stimulus_duration: processingStimulusDuration,
       block_num: getExpStage() == 'practice' ? practiceCount : testCount,
@@ -7346,57 +7338,6 @@ function arraysAreEqual(array1, array2) {
 
 var activeGrid;
 
-var practiceFeedbackBlock = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: function () {
-    function arraysEqual(a, b) {
-      if (a === b) return true;
-      if (a == null || b == null) return false;
-      if (a.length !== b.length) return false;
-      for (var i = 0; i < a.length; ++i) {
-        if (a[i] !== b[i]) return false;
-      }
-      return true;
-    }
-
-    const { response, spatial_sequence } = jsPsych.data.get().last(1).trials[0];
-    const common = spatial_sequence.filter((ele) =>
-      response.includes(ele)
-    ).length;
-
-    const areArraysEqual = arraysEqual(response, spatial_sequence);
-
-    const text =
-      common === 0 ? 'You did not submit any' : `You submitted ${common}`;
-
-    if (areArraysEqual) {
-      return `
-          <div class='memory_feedback'>
-            <p>Correct!</p>
-          </div>
-        `;
-    } else {
-      return `
-          <div class='memory_feedback'>
-            <p>${text} correct responses.</p>
-            <p>Please attempt to make all 4 correct responses in the order they were presented.</p>
-        </div>`;
-    }
-  },
-  data: function () {
-    return {
-      exp_stage: 'practice',
-      trial_id: 'practice_feedback',
-      trial_duration: 5000, // changed from 500
-      stimulus_duration: 5000, // changed from 500
-      block_num: practiceCount,
-    };
-  },
-  response_ends_trial: false,
-  stimulus_duration: 5000, // changed from 500
-  trial_duration: 5000, // changed from 500
-};
-
 var testTrial = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: function () {
@@ -7440,7 +7381,7 @@ var testTrial = {
       data['correct_trial'] = correct ? 1 : 0;
     }
 
-    data['condition'] = getCurrCondition();
+    data['condition'] = 'operation';
 
     if (getExpStage() == 'practice') {
       var lastInterStimTrials = jsPsych.data
@@ -7493,7 +7434,7 @@ var ITIBlock = {
       trial_id: `${stage}_ITI`,
       exp_stage: stage,
       block_num: stage === 'practice' ? practiceCount : testCount,
-      condition: getCurrCondition(),
+      condition: 'operation',
     };
 
     if (stage === 'practice') {
@@ -7533,7 +7474,7 @@ function generatePracticeTrials() {
     for (let j = 0; j < numStimuli; j++) {
       returnArray.push(waitNode, stimulusBlock);
     }
-    returnArray.push(testTrial, practiceFeedbackBlock, ITIBlock);
+    returnArray.push(testTrial, ITIBlock);
   }
 
   return returnArray;
