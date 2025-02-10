@@ -67,7 +67,6 @@ var check_right_button = {
   },
 };
 
-
 var check_up_button = {
   // Check key press for up button.
   type: jsPsychHtmlKeyboardResponse,
@@ -117,9 +116,20 @@ var check_fingers_node_stroop = {
   timeline: [check_index, check_middle, check_ring],
 };
 
+var check_fingers_node_op_only_span = {
+  // Check key press for left and right buttons.
+  timeline: [check_left_button, check_right_button],
+};
+
 var check_fingers_node_span = {
   // Check key press for left, right, up, down, and middle buttons.
-  timeline: [check_left_button, check_right_button, check_up_button, check_down_button, check_middle_button],
+  timeline: [
+    check_left_button,
+    check_right_button,
+    check_up_button,
+    check_down_button,
+    check_middle_button,
+  ],
 };
 
 var fmri_wait_block_initial = {
