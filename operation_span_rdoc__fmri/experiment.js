@@ -6969,6 +6969,7 @@ var speedReminder;
 var promptText;
 var reminderInstruct;
 var feedbackText;
+var fixationPromptText;
 var choices;
 const setText = () => {
   speedReminder =
@@ -7016,6 +7017,11 @@ const setText = () => {
     }</b> and <b>"right button"</b> if <b>${
     processingChoices[0].keyname === 'left button' ? 'asymmetric' : 'symmetric'
   }</b>.</p>
+  </div>`;
+
+  fixationPromptText = `<div class=prompt_box_operation>
+    <p class = center-block-text style = "font-size:16px; line-height:80%%;"></p>
+    <p class = center-block-text style = "font-size:16px; line-height:80%%;">Keep your eyes on the fixation.</p>
   </div>`;
 
   reminderInstruct = `
@@ -7463,6 +7469,9 @@ var ITIBlock = {
       data['trial_duration'] = ITIms * 1000;
       data['stimulus_duration'] = ITIms * 1000;
     }
+  },
+  prompt: function () {
+    return getExpStage() == 'practice' ? fixationPromptText : '';
   },
 };
 

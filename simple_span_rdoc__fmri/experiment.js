@@ -266,6 +266,7 @@ const getExpStage = () => expStage;
 // common variables
 var speedReminder;
 var promptText;
+var fixationPromptText;
 var reminderInstruct;
 var feedbackText;
 var choices;
@@ -292,6 +293,11 @@ const setText = () => {
 
   promptText = `<div class=prompt_box_operation>
     <p class = center-block-text style = "font-size:16px; line-height:80%%;">Memorize all the black colored cells.</p>
+  </div>`;
+
+  fixationPromptText = `<div class=prompt_box_operation>
+    <p class = center-block-text style = "font-size:16px; line-height:80%%;"></p>
+    <p class = center-block-text style = "font-size:16px; line-height:80%%;">Keep your eyes on the fixation.</p>
   </div>`;
 
   reminderInstruct = `
@@ -614,6 +620,9 @@ var ITIBlock = {
       data['trial_duration'] = ITIms * 1000;
       data['stimulus_duration'] = ITIms * 1000;
     }
+  },
+  prompt: function () {
+    return getExpStage() == 'practice' ? fixationPromptText : '';
   },
 };
 
