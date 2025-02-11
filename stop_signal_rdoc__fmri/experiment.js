@@ -525,13 +525,25 @@ var practiceNode = {
       };
     }
 
+    let speedFeedbackText =
+      '<p class="block-text">Please respond more quickly without sacrificing accuracy.</p>';
+
     if (avgRT > rtThresh) {
-      let text =
-        '<p class="block-text">Please respond more quickly without sacrificing accuracy.</p>';
-      feedbackText += text;
+      feedbackText += speedFeedbackText;
       feedback['rt'] = {
         value: avgRT,
-        text: text,
+        text: speedFeedbackText,
+      };
+    }
+
+    if (stopSignalRespond === minStopCorrectPractice) {
+      if (avgRT <= rtThresh) {
+        // Only add text if it wasn't already added
+        feedbackText += speedFeedbackText;
+      }
+      feedback['stop_signal_respond'] = {
+        value: stopSignalRespond,
+        text: speedFeedbackText,
       };
     }
 
@@ -548,16 +560,6 @@ var practiceNode = {
     if (stopSignalRespond === maxStopCorrectPractice) {
       let text =
         '<p class="block-text">Please try your best to stop to stars.</p>';
-      feedbackText += text;
-      feedback['stop_signal_respond'] = {
-        value: stopSignalRespond,
-        text: text,
-      };
-    }
-
-    if (stopSignalRespond === minStopCorrectPractice) {
-      let text =
-        '<p class="block-text">Please do not slow down and wait for the star to appear.</p>';
       feedbackText += text;
       feedback['stop_signal_respond'] = {
         value: stopSignalRespond,
@@ -673,13 +675,25 @@ var testNode = {
       };
     }
 
+    let speedFeedbackText =
+      '<p class="block-text">Please respond more quickly without sacrificing accuracy.</p>';
+
     if (avgRT > rtThresh) {
-      let text =
-        '<p class="block-text">Please respond more quickly without sacrificing accuracy.</p>';
-      feedbackText += text;
+      feedbackText += speedFeedbackText;
       feedback['rt'] = {
         value: avgRT,
-        text: text,
+        text: speedFeedbackText,
+      };
+    }
+
+    if (stopSignalRespond <= minStopCorrect) {
+      if (avgRT <= rtThresh) {
+        // Only add text if it wasn't already added
+        feedbackText += speedFeedbackText;
+      }
+      feedback['stop_signal_respond'] = {
+        value: stopSignalRespond,
+        text: speedFeedbackText,
       };
     }
 
@@ -696,16 +710,6 @@ var testNode = {
     if (stopSignalRespond >= maxStopCorrect) {
       let text =
         '<p class="block-text">Please try your best to stop to stars.</p>';
-      feedbackText += text;
-      feedback['stop_signal_respond'] = {
-        value: stopSignalRespond,
-        text: text,
-      };
-    }
-
-    if (stopSignalRespond <= minStopCorrect) {
-      let text =
-        '<p class="block-text">Please do not slow down and wait for the star to appear.</p>';
       feedbackText += text;
       feedback['stop_signal_respond'] = {
         value: stopSignalRespond,
