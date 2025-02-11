@@ -162,10 +162,10 @@ const setText = () => {
   promptTextList = `
   <ul style="text-align:left;">
     <li>${
-      possibleResponses[0][0] === 'index finger' ? 'A -> X' : 'Other pair'
+      possibleResponses[0][0] === 'index finger' ? 'A -> X' : 'Any other pair'
     }: Index</li>
     <li>${
-      possibleResponses[0][0] === 'index finger' ? 'Other pair' : 'A -> X'
+      possibleResponses[0][0] === 'index finger' ? 'Any other pair' : 'A -> X'
     }: Middle</li>
   </ul>
 `;
@@ -173,10 +173,10 @@ const setText = () => {
   promptText = `
   <div class = prompt_box>
     <p class = center-block-text style = "font-size:16px; line-height:80%;">${
-      possibleResponses[0][0] === 'index finger' ? 'A -> X' : 'Other pair'
+      possibleResponses[0][0] === 'index finger' ? 'A -> X' : 'Any other pair'
     }: Index</p>
     <p class = center-block-text style = "font-size:16px; line-height:80%;">${
-      possibleResponses[0][0] === 'index finger' ? 'Other pair' : 'A -> X'
+      possibleResponses[0][0] === 'index finger' ? 'Any other pair' : 'A -> X'
     }: Middle</p>
   </div>
 `;
