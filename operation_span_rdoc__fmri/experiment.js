@@ -7227,7 +7227,6 @@ var waitBlock = {
   stimulus: function () {
     return getRandomSpatial();
   },
-  choices: [processingChoices[0].keycode, processingChoices[1].keycode],
   trial_duration: function () {
     var { trial_id } = jsPsych.data.get().last(1).trials[0];
 
@@ -7261,7 +7260,6 @@ var waitBlock = {
           : 'test_inter-stimulus',
       exp_stage: getExpStage(),
       condition: 'operation',
-      choices: [processingChoices[0].keycode, processingChoices[1].keycode],
       trial_duration: processingTrialDuration,
       stimulus_duration: processingStimulusDuration,
       block_num: getExpStage() == 'practice' ? practiceCount : testCount,
@@ -7542,8 +7540,7 @@ var practiceNode = {
       accuracy_irrespective_of_cell_order_thresh
     ) {
       let text =
-        '<p class = block-text>Your accuracy for the 4x4 memory grid was low.</p>' +
-        '<p class = block-text>Remember the location of the black cells.</p>';
+        '<p class = block-text>Your accuracy for the 4x4 memory grid was low.</p>';
 
       feedbackText += text;
       feedback['accuracy_irrespective_of_cell_order'] = {
@@ -7671,8 +7668,7 @@ var testNode = {
       accuracy_irrespective_of_cell_order_thresh
     ) {
       let text =
-        '<p class = block-text>Your accuracy for the 4x4 memory grid was low.</p>' +
-        '<p class = block-text>Remember the location of the black cells.</p>';
+        '<p class = block-text>Your accuracy for the 4x4 memory grid was low.</p>';
 
       feedbackText += text;
       feedback['accuracy_irrespective_of_cell_order'] = {

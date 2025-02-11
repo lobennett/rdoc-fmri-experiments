@@ -7050,7 +7050,6 @@ var waitBlock = {
   stimulus: function () {
     return getRandomSpatial();
   },
-  choices: choices,
   trial_duration: function () {
     var { trial_id } = jsPsych.data.get().last(1).trials[0];
 
@@ -7079,7 +7078,6 @@ var waitBlock = {
           : 'test_inter-stimulus',
       exp_stage: getExpStage(),
       condition: 'operation_only',
-      choices: [processingChoices[0].keycode, processingChoices[1].keycode],
       trial_duration: processingTrialDuration,
       stimulus_duration: processingStimulusDuration,
       block_num: getExpStage() == 'practice' ? practiceCount : testCount,
