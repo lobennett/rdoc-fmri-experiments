@@ -268,39 +268,27 @@ const setText = () => {
 
   promptText = `
   <div class="prompt_box">
-    <p class="center-block-text" style="font-size:16px; line-height:80%;">"Parity" or "Odd-Even": <b>index finger</b> if <b>${
-      responseMappings.oddEven.even === 'y' ? 'even' : 'odd'
-    }</b> and <b>middle finger</b> if <b>${
-    responseMappings.oddEven.even === 'y' ? 'odd' : 'even'
-  }</b></p>
-   <p class="center-block-text" style="font-size:16px; line-height:80%;">"Magnitude" or "High-Low": <b>index finger</b> if <b>${
-     responseMappings.higherLower.higher === 'y'
-       ? 'higher than 5'
-       : 'lower than 5'
-   }</b> and <b>middle finger</b> if <b>${
-    responseMappings.higherLower.higher === 'y'
-      ? 'lower than 5'
-      : 'higher than 5'
-  }</b></p>
+    <p class="center-block-text" style="font-size:16px; line-height:80%;">
+      Index: ${responseMappings.oddEven.odd === 'y' ? 'Odd' : 'Even'}/${
+    responseMappings.higherLower.higher === 'y' ? 'High' : 'Low'
+  }
+    </p>
+    <p class="center-block-text" style="font-size:16px; line-height:80%;">
+      Middle: ${responseMappings.oddEven.odd === 'y' ? 'Even' : 'Odd'}/${
+    responseMappings.higherLower.higher === 'y' ? 'Low' : 'High'
+  } 5
+    </p>
   </div>
 `;
 
   promptTextList = `
-  <ul style="text-align:left;font-size:24px; ">
-    <li>Cue "Parity" or "Odd-Even": <b>index finger</b> if <b>${
-      responseMappings.oddEven.even === 'y' ? 'even' : 'odd'
-    }</b> and <b>middle finger</b> if <b>${
-    responseMappings.oddEven.even === 'y' ? 'odd' : 'even'
-  }</b>.</li>
-    <li>Cue "Magnitude" or "High-Low": <b>index finger</b> if <b>${
-      responseMappings.higherLower.higher === 'y'
-        ? 'higher than 5'
-        : 'lower than 5'
-    }</b> and <b>middle finger</b> if <b>${
-    responseMappings.higherLower.higher === 'y'
-      ? 'lower than 5'
-      : 'higher than 5'
-  }</b>.</li>
+  <ul style="text-align:left;font-size:24px;">
+    <li>Index: ${responseMappings.oddEven.odd === 'y' ? 'Odd' : 'Even'}/${
+    responseMappings.higherLower.higher === 'y' ? 'High' : 'Low'
+  }</li>
+    <li>Middle: ${responseMappings.oddEven.odd === 'y' ? 'Even' : 'Odd'}/${
+    responseMappings.higherLower.higher === 'y' ? 'Low' : 'High'
+  }</li>
   </ul>
 `;
 
@@ -633,12 +621,12 @@ var practiceNode = {
     var missedResponses = (totalTrials - sumResponses) / totalTrials;
     var avgRT = sumRT / sumResponses;
 
-    feedbackText =
-      '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
+    feedbackText = '<div class = centerbox>';
+    feedbackText += '<p class = block-text>Please take a short break.</p>';
 
     if (accuracy < practiceAccuracyThresh) {
       let text = `
-          <p class="block-text">Your accuracy is low. Remember:</p>
+          <p class="block-text">Your accuracy was low.</p>
           ${promptTextList}
         `;
       feedbackText += text;
@@ -650,8 +638,7 @@ var practiceNode = {
 
     if (avgRT > rtThresh) {
       let text = `
-          <p class="block-text">You have been responding too slowly.</p>
-          ${speedReminder}
+          <p class="block-text">Please respond more quickly without sacrificing accuracy.</p>
         `;
       feedbackText += text;
       feedback['rt'] = {
@@ -662,7 +649,7 @@ var practiceNode = {
 
     if (missedResponses > missedResponseThresh) {
       let text = `
-          <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>
+          <p class="block-text">Respond on every trial.</p>
         `;
       feedbackText += text;
       feedback['missed_responses'] = {
@@ -671,7 +658,7 @@ var practiceNode = {
       };
     }
 
-    feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
+    feedbackText += '</div>';
 
     // setting next block's stimuli
     taskSwitches = trial_designs;
@@ -757,76 +744,62 @@ var testNode = {
     var missedResponses = (totalTrials - sumResponses) / totalTrials;
     var avgRT = sumRT / sumResponses;
 
-    if (testCount === numTestBlocks) {
-      let text = `<div class=centerbox>
-        <p class=block-text>Done with this task.</p>
-        </div>`;
-      feedbackText += text;
-      feedback['done'] = {
-        value: true,
-        text: text,
-      };
+    feedbackText = '<div class = centerbox>';
+    feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
 
-      block_level_feedback = feedback;
-
-      return false;
-    } else {
-      feedbackText =
-        '<div class = centerbox><p class = block-text>Please take this time to read your feedback!</p>';
-
-      feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
-
-      if (accuracy < accuracyThresh) {
-        let text = `
-          <p class="block-text">Your accuracy is low. Remember:</p>
+    if (accuracy < accuracyThresh) {
+      let text = `
+          <p class="block-text">Your accuracy was low.</p>
           ${promptTextList}
         `;
-        feedbackText += text;
-        feedback['accuracy'] = {
-          value: accuracy,
-          text: text,
-        };
-      }
-
-      if (avgRT > rtThresh) {
-        let text = `
-          <p class="block-text">You have been responding too slowly.</p>
-          ${speedReminder}
-        `;
-        feedbackText += text;
-        feedback['rt'] = {
-          value: avgRT,
-          text: text,
-        };
-      }
-
-      if (missedResponses > missedResponseThresh) {
-        let text = `
-          <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>
-        `;
-        feedbackText += text;
-        feedback['missed_responses'] = {
-          value: missedResponses,
-          text: text,
-        };
-      }
-
-      feedbackText += '</div>';
-
-      block_level_feedback = feedback;
-
-      // setting next block's stimuli
-      trial_designs = trial_designs.slice(0, numTrialsPerBlock);
-      trial_designs.unshift({
-        task_switch: 'na',
-        cue_switch: 'na',
-      });
-      stim_designs = stim_designs.slice(numTrialsPerBlock);
-
-      taskSwitches = trial_designs;
-      stims = genStims(numTrialsPerBlock + 1);
-      return true;
+      feedbackText += text;
+      feedback['accuracy'] = {
+        value: accuracy,
+        text: text,
+      };
     }
+
+    if (avgRT > rtThresh) {
+      let text = `
+          <p class="block-text">Please respond more quickly without sacrificing accuracy.</p>
+        `;
+      feedbackText += text;
+      feedback['rt'] = {
+        value: avgRT,
+        text: text,
+      };
+    }
+
+    if (missedResponses > missedResponseThresh) {
+      let text = `
+          <p class="block-text">Respond on every trial.</p>
+        `;
+      feedbackText += text;
+      feedback['missed_responses'] = {
+        value: missedResponses,
+        text: text,
+      };
+    }
+
+    feedbackText += '</div>';
+
+    block_level_feedback = feedback;
+    if (testCount === numTestBlocks) {
+      return false;
+    }
+
+    // setting next block's stimuli
+    trial_designs = trial_designs.slice(0, numTrialsPerBlock);
+    trial_designs.unshift({
+      task_switch: 'na',
+      cue_switch: 'na',
+    });
+    stim_designs = stim_designs.slice(numTrialsPerBlock);
+
+    taskSwitches = trial_designs;
+    stims = genStims(numTrialsPerBlock + 1);
+
+    return true;
   },
   on_timeline_finish: function () {
     // window.dataSync();
@@ -920,6 +893,8 @@ var cued_task_switching_rdoc__fmri_init = () => {
 
   // Start test blocks
   cued_task_switching_rdoc__fmri_experiment.push(testNode);
+  cued_task_switching_rdoc__fmri_experiment.push(long_fixation_node);
+  cued_task_switching_rdoc__fmri_experiment.push(feedbackBlock);
   cued_task_switching_rdoc__fmri_experiment.push(endBlock);
   cued_task_switching_rdoc__fmri_experiment.push(exitFullscreen);
 };

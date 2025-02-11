@@ -5,8 +5,8 @@
 # Clone expfactory_deploy_local
 git clone https://github.com/lobennett/expfactory-deploy.git
 
-# Create virtual environment - using python3.12 because of web.py dependency
-python3.12 -m venv .venv && source .venv/bin/activate && pip3 install -e ./expfactory-deploy/expfactory_deploy_local
+# Create virtual environment - using python3 because of web.py dependency
+python3 -m venv .venv && source .venv/bin/activate && pip3 install -e ./expfactory-deploy/expfactory_deploy_local
 
 pip3 list
 
@@ -21,7 +21,6 @@ cp ../.utils/*.js ./expfactory-deploy/expfactory_deploy_local/src/expfactory_dep
 
 echo "---------------------------------------------------------------"
 echo "If you see expfactory_deploy_local in the list, you're all set."
-echo "To run a task, navigate to the task directory and run 'expfactory_deploy_local -e .'"
-echo "For example, from this directory: source .venv/bin/activate && cd ../ax_cpt_rdoc__fmri && expfactory_deploy_local -e ."
+echo "Run `./run.sh` in the root of the project and it will prompt you for the session's metadata and then run the experiment."
 echo "The experiment will be available at: http://localhost:8000/"
 echo "---------------------------------------------------------------"

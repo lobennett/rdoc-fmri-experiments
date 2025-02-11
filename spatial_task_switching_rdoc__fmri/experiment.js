@@ -332,112 +332,123 @@ const setText = () => {
 
   prompt_text_list = `
   <ul style="text-align:left;">
-    <li>Top 2 quadrants: judge the shape on its <b>${quadMappings.top}</b></li>
-    <li><b>${
-      quadMappings.top === 'form'
-        ? responseMappings.form.circle === 'y'
-          ? 'circle'
-          : 'square'
-        : quadMappings.top === 'color'
-        ? responseMappings.color.blue === 'y'
-          ? 'blue'
-          : 'orange'
-        : ''
-    }</b>: index finger</li>
-    <li><b>${
-      quadMappings.top === 'form'
-        ? responseMappings.form.circle === 'g'
-          ? 'circle'
-          : 'square'
-        : quadMappings.top === 'color'
-        ? responseMappings.color.blue === 'g'
-          ? 'blue'
-          : 'orange'
-        : ''
-    }</b>: middle finger</li>
-    <li>Bottom 2 quadrants: judge the shape on its <b>${
-      quadMappings.bottom
-    }</b></li>
-    <li><b>${
-      quadMappings.bottom === 'form'
-        ? responseMappings.form.circle === 'y'
-          ? 'circle'
-          : 'square'
-        : quadMappings.bottom === 'color'
-        ? responseMappings.color.blue === 'y'
-          ? 'blue'
-          : 'orange'
-        : ''
-    }</b>: index finger</li>
-    <li><b>${
-      quadMappings.bottom === 'form'
-        ? responseMappings.form.circle === 'g'
-          ? 'circle'
-          : 'square'
-        : quadMappings.bottom === 'color'
-        ? responseMappings.color.blue === 'g'
-          ? 'blue'
-          : 'orange'
-        : ''
-    }</b>: middle finger</li>
+    <li>Top: <b>${
+      quadMappings.top.charAt(0).toUpperCase() + quadMappings.top.slice(1)
+    }</b>
+      <ul>
+        <li><b>${
+          quadMappings.top === 'form'
+            ? responseMappings.form.circle === 'y'
+              ? 'Circle'
+              : 'Square'
+            : quadMappings.top === 'color'
+            ? responseMappings.color.blue === 'y'
+              ? 'Blue'
+              : 'Orange'
+            : ''
+        }</b>: Index</li>
+        <li><b>${
+          quadMappings.top === 'form'
+            ? responseMappings.form.circle === 'g'
+              ? 'Circle'
+              : 'Square'
+            : quadMappings.top === 'color'
+            ? responseMappings.color.blue === 'g'
+              ? 'Blue'
+              : 'Orange'
+            : ''
+        }</b>: Middle</li>
+      </ul>
+    </li>
+    <li>Bottom: <b>${
+      quadMappings.bottom.charAt(0).toUpperCase() + quadMappings.bottom.slice(1)
+    }</b>
+      <ul>
+        <li><b>${
+          quadMappings.bottom === 'form'
+            ? responseMappings.form.circle === 'y'
+              ? 'Circle'
+              : 'Square'
+            : quadMappings.bottom === 'color'
+            ? responseMappings.color.blue === 'y'
+              ? 'Blue'
+              : 'Orange'
+            : ''
+        }</b>: Index</li>
+        <li><b>${
+          quadMappings.bottom === 'form'
+            ? responseMappings.form.circle === 'g'
+              ? 'Circle'
+              : 'Square'
+            : quadMappings.bottom === 'color'
+            ? responseMappings.color.blue === 'g'
+              ? 'Blue'
+              : 'Orange'
+            : ''
+        }</b>: Middle</li>
+      </ul>
+    </li>
   </ul>`;
 
   prompt_text = `
   <div class="prompt_box">
     <div class='prompt_content' style='margin-bottom: 80px;'>
-      <p>Top 2 quadrants, judge the shape on its <b>${quadMappings.top}</b>:</p>
+      <p>Top: <b>${
+        quadMappings.top.charAt(0).toUpperCase() + quadMappings.top.slice(1)
+      }</b></p>
       <ul>
         <li><b>${
           quadMappings.top === 'form'
             ? responseMappings.form.circle === 'y'
-              ? 'circle'
-              : 'square'
+              ? 'Circle'
+              : 'Square'
             : quadMappings.top === 'color'
             ? responseMappings.color.blue === 'y'
-              ? 'blue'
-              : 'orange'
+              ? 'Blue'
+              : 'Orange'
             : ''
-        }</b>: index finger</li>
+        }</b>: Index</li>
         <li><b>${
           quadMappings.top === 'form'
             ? responseMappings.form.circle === 'g'
-              ? 'circle'
-              : 'square'
+              ? 'Circle'
+              : 'Square'
             : quadMappings.top === 'color'
             ? responseMappings.color.blue === 'g'
-              ? 'blue'
-              : 'orange'
+              ? 'Blue'
+              : 'Orange'
             : ''
-        }</b>: middle finger</li>
+        }</b>: Middle</li>
       </ul>
     </div>
     <div class='prompt_content' style='margin-top: 80px;'>
-      <p>Bottom 2 quadrants, judge the shape on its <b>${
-        quadMappings.bottom
-      }</b>:</p>
+      <p>Bottom: <b>${
+        quadMappings.bottom.charAt(0).toUpperCase() +
+        quadMappings.bottom.slice(1)
+      }</b></p>
        <ul>
         <li><b>${
           quadMappings.bottom === 'form'
             ? responseMappings.form.circle === 'y'
-              ? 'circle'
-              : 'square'
+              ? 'Circle'
+              : 'Square'
             : quadMappings.bottom === 'color'
             ? responseMappings.color.blue === 'y'
-              ? 'blue'
-              : 'orange'
+              ? 'Blue'
+              : 'Orange'
             : ''
-        }</b>: index finger</li>
+        }</b>: Index</li>
         <li><b>${
           quadMappings.bottom === 'form'
             ? responseMappings.form.circle === 'g'
-              ? 'circle'
-              : 'square'
+              ? 'Circle'
+              : 'Square'
             : quadMappings.bottom === 'color'
             ? responseMappings.color.blue === 'g'
-              ? 'blue'
-              : 'orange'
+              ? 'Blue'
+              : 'Orange'
             : ''
-        }</b>: middle finger</li>
+        }</b>: Middle</li>
       </ul>
     </div>
   </div>`;
@@ -650,6 +661,9 @@ var feedbackBlock = {
     const { trial_id } = jsPsych.data.get().last().trials[0];
     return trial_id === 'check_middle';
   },
+  on_finish: function (data) {
+    data['block_level_feedback'] = block_level_feedback;
+  },
 };
 
 var practiceTrials = [];
@@ -793,12 +807,12 @@ var practiceNode = {
     var missed_responses = (total_trials - sum_responses) / total_trials;
     var ave_rt = sum_rt / sum_responses;
 
-    feedbackText =
-      '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
+    feedbackText = '<div class = centerbox>';
+    feedbackText += '<p class = block-text>Please take a short break.</p>';
 
     if (accuracy < practice_accuracy_thresh) {
       let text = `
-          <p class="block-text">Your accuracy is low. Remember:</p>
+          <p class="block-text">Your accuracy was low.</p>
           ${prompt_text_list}
         `;
       feedbackText += text;
@@ -810,7 +824,7 @@ var practiceNode = {
 
     if (ave_rt > rt_thresh) {
       let text = `
-        <p class="block-text">You have been responding too slowly.${speedReminder}</p>
+        <p class="block-text">Please respond more quickly without sacrificing accuracy.</p>
       `;
       feedbackText += text;
       feedback['rt'] = {
@@ -821,7 +835,7 @@ var practiceNode = {
 
     if (missed_responses > missed_response_thresh) {
       let text = `
-          <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>
+          <p class="block-text">Respond on every trial.</p>
         `;
       feedbackText += text;
       feedback['missed_responses'] = {
@@ -830,7 +844,7 @@ var practiceNode = {
       };
     }
 
-    feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
+    feedbackText += '</div>';
 
     trial_designs = stim_designs.slice(0, numTrialsPerBlock);
     stim_designs = stim_designs.slice(numTrialsPerBlock);
@@ -954,68 +968,55 @@ var testNode = {
     var missed_responses = (total_trials - sum_responses) / total_trials;
     var ave_rt = sum_rt / sum_responses;
 
-    if (testCount === numTestBlocks) {
-      let text = `<div class=centerbox>
-        <p class=block-text>Done with this task.</p>
-        </div>`;
-      feedbackText += text;
-      feedback['done'] = {
-        value: true,
-        text: text,
-      };
-      block_level_feedback = feedback;
+    feedbackText = '<div class = centerbox>';
+    feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
 
-      return false;
-    } else {
-      feedbackText =
-        '<div class = centerbox><p class = block-text>Please take this time to read your feedback!</p>';
-
-      feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
-
-      if (accuracy < accuracy_thresh) {
-        let text = `
-          <p class="block-text">Your accuracy is low. Remember:</p>
+    if (accuracy < accuracy_thresh) {
+      let text = `
+          <p class="block-text">Your accuracy was low.</p>
           ${prompt_text_list}
         `;
-        feedbackText += text;
-        feedback['accuracy'] = {
-          value: accuracy,
-          text: text,
-        };
-      }
-
-      if (ave_rt > rt_thresh) {
-        let text = `
-          <p class="block-text">You have been responding too slowly.${speedReminder}</p>
-        `;
-        feedbackText += text;
-        feedback['rt'] = {
-          value: ave_rt,
-          text: text,
-        };
-      }
-
-      if (missed_responses > missed_response_thresh) {
-        let text = `
-          <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>
-        `;
-        feedbackText += text;
-        feedback['missed_responses'] = {
-          value: missed_responses,
-          text: text,
-        };
-      }
-
-      feedbackText += '</div>';
-
-      trial_designs = stim_designs.slice(0, numTrialsPerBlock);
-      stim_designs = stim_designs.slice(numTrialsPerBlock);
-      trial_designs = parse_design(trial_designs);
-      task_switches = trial_designs;
-      stims = createTrialTypes(task_switches);
-      block_level_feedback = feedback;
-      return true;
+      feedbackText += text;
+      feedback['accuracy'] = {
+        value: accuracy,
+        text: text,
+      };
     }
+
+    if (ave_rt > rt_thresh) {
+      let text = `
+          <p class="block-text">Please respond more quickly without sacrificing accuracy.</p>
+        `;
+      feedbackText += text;
+      feedback['rt'] = {
+        value: ave_rt,
+        text: text,
+      };
+    }
+
+    if (missed_responses > missed_response_thresh) {
+      let text = `
+          <p class="block-text">Respond on every trial.</p>
+        `;
+      feedbackText += text;
+      feedback['missed_responses'] = {
+        value: missed_responses,
+        text: text,
+      };
+    }
+
+    feedbackText += '</div>';
+    block_level_feedback = feedback;
+    if (testCount === numTestBlocks) {
+      return false;
+    }
+
+    trial_designs = stim_designs.slice(0, numTrialsPerBlock);
+    stim_designs = stim_designs.slice(numTrialsPerBlock);
+    trial_designs = parse_design(trial_designs);
+    task_switches = trial_designs;
+    stims = createTrialTypes(task_switches);
+    return true;
   },
   on_timeline_finish: function () {
     // window.dataSync();
@@ -1083,6 +1084,9 @@ var spatial_task_switching_rdoc__fmri_init = () => {
 
   // Test blocks
   spatial_task_switching_rdoc__fmri_experiment.push(testNode);
+  spatial_task_switching_rdoc__fmri_experiment.push(long_fixation_node);
+  spatial_task_switching_rdoc__fmri_experiment.push(feedbackBlock);
+
   spatial_task_switching_rdoc__fmri_experiment.push(endBlock);
   spatial_task_switching_rdoc__fmri_experiment.push(exit_fullscreen);
 };

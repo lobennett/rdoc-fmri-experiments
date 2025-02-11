@@ -19,10 +19,10 @@ fi
 # Create options string for select prompt
 PS3="Please select an experiment: "
 
-# Creat list of options in alphabetical order 
+# Create list of options in alphabetical order 
 sorted_dirs=()
 for dir in "${fmri_dirs[@]#./}"; do
-    if [[ "$dir" == "ax_cpt__fmri" ]]; then
+    if [[ "$dir" == "ax_cpt__fmri" ]] || [[ "$dir" =~ surveys ]]; then
         continue
     fi
     sorted_dirs+=("$dir")

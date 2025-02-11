@@ -228,22 +228,23 @@ const setText = () => {
     <li>
     <span class="large" style="color:${
       getColorByKey('y').color
-    };">WORD</span>: index finger
+    };">WORD</span>: Index
   </span>
   </li>
    <li>
     <span class="large" style="color:${
       getColorByKey('g').color
-    };">WORD</span>: middle finger
+    };">WORD</span>: Middle
   </span>
   </li>
     <li>
     <span class="large" style="color:${
       getColorByKey('c').color
-    };">WORD</span>: ring finger
+    };">WORD</span>: Ring
   </span>
   </li>
   </ul>`;
+
   incongruentStim = [
     // red word in blue ink
     {
@@ -484,11 +485,11 @@ var feedbackBlock = {
   stimulus: getFeedback,
   trial_duration: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_middle' ? undefined : 4000;
+    return trial_id === 'check_ring' ? undefined : 4000;
   },
   response_ends_trial: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_middle';
+    return trial_id === 'check_ring';
   },
   on_finish: function (data) {
     data['block_level_feedback'] = block_level_feedback;
@@ -642,12 +643,12 @@ var practiceNode = {
     var missedResponses = (totalTrials - sumResponses) / totalTrials;
     var avgRT = sumRT / sumResponses;
 
-    feedbackText =
-      '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
+    feedbackText = '<div class = centerbox>';
+    feedbackText += '<p class = block-text>Please take a short break.</p>';
 
     if (accuracy < practiceAccuracyThresh) {
       let text = `
-          <p class="block-text">Your accuracy is low. Remember:</p>
+          <p class="block-text">Your accuracy was low.</p>
           ${responseKeys}`;
       feedbackText += text;
       feedback['accuracy'] = {
@@ -658,7 +659,7 @@ var practiceNode = {
 
     if (avgRT > rtThresh) {
       let text = `
-          <p class="block-text">You have been responding too slowly. Try to respond as quickly and accurately as possible.</p>`;
+          <p class="block-text">Please respond more quickly without sacrificing accuracy.</p>`;
       feedbackText += text;
       feedback['rt'] = {
         value: avgRT,
@@ -668,7 +669,7 @@ var practiceNode = {
 
     if (missedResponses > missedResponseThresh) {
       let text = `
-          <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>`;
+          <p class="block-text">Respond on every trial.</p>`;
       feedbackText += text;
       feedback['missed_responses'] = {
         value: missedResponses,
@@ -676,7 +677,7 @@ var practiceNode = {
       };
     }
 
-    feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
+    feedbackText += '</div>';
 
     expStage = 'test';
 
@@ -789,64 +790,51 @@ var testNode = {
     var missedResponses = (totalTrials - sumResponses) / totalTrials;
     var avgRT = sumRT / sumResponses;
 
-    if (testCount === numTestBlocks) {
-      let text = `<div class=centerbox>
-        <p class=block-text>Done with this task.</p>
-        </div>`;
-      feedbackText = text;
-      feedback['done'] = {
-        value: true,
+    feedbackText = '<div class = centerbox>';
+    feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
+
+    if (accuracy < accuracyThresh) {
+      let text = `
+          <p class="block-text">Your accuracy was low.</p>
+          ${responseKeys}`;
+      feedbackText += text;
+      feedback['accuracy'] = {
+        value: accuracy,
         text: text,
       };
-      block_level_feedback = feedback;
-      return false;
-    } else {
-      feedbackText =
-        '<div class = centerbox><p class = block-text>Please take this time to read your feedback!</p>';
-
-      feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
-
-      if (accuracy < accuracyThresh) {
-        let text = `
-          <p class="block-text">Your accuracy is low. Remember:</p>
-          ${responseKeys}`;
-        feedbackText += text;
-        feedback['accuracy'] = {
-          value: accuracy,
-          text: text,
-        };
-      }
-
-      if (avgRT > rtThresh) {
-        let text = `
-          <p class="block-text">You have been responding too slowly. Try to respond as quickly and accurately as possible.</p>`;
-        feedbackText += text;
-        feedback['rt'] = {
-          value: avgRT,
-          text: text,
-        };
-      }
-
-      if (missedResponses > missedResponseThresh) {
-        let text = `
-          <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>`;
-        feedbackText += text;
-        feedback['missed_responses'] = {
-          value: missedResponses,
-          text: text,
-        };
-      }
-
-      feedbackText += '</div>';
-
-      block_level_feedback = feedback;
-
-      let block_designs = stim_designs.slice(0, numTrialsPerBlock);
-      stim_designs = stim_designs.slice(numTrialsPerBlock);
-
-      blockStims = create_test_stimuli(block_designs);
-      return true;
     }
+
+    if (avgRT > rtThresh) {
+      let text = `
+          <p class="block-text">Please respond more quickly without sacrificing accuracy.</p>`;
+      feedbackText += text;
+      feedback['rt'] = {
+        value: avgRT,
+        text: text,
+      };
+    }
+
+    if (missedResponses > missedResponseThresh) {
+      let text = `
+          <p class="block-text">Respond on every trial.</p>`;
+      feedbackText += text;
+      feedback['missed_responses'] = {
+        value: missedResponses,
+        text: text,
+      };
+    }
+
+    feedbackText += '</div>';
+    block_level_feedback = feedback;
+    if (testCount === numTestBlocks) {
+      return false;
+    }
+
+    let block_designs = stim_designs.slice(0, numTrialsPerBlock);
+    stim_designs = stim_designs.slice(numTrialsPerBlock);
+
+    blockStims = create_test_stimuli(block_designs);
+    return true;
   },
   // on_timeline_finish: function () {
   //   window.dataSync();
@@ -903,11 +891,13 @@ stroop_rdoc__fmri_experiment = [];
 var stroop_rdoc__fmri_init = () => {
   stroop_rdoc__fmri_experiment.push(motor_and_design_perm_block);
   stroop_rdoc__fmri_experiment.push(fullscreen);
-  stroop_rdoc__fmri_experiment.push(check_fingers_node);
+  stroop_rdoc__fmri_experiment.push(check_fingers_node_stroop);
   stroop_rdoc__fmri_experiment.push(practiceNode);
   stroop_rdoc__fmri_experiment.push(feedbackBlock);
   stroop_rdoc__fmri_experiment.push(fmri_wait_node);
   stroop_rdoc__fmri_experiment.push(testNode);
+  stroop_rdoc__fmri_experiment.push(long_fixation_node);
+  stroop_rdoc__fmri_experiment.push(feedbackBlock);
   stroop_rdoc__fmri_experiment.push(endBlock);
   stroop_rdoc__fmri_experiment.push(exitFullscreen);
 };

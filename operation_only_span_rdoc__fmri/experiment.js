@@ -6626,19 +6626,6 @@ const calculate_processing_accuracy = (trials) => {
   return { avgProcessingAcc, avgProcessingRT };
 };
 
-function shuffleChecksArray(array) {
-  // Create a copy of the original array
-  const shuffledArray = [...array];
-
-  // Perform Fisher-Yates shuffle
-  for (let i = shuffledArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-  }
-
-  return shuffledArray;
-}
-
 function shuffleArray(array) {
   // Create a copy of the original array to avoid modifying it directly
   const shuffledArray = array.slice();
@@ -6780,123 +6767,6 @@ function getProcessingStimProperties(htmlString) {
   return parsedClassList;
 }
 
-var submittedAnswers = [];
-var timestampsSubmissions = [];
-var timestampsMovingThroughGrid = [];
-var trackingCellMovingThroughGrid = [];
-var startingCellInGrid;
-
-var generateGrid = function () {
-  const randomIndex = Math.floor(Math.random() * 16);
-  startingCellInGrid = randomIndex;
-  // Variable to store the initial call time
-  let initialCallTime = Date.now();
-
-  let activeIndex = randomIndex;
-  const activeBoxes = [];
-
-  let html = '<div class="container">';
-  for (var i = 0; i < 16; i++) {
-    if (i === randomIndex) {
-      html += '<div class="box response-active"></div>';
-      activeBoxes.push(i);
-    } else {
-      html += '<div class="box"></div>';
-    }
-  }
-  html += '</div>';
-
-  let spacebarCount = 0;
-  const selectedIndexes = [];
-
-  // Declare a variable to store the setTimeout ID
-  let timeoutId;
-  function handleKeyDown(event) {
-    let currentTime = Date.now();
-    let timeDifference = currentTime - initialCallTime;
-    timestampsMovingThroughGrid.push(timeDifference); // Store timestamp
-
-    const key = event.key;
-    const container = document.querySelector('.container');
-    const boxes = container.querySelectorAll('.box');
-
-    // Remove active-box class from all boxes
-    boxes.forEach(function (box) {
-      box.classList.remove('spacebar-box');
-    });
-
-    // Update activeIndex based on arrow key input
-    let newActiveIndex = activeIndex;
-    if (key === 'b' && activeIndex % 4 !== 0) {
-      newActiveIndex = activeIndex - 1;
-    } else if (key === 'g' && activeIndex % 4 !== 3) {
-      newActiveIndex = activeIndex + 1;
-    } else if (key === 'y' && activeIndex >= 4) {
-      newActiveIndex = activeIndex - 4;
-    } else if (key === 'r' && activeIndex < 12) {
-      newActiveIndex = activeIndex + 4;
-    }
-
-    trackingCellMovingThroughGrid.push(newActiveIndex);
-
-    if (newActiveIndex !== activeIndex) {
-      // Remove active-box class from all boxes
-      boxes.forEach(function (box) {
-        box.classList.remove('response-active');
-      });
-    }
-
-    if (newActiveIndex !== activeIndex) {
-      activeIndex = newActiveIndex;
-      boxes[activeIndex].classList.add('response-active'); // Add active-box class for arrow key navigation
-    }
-
-    if (key === 'e') {
-      event.preventDefault(); // handling default behavior on keydown event for spacebar. Prevents scrolling of the page.
-      let currentTime = Date.now();
-      let timeDifference = currentTime - initialCallTime;
-      timestampsSubmissions.push(timeDifference); // Store timestamp
-
-      if (spacebarCount < 4) {
-        boxes[activeIndex].classList.add('spacebar-box'); // Add spacebar-box class for spacebar selection
-        activeBoxes.push(activeIndex);
-        selectedIndexes.push(activeIndex);
-        spacebarCount++;
-        submittedAnswers.push(activeIndex);
-      }
-
-      // Clear any existing setTimeout calls
-      clearTimeout(timeoutId);
-
-      timeoutId = setTimeout(() => {
-        if (key !== 'e') {
-          boxes[activeIndex].classList.remove('response-active'); // Remove active-box class if the arrow key was pressed
-        }
-        boxes[activeIndex].classList.remove('spacebar-box'); // Remove spacebar-box class for spacebar selection
-      }, 200);
-    }
-  }
-  // Attach the event listener
-  document.addEventListener('keydown', handleKeyDown);
-
-  function resetGrid() {
-    activeBoxes.length = 0; // Clear the activeBoxes array
-    selectedIndexes.length = 0; // Clear the selectedIndexes array
-    spacebarCount = 0;
-
-    // Remove the event listener
-    document.removeEventListener('keydown', handleKeyDown);
-
-    // Clear any remaining state or perform other necessary actions
-    submittedAnswers = [];
-
-    // Also reset the initial call time when the grid is reset
-    initialCallTime = Date.now();
-  }
-
-  return { html, resetGrid };
-};
-
 function combineArrays(array1, array2) {
   if (array1.length % 4 !== 0 || array2.length % 4 !== 0) {
     throw new Error('Both arrays must have a length that is a multiple of 4.');
@@ -6933,8 +6803,6 @@ const getFeedback = () =>
 
 const getCurrSeq = () => currSeq;
 
-const getCurrCondition = () => currCondition;
-
 const getCurrBlockNum = () =>
   getExpStage() === 'practice' ? practiceCount : testCount;
 
@@ -6942,6 +6810,7 @@ const getExpStage = () => expStage;
 
 var speedReminder;
 var promptText;
+var fixationPromptText;
 var reminderInstruct;
 var feedbackText;
 var choices;
@@ -6985,6 +6854,24 @@ const setText = () => {
     }</b> and <b>"right button"</b> if <b>${
     processingChoices[0].keyname === 'left button' ? 'asymmetric' : 'symmetric'
   }</b>.</p>
+  </div>`;
+
+  promptTextList = `<ul style="text-align:left;">
+    <li>${
+      processingChoices[0].keyname === 'left button'
+        ? 'Symmetric'
+        : 'Asymmetric'
+    }: Left</li>
+    <li>${
+      processingChoices[0].keyname === 'left button'
+        ? 'Asymmetric'
+        : 'Symmetric'
+    }: Right</li>
+  </ul>`;
+
+  fixationPromptText = `<div class=prompt_box_operation>
+    <p class = center-block-text style = "font-size:16px; line-height:80%%;"></p>
+    <p class = center-block-text style = "font-size:16px; line-height:80%%;">Keep your eyes on the fixation.</p>
   </div>`;
 
   reminderInstruct = `
@@ -7034,11 +6921,7 @@ var practiceLen = 1;
 var numTrialsPerBlock = 8;
 var numTestBlocks = 3;
 
-var trialList;
-
 var spatialAns;
-
-var currCondition = 'operation';
 
 var numStimuli = 4;
 
@@ -7108,11 +6991,11 @@ var feedbackBlock = {
   stimulus: getFeedback,
   trial_duration: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_middle' ? undefined : 4000;
+    return trial_id === 'check_right_button' ? undefined : 4000;
   },
   response_ends_trial: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_middle';
+    return trial_id === 'check_right_button';
   },
   on_finish: function (data) {
     data['block_level_feedback'] = block_level_feedback;
@@ -7131,7 +7014,7 @@ var stimulusBlock = {
     return {
       trial_id: `${stage}_stim`,
       exp_stage: stage,
-      condition: getCurrCondition(),
+      condition: 'operation_only',
       trial_duration: stimTrialDuration,
       stimulus_duration: stimStimulusDuration,
       block_num: stage === 'practice' ? practiceCount : testCount,
@@ -7152,14 +7035,6 @@ var checkTime = null;
 var endTime = null;
 var timeLeft = null;
 
-var initializingTrialIDs = new Set([
-  'practice_feedback',
-  'practice_ITI',
-  'test_ITI',
-  'test_long_fixation',
-  'fmri_wait_block_trigger_end',
-]);
-
 var timerInitializingTrialIDs = new Set([
   'practice_feedback',
   'practice_ITI',
@@ -7175,7 +7050,6 @@ var waitBlock = {
   stimulus: function () {
     return getRandomSpatial();
   },
-  choices: choices,
   trial_duration: function () {
     var { trial_id } = jsPsych.data.get().last(1).trials[0];
 
@@ -7192,10 +7066,6 @@ var waitBlock = {
   response_ends_trial: true,
   on_start: function () {
     var { trial_id } = jsPsych.data.get().last(1).trials[0];
-    if (initializingTrialIDs.has(trial_id)) {
-      trialList = generateSpatialTrialValues(numStimuli);
-    }
-
     if (timerInitializingTrialIDs.has(trial_id)) {
       startTime = performance.now();
     }
@@ -7207,11 +7077,7 @@ var waitBlock = {
           ? 'practice_inter-stimulus'
           : 'test_inter-stimulus',
       exp_stage: getExpStage(),
-      condition: getCurrCondition(),
-      choices:
-        getCurrCondition() == 'operation'
-          ? [processingChoices[0].keycode, processingChoices[1].keycode]
-          : '',
+      condition: 'operation_only',
       trial_duration: processingTrialDuration,
       stimulus_duration: processingStimulusDuration,
       block_num: getExpStage() == 'practice' ? practiceCount : testCount,
@@ -7270,9 +7136,6 @@ var waitBlock = {
         }
       }
     }
-
-    console.log('Practice block stimulus data === ', data);
-    console.log('Practice block response data === ', data.response);
   },
   prompt: function () {
     return getExpStage() === 'practice' ? promptText : '';
@@ -7294,64 +7157,9 @@ var waitNode = {
   },
 };
 
-function arraysAreEqual(array1, array2) {
-  if (array1.length !== array2.length) {
-    return false;
-  }
-
-  for (let i = 0; i < array1.length; i++) {
-    if (array1[i] !== array2[i]) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-var activeGrid;
-
-var practiceFeedbackBlock = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: function () {
-    var responseProcessingData = jsPsych.data.get().filter({
-      trial_id: 'practice_inter-stimulus',
-      block_num: getCurrBlockNum(),
-    }).trials;
-
-    const { avgProcessingAcc, avgProcessingRT } = calculate_processing_accuracy(
-      responseProcessingData
-    );
-
-    return `
-          <div class='memory_feedback'>
-            <p>Accuracy for the 8x8 grids: ${(avgProcessingAcc * 100).toFixed(
-              2
-            )}</p>
-            <p>Response time for the 8x8 grids: ${avgProcessingRT.toFixed(
-              2
-            )}</p>
-        </div>`;
-  },
-  data: function () {
-    return {
-      exp_stage: 'practice',
-      trial_id: 'practice_feedback',
-      trial_duration: 5000, // changed from 500
-      stimulus_duration: 5000, // changed from 500
-      block_num: practiceCount,
-    };
-  },
-  response_ends_trial: false,
-  stimulus_duration: 5000, // changed from 500
-  trial_duration: 5000, // changed from 500
-};
-
 var testTrial = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: function () {
-    activeGrid = generateGrid();
-    return activeGrid.html;
-  },
+  stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
   response_ends_trial: false,
   data: function () {
     return {
@@ -7363,69 +7171,12 @@ var testTrial = {
   },
   trial_duration: responseBlockDuration,
   stimulus_duration: responseBlockDuration,
-  prompt: function () {
-    return getExpStage() === 'practice' ? practicePromptResponse : '';
-  },
   on_finish: function (data) {
-    if (getExpStage() == 'practice') {
-      var stimTrials = jsPsych.data
-        .get()
-        .filter({ trial_id: 'practice_stim' }).trials;
-    } else {
-      var stimTrials = jsPsych.data
-        .get()
-        .filter({ trial_id: 'test_stim' }).trials;
-    }
-
-    var lastTrials = stimTrials.slice(-4);
-    var correctResponses = lastTrials.map((trial) => trial.spatial_location);
-
-    data['response'] = submittedAnswers;
-
-    if (submittedAnswers.length < 4) {
-      data['correct_trial'] = null;
-    } else if (submittedAnswers.length == 4) {
-      const correct = arraysAreEqual(correctResponses, submittedAnswers);
-      data['correct_trial'] = correct ? 1 : 0;
-    }
-
-    data['condition'] = getCurrCondition();
-
-    if (getExpStage() == 'practice') {
-      var lastInterStimTrials = jsPsych.data
-        .get()
-        .filter({ trial_id: 'practice_stim' });
-
-      var lastInterStimTrialsCorrectAnswers = lastInterStimTrials.trials
-        .slice(-4)
-        .map((trial) => trial.spatial_location);
-    } else {
-      var lastInterStimTrials = jsPsych.data
-        .get()
-        .filter({ trial_id: 'test_stim' });
-
-      var lastInterStimTrialsCorrectAnswers = lastInterStimTrials.trials
-        .slice(-4)
-        .map((trial) => trial.spatial_location);
-    }
-    data['starting_cell_in_grid'] = startingCellInGrid;
-
-    data['spatial_sequence'] = lastInterStimTrialsCorrectAnswers;
+    data['condition'] = 'operation_only';
     data['block_num'] = getExpStage() == 'practice' ? practiceCount : testCount;
-    data['rt_each_spatial_location_response_grid'] =
-      timestampsSubmissions.slice(0, 4);
-
-    data['rt_moving_each_spatial_location_response_grid'] =
-      timestampsMovingThroughGrid;
-
-    data['moving_order_spatial_location'] = trackingCellMovingThroughGrid;
-
-    trackingCellMovingThroughGrid = [];
-    timestampsSubmissions = [];
-    timestampsMovingThroughGrid = [];
-
-    activeGrid.resetGrid();
-    console.log(data);
+  },
+  prompt: function () {
+    return getExpStage() == 'practice' ? fixationPromptText : '';
   },
 };
 
@@ -7443,7 +7194,7 @@ var ITIBlock = {
       trial_id: `${stage}_ITI`,
       exp_stage: stage,
       block_num: stage === 'practice' ? practiceCount : testCount,
-      condition: getCurrCondition(),
+      condition: 'operation_only',
     };
 
     if (stage === 'practice') {
@@ -7473,6 +7224,9 @@ var ITIBlock = {
       data['stimulus_duration'] = ITIms * 1000;
     }
   },
+  prompt: function () {
+    return getExpStage() == 'practice' ? fixationPromptText : '';
+  },
 };
 
 var practiceTrials = [];
@@ -7483,7 +7237,7 @@ function generatePracticeTrials() {
     for (let j = 0; j < numStimuli; j++) {
       returnArray.push(waitNode, stimulusBlock);
     }
-    returnArray.push(testTrial, practiceFeedbackBlock, ITIBlock);
+    returnArray.push(testTrial, ITIBlock);
   }
 
   return returnArray;
@@ -7512,22 +7266,13 @@ var practiceNode = {
       responseProcessingData
     );
 
-    feedbackText =
-      '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
+    feedbackText = '<div class = centerbox>';
+    feedbackText += '<p class = block-text>Please take a short break.</p>';
 
     if (avgProcessingAcc < processingAccThresh) {
       let text =
-        `
-        <p class = block-text>Your accuracy for the 8x8 grid is low.</p>` +
-        `<p class = block-text>Try your best determining if the 8x8 grid is ${
-          processingChoices[0].keyname === 'left button'
-            ? 'symmetric'
-            : 'asymmetric'
-        } (left button) or ${
-          processingChoices[0].keyname === 'left button'
-            ? 'asymmetric'
-            : 'symmetric'
-        } (right button).</p>`;
+        '<p class = block-text>Your accuracy was low.</p>' + promptTextList;
+
       feedbackText += text;
       feedback['processing_accuracy'] = {
         value: avgProcessingAcc,
@@ -7535,10 +7280,8 @@ var practiceNode = {
       };
     }
     if (avgProcessingRT > processingRTThresh) {
-      let text =
-        `
-        <p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>` +
-        `<p class = block-text>Try to respond (left arrow/right arrow) as quickly and accurately as possible.</p>`;
+      let text = `
+        <p class = block-text>Please respond more quickly without sacrificing accuracy.</p>`;
       feedbackText += text;
       feedback['processing_rt'] = {
         value: avgProcessingRT,
@@ -7546,8 +7289,7 @@ var practiceNode = {
       };
     }
 
-    feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
-
+    feedbackText += '</div>';
     block_level_feedback = feedback;
 
     expStage = 'test';
@@ -7629,61 +7371,36 @@ var testNode = {
       responseProcessingData
     );
 
-    if (testCount === numTestBlocks) {
-      let text = `
-        <div class=centerbox>
-        <p class=block-text>Done with this task.</p>
-        </div>
-      `;
+    feedbackText = '<div class = centerbox>';
+    feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
+
+    if (avgProcessingAcc < processingAccThresh) {
+      let text =
+        '<p class = block-text>Your accuracy was low.</p>' + promptTextList;
+
       feedbackText += text;
-      feedback['done'] = {
-        value: true,
+      feedback['processing_accuracy'] = {
+        value: avgProcessingAcc,
         text: text,
       };
-
-      block_level_feedback = feedback;
-
-      return false;
-    } else {
-      feedbackText =
-        '<div class = centerbox><p class = block-text>Please take this time to read your feedback!</p>';
-
-      feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
-
-      if (avgProcessingAcc < processingAccThresh) {
-        let text =
-          '<p class = block-text>Your accuracy for the 8x8 grid is low.</p>' +
-          `<p class = block-text>Try your best determining if the 8x8 grid is ${
-            processingChoices[0].keyname === 'left button'
-              ? 'symmetric'
-              : 'asymmetric'
-          } (left button) or ${
-            processingChoices[0].keyname === 'left button'
-              ? 'asymmetric'
-              : 'symmetric'
-          } (right button).</p>`;
-        feedbackText += text;
-        feedback['processing_accuracy'] = {
-          value: avgProcessingAcc,
-          text: text,
-        };
-      }
-      if (avgProcessingRT > processingRTThresh) {
-        let text =
-          `<p class = block-text>You are responding too slowly to the 8x8 grids when they appear on the screen.</p>` +
-          `<p class = block-text>Try to respond (left arrow/right arrow) as quickly and accurately as possible.</p>`;
-        feedbackText += text;
-        feedback['processing_rt'] = {
-          value: avgProcessingRT,
-          text: text,
-        };
-      }
-
-      block_level_feedback = feedback;
-      feedbackText += '</div>';
-
-      return true;
     }
+    if (avgProcessingRT > processingRTThresh) {
+      let text = `<p class = block-text>Please respond more quickly without sacrificing accuracy.</p>`;
+      feedbackText += text;
+      feedback['processing_rt'] = {
+        value: avgProcessingRT,
+        text: text,
+      };
+    }
+
+    feedbackText += '</div>';
+
+    block_level_feedback = feedback;
+    if (testCount === numTestBlocks) {
+      return false;
+    }
+
+    return true;
   },
   on_timeline_finish: function () {
     // window.dataSync();
@@ -7733,7 +7450,9 @@ operation_only_span_rdoc__fmri_experiment = [];
 var operation_only_span_rdoc__fmri_init = () => {
   operation_only_span_rdoc__fmri_experiment.push(motor_and_design_perm_block);
   operation_only_span_rdoc__fmri_experiment.push(fullscreen);
-  operation_only_span_rdoc__fmri_experiment.push(check_fingers_node);
+  operation_only_span_rdoc__fmri_experiment.push(
+    check_fingers_node_op_only_span
+  );
 
   // Practice block
   operation_only_span_rdoc__fmri_experiment.push(practiceNode);
@@ -7744,6 +7463,8 @@ var operation_only_span_rdoc__fmri_init = () => {
 
   // Test blocks
   operation_only_span_rdoc__fmri_experiment.push(testNode);
+  operation_only_span_rdoc__fmri_experiment.push(long_fixation_node);
+  operation_only_span_rdoc__fmri_experiment.push(feedbackBlock);
   operation_only_span_rdoc__fmri_experiment.push(endBlock);
   operation_only_span_rdoc__fmri_experiment.push(exitFullscreen);
 };

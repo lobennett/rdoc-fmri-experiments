@@ -184,24 +184,47 @@ const setText = () => {
   promptText = `
     <div class="prompt_box">
       <p class="center-block-text" style="font-size:16px; line-height:80%;">${
-        possibleResponses[0][0] == 'index finger' ? shapes[0] : shapes[1]
-      }: index finger</p>
+        (possibleResponses[0][0] == 'index finger' ? shapes[0] : shapes[1])
+          .charAt(0)
+          .toUpperCase() +
+        (possibleResponses[0][0] == 'index finger'
+          ? shapes[0]
+          : shapes[1]
+        ).slice(1)
+      }: Index</p>
       <p class="center-block-text" style="font-size:16px; line-height:80%;">${
-        possibleResponses[1][0] == 'middle finger' ? shapes[1] : shapes[0]
-      }: middle finger</p>
-      <p class="center-block-text" style="font-size:16px; line-height:80%;">Do not respond if a star appears.</p>
+        (possibleResponses[1][0] == 'middle finger' ? shapes[1] : shapes[0])
+          .charAt(0)
+          .toUpperCase() +
+        (possibleResponses[1][0] == 'middle finger'
+          ? shapes[1]
+          : shapes[0]
+        ).slice(1)
+      }: Middle</p>
+      <p class="center-block-text" style="font-size:16px; line-height:80%;">Star: Do not respond</p>
     </div>
   `;
 
   promptTextList = `
   <ul style="text-align:left;">
     <li>${
-      possibleResponses[0][0] == 'index finger' ? shapes[0] : shapes[1]
-    }: index finger</li>
+      (possibleResponses[0][0] == 'index finger' ? shapes[0] : shapes[1])
+        .charAt(0)
+        .toUpperCase() +
+      (possibleResponses[0][0] == 'index finger' ? shapes[0] : shapes[1]).slice(
+        1
+      )
+    }: Index</li>
     <li>${
-      possibleResponses[1][0] == 'middle finger' ? shapes[1] : shapes[0]
-    }: middle finger</li>
-    <li>Do not respond if a star appears.</li>
+      (possibleResponses[1][0] == 'middle finger' ? shapes[1] : shapes[0])
+        .charAt(0)
+        .toUpperCase() +
+      (possibleResponses[1][0] == 'middle finger'
+        ? shapes[1]
+        : shapes[0]
+      ).slice(1)
+    }: Middle</li>
+    <li>Star: Do not respond</li>
   </ul>
 `;
 
@@ -368,6 +391,7 @@ for (i = 0; i < practiceLen; i++) {
     stimulus: getStim,
     SS_stimulus: getStopStim,
     SS_trial_type: getCondition,
+    post_trial_gap: 0,
     data: {
       trial_id: 'practice_trial',
       exp_stage: 'practice',
@@ -488,13 +512,12 @@ var practiceNode = {
     var aveShapeRespondCorrect = sumGoCorrect / goLength;
     var stopSignalRespond = numStopResponses / stopLength;
 
-    feedbackText =
-      '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
+    feedbackText = '<div class="centerbox">';
+    feedbackText += '<p class = block-text>Please take a short break.</p>';
 
     if (aveShapeRespondCorrect <= practiceAccuracyThresh) {
-      let text = `
-        <p class="block-text">Your accuracy is low. Remember:</p>
-        ${promptTextList}`;
+      let text =
+        '<p class="block-text">Your accuracy was low.</p>' + promptTextList;
       feedbackText += text;
       feedback['accuracy'] = {
         value: aveShapeRespondCorrect,
@@ -502,20 +525,31 @@ var practiceNode = {
       };
     }
 
+    let speedFeedbackText =
+      '<p class="block-text">Please respond more quickly without sacrificing accuracy.</p>';
+
     if (avgRT > rtThresh) {
-      let text = `
-        <p class="block-text">You have been responding too slowly.</p>
-        ${speedReminder}`;
-      feedbackText += text;
+      feedbackText += speedFeedbackText;
       feedback['rt'] = {
         value: avgRT,
-        text: text,
+        text: speedFeedbackText,
+      };
+    }
+
+    if (stopSignalRespond === minStopCorrectPractice) {
+      if (avgRT <= rtThresh) {
+        // Only add text if it wasn't already added
+        feedbackText += speedFeedbackText;
+      }
+      feedback['stop_signal_respond'] = {
+        value: stopSignalRespond,
+        text: speedFeedbackText,
       };
     }
 
     if (missedResponses > missedResponseThresh) {
-      let text = `
-        <p class="block-text">We have detected a number of trials that required a response, where no response was made. Please ensure that you are responding quickly and accurately to the shapes.</p>`;
+      let text =
+        '<p class="block-text">Respond on every trial that requires a response.</p>';
       feedbackText += text;
       feedback['missed_responses'] = {
         value: missedResponses,
@@ -524,9 +558,8 @@ var practiceNode = {
     }
 
     if (stopSignalRespond === maxStopCorrectPractice) {
-      let text = `
-        <p class="block-text">You have not been stopping your response when stars are present.</p>
-        <p class="block-text">Please try your best to stop your response if you see a star.</p>`;
+      let text =
+        '<p class="block-text">Please try your best to stop to stars.</p>';
       feedbackText += text;
       feedback['stop_signal_respond'] = {
         value: stopSignalRespond,
@@ -534,17 +567,7 @@ var practiceNode = {
       };
     }
 
-    if (stopSignalRespond === minStopCorrectPractice) {
-      let text = `
-        <p class="block-text">Please do not slow down and wait for the star to appear. Respond as quickly and accurately as possible when a star does not appear.</p>`;
-      feedbackText += text;
-      feedback['stop_signal_respond'] = {
-        value: stopSignalRespond,
-        text: text,
-      };
-    }
-
-    feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
+    feedbackText += '</div>';
 
     stims = stim_designs;
     expStage = 'test';
@@ -560,6 +583,7 @@ for (i = 0; i < numTrialsPerBlock; i++) {
     stimulus: getStim,
     SS_stimulus: getStopStim,
     SS_trial_type: getCondition,
+    post_trial_gap: 0,
     data: {
       trial_id: 'test_trial',
       exp_stage: 'test',
@@ -637,81 +661,69 @@ var testNode = {
     var aveShapeRespondCorrect = sumGoCorrect / goLength;
     var stopSignalRespond = numStopResponses / stopLength;
 
-    if (testCount === numTestBlocks) {
-      let text = `<div class=centerbox>
-        <p class=block-text>Done with this task.</p>
-        </div>`;
-      feedbackText = text;
-      feedback['done'] = {
-        value: true,
+    feedbackText = '<div class="centerbox">';
+    feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
+
+    if (aveShapeRespondCorrect < accuracyThresh) {
+      let text = `
+        <p class="block-text">Your accuracy was low.</p>
+        ${promptTextList}`;
+      feedbackText += text;
+      feedback['accuracy'] = {
+        value: aveShapeRespondCorrect,
         text: text,
       };
-      block_level_feedback = feedback;
-      return false;
-    } else {
-      feedbackText =
-        '<div class = centerbox><p class = block-text>Please take this time to read your feedback!</p>';
-
-      feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
-
-      if (aveShapeRespondCorrect < accuracyThresh) {
-        let text = `
-        <p class="block-text">Your accuracy is low. Remember:</p>
-        ${promptTextList}`;
-        feedbackText += text;
-        feedback['accuracy'] = {
-          value: aveShapeRespondCorrect,
-          text: text,
-        };
-      }
-
-      if (avgRT > rtThresh) {
-        let text = `
-        <p class="block-text">You have been responding too slowly.</p>
-        ${speedReminder}`;
-        feedbackText += text;
-        feedback['rt'] = {
-          value: avgRT,
-          text: text,
-        };
-      }
-
-      if (missedResponses > missedResponseThresh) {
-        let text = `
-          <p class="block-text">We have detected a number of trials that required a response, where no response was made. Please ensure that you are responding quickly and accurately to the shapes.</p>`;
-        feedbackText += text;
-        feedback['missed_responses'] = {
-          value: missedResponses,
-          text: text,
-        };
-      }
-
-      if (stopSignalRespond >= maxStopCorrect) {
-        let text = `
-        <p class="block-text">You have not been stopping your response when stars are present.</p>
-        <p class="block-text">Please try your best to stop your response if you see a star.</p>`;
-        feedbackText += text;
-        feedback['stop_signal_respond'] = {
-          value: stopSignalRespond,
-          text: text,
-        };
-      }
-
-      if (stopSignalRespond <= minStopCorrect) {
-        let text = `
-        <p class="block-text">Please do not slow down and wait for the star to appear. Respond as quickly and accurately as possible when a star does not appear.</p>`;
-        feedbackText += text;
-        feedback['stop_signal_respond'] = {
-          value: stopSignalRespond,
-          text: text,
-        };
-      }
-
-      feedbackText += '</div>';
-
-      block_level_feedback = feedback;
-      return true;
     }
+
+    let speedFeedbackText =
+      '<p class="block-text">Please respond more quickly without sacrificing accuracy.</p>';
+
+    if (avgRT > rtThresh) {
+      feedbackText += speedFeedbackText;
+      feedback['rt'] = {
+        value: avgRT,
+        text: speedFeedbackText,
+      };
+    }
+
+    if (stopSignalRespond <= minStopCorrect) {
+      if (avgRT <= rtThresh) {
+        // Only add text if it wasn't already added
+        feedbackText += speedFeedbackText;
+      }
+      feedback['stop_signal_respond'] = {
+        value: stopSignalRespond,
+        text: speedFeedbackText,
+      };
+    }
+
+    if (missedResponses > missedResponseThresh) {
+      let text =
+        '<p class="block-text">Respond on every trial that requires a response.</p>';
+      feedbackText += text;
+      feedback['missed_responses'] = {
+        value: missedResponses,
+        text: text,
+      };
+    }
+
+    if (stopSignalRespond >= maxStopCorrect) {
+      let text =
+        '<p class="block-text">Please try your best to stop to stars.</p>';
+      feedbackText += text;
+      feedback['stop_signal_respond'] = {
+        value: stopSignalRespond,
+        text: text,
+      };
+    }
+
+    feedbackText += '</div>';
+
+    block_level_feedback = feedback;
+    if (testCount === numTestBlocks) {
+      return false;
+    }
+    return true;
   },
   on_timeline_finish: function () {
     // window.dataSync();
@@ -776,6 +788,8 @@ var stop_signal_rdoc__fmri_init = () => {
 
   // Test block
   stop_signal_rdoc__fmri_experiment.push(testNode);
+  stop_signal_rdoc__fmri_experiment.push(long_fixation_node);
+  stop_signal_rdoc__fmri_experiment.push(feedbackBlock);
   stop_signal_rdoc__fmri_experiment.push(endBlock);
   stop_signal_rdoc__fmri_experiment.push(exitFullscreen);
 };

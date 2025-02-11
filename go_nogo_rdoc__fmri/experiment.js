@@ -44,13 +44,9 @@ var choices;
 var correctResponses;
 var practiceStimuli;
 var testStimuliBlock;
-function getKeyMappingForTask(motor_perm) {
-  if (motor_perm === 0) {
-    goResponse = 'y';
-  } else {
-    goResponse = 'g';
-  }
-  choices = ['y', 'g'];
+
+function getKeyMappingForTask() {
+  goResponse = 'y';
 
   correctResponses = [
     ['go', goResponse],
@@ -128,21 +124,15 @@ const setText = () => {
 
   promptTextList = `
   <ul style="text-align:left;">
-    <li>${stims[0][0]} square: ${
-    goResponse === 'y' ? 'index finger' : 'middle finger'
-  }</li>
-    <li>${stims[1][0]} square: do not respond</li>
+    <li>Solid: Index</li>
+    <li>Outlined: Do not respond</li>
   </ul>
 `;
 
   promptText = `
   <div class="prompt_box">
-    <p class="center-block-text" style="font-size:16px; line-height:80%;">${
-      stims[0][0]
-    } square: ${goResponse === 'y' ? 'index finger' : 'middle finger'}</p>
-    <p class="center-block-text" style="font-size:16px; line-height:80%;">${
-      stims[1][0]
-    } square: do not respond</p>
+    <p class="center-block-text" style="font-size:16px; line-height:80%;">Solid square: Index</p>
+    <p class="center-block-text" style="font-size:16px; line-height:80%;">Outlined square: Do not respond</p>
   </div>
 `;
 
@@ -253,7 +243,6 @@ var ITIBlock = {
   },
 };
 
-var motor_perm = null;
 var design_perm = null;
 var motor_and_design_perm_block = {
   type: jsPsychSurvey,
@@ -262,13 +251,6 @@ var motor_and_design_perm_block = {
       {
         type: 'html',
         prompt: 'fMRI setup',
-      },
-      {
-        type: 'multi-choice',
-        prompt: 'Select the motor perm:',
-        name: 'motor_perm',
-        options: [0, 1],
-        required: true,
       },
       {
         type: 'multi-choice',
@@ -281,13 +263,10 @@ var motor_and_design_perm_block = {
   ],
   button_label_finish: 'Submit',
   on_finish: function (data) {
-    data['motor_perm'] = data.response.motor_perm;
     data['design_perm'] = data.response.design_perm;
-    motor_perm = data.response.motor_perm;
     design_perm = data.response.design_perm;
-    console.log(motor_perm);
-    console.log(design_perm);
-    getKeyMappingForTask(motor_perm);
+
+    getKeyMappingForTask();
     // set practice stimuli
     blockStims = jsPsych.randomization.repeat(
       practiceStimuli,
@@ -332,11 +311,9 @@ for (var i = 0; i < practiceLen; i++) {
     data: function () {
       return Object.assign(getData(), {
         exp_stage: 'practice',
-        choices: choices,
         block_num: practiceCount,
       });
     },
-    choices: choices,
     stimulus_duration: stimStimulusDuration, // 1000,
     trial_duration: stimTrialDuration, // 1500
     response_ends_trial: false,
@@ -394,11 +371,11 @@ var feedbackBlock = {
   stimulus: getFeedback,
   trial_duration: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_middle' ? undefined : 4000;
+    return trial_id === 'check_index' ? undefined : 4000;
   },
   response_ends_trial: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_middle';
+    return trial_id === 'check_index';
   },
   on_finish: function (data) {
     data['block_level_feedback'] = block_level_feedback;
@@ -450,12 +427,12 @@ var practiceNode = {
     var missedResponses = missedResponse / totalGoTrials;
     var avgRT = sumRT / sumResponses;
 
-    feedbackText =
-      '<div class = centerbox><p class = block-text>Please take this time to read your feedback! This screen will advance automatically in 4 seconds.</p>';
+    feedbackText = '<div class = centerbox>';
+    feedbackText += '<p class = block-text>Please take a short break.</p>';
 
     if (accuracy < practiceAccuracyThresh) {
       let text = `
-       <p class="block-text">Your accuracy is low. Remember: </p>${promptTextList}
+       <p class="block-text">Your accuracy was low.</p>${promptTextList}
       `;
       feedbackText += text;
       feedback['accuracy'] = {
@@ -466,7 +443,7 @@ var practiceNode = {
 
     if (avgRT > rtThresh) {
       let text = `
-        <p class="block-text">You have been responding too slowly.${speedReminder}</p>
+        <p class="block-text">Please respond more quickly without sacrificing accuracy.</p>
       `;
       feedbackText += text;
       feedback['rt'] = {
@@ -477,7 +454,7 @@ var practiceNode = {
 
     if (missedResponses > missedResponseThresh) {
       let text = `
-        <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>
+        <p class="block-text">Respond on every trial that requires a response.</p>
       `;
       feedbackText += text;
       feedback['missed_responses'] = {
@@ -486,7 +463,7 @@ var practiceNode = {
       };
     }
 
-    feedbackText += `<p class="block-text">We are now going to start the task.</p>`;
+    feedbackText += '</div>';
 
     expStage = 'test';
 
@@ -503,11 +480,9 @@ for (var i = 0; i < numTrialsPerBlock; i++) {
   var testTrial = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getStim,
-    choices: choices,
     data: function () {
       return Object.assign(getData(), {
         exp_stage: 'test',
-        choices: choices,
         block_num: testCount,
       });
     },
@@ -535,6 +510,7 @@ var testNode = {
     testTrials
   ),
   loop_function: function (data) {
+    let feedback = {};
     testCount += 1;
     currentTrial = 0;
 
@@ -570,64 +546,50 @@ var testNode = {
     var missedResponses = missedResponse / totalGoTrials;
     var avgRT = sumRT / sumResponses;
 
-    if (testCount === numTestBlocks) {
-      let text = `<div class=centerbox>
-        <p class=block-text>Done with this task.</p>
-        </div>`;
+    feedbackText = '<div class = centerbox>';
+    feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
+
+    if (accuracy < accuracyThresh) {
+      let text = `
+       <p class="block-text">Your accuracy was low.</p>${promptTextList}
+      `;
       feedbackText += text;
-      feedback['done'] = {
-        value: true,
+      feedback['accuracy'] = {
+        value: accuracy,
         text: text,
       };
-
-      block_level_feedback = feedback;
-
-      return false;
-    } else {
-      feedbackText =
-        '<div class = centerbox><p class = block-text>Please take this time to read your feedback!</p>';
-
-      feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
-
-      if (accuracy < accuracyThresh) {
-        let text = `
-       <p class="block-text">Your accuracy is low. Remember: </p>${promptTextList}
-      `;
-        feedbackText += text;
-        feedback['accuracy'] = {
-          value: accuracy,
-          text: text,
-        };
-      }
-
-      if (avgRT > rtThresh) {
-        let text = `
-        <p class="block-text">You have been responding too slowly.${speedReminder}</p>
-      `;
-        feedbackText += text;
-        feedback['rt'] = {
-          value: avgRT,
-          text: text,
-        };
-      }
-
-      if (missedResponses > missedResponseThresh) {
-        let text = `
-        <p class="block-text">You have not been responding to some trials. Please respond on every trial that requires a response.</p>
-      `;
-        feedbackText += text;
-        feedback['missed_responses'] = {
-          value: missedResponses,
-          text: text,
-        };
-      }
-
-      feedbackText += '</div>';
-
-      block_level_feedback = feedback;
-
-      return true;
     }
+
+    if (avgRT > rtThresh) {
+      let text = `
+        <p class="block-text">Please respond more quickly without sacrificing accuracy.</p>
+      `;
+      feedbackText += text;
+      feedback['rt'] = {
+        value: avgRT,
+        text: text,
+      };
+    }
+
+    if (missedResponses > missedResponseThresh) {
+      let text = `
+        <p class="block-text">Respond on every trial that requires a response.</p>
+      `;
+      feedbackText += text;
+      feedback['missed_responses'] = {
+        value: missedResponses,
+        text: text,
+      };
+    }
+
+    feedbackText += '</div>';
+
+    block_level_feedback = feedback;
+    if (testCount === numTestBlocks) {
+      return false;
+    }
+
+    return true;
   },
   on_timeline_finish: function () {
     // window.dataSync();
@@ -685,13 +647,15 @@ var go_nogo_rdoc__fmri_init = () => {
   // globals
   go_nogo_rdoc__fmri_experiment.push(motor_and_design_perm_block);
   go_nogo_rdoc__fmri_experiment.push(fullscreen);
-  go_nogo_rdoc__fmri_experiment.push(check_fingers_node);
+  go_nogo_rdoc__fmri_experiment.push(check_index);
   // practice block
   go_nogo_rdoc__fmri_experiment.push(practiceNode);
   go_nogo_rdoc__fmri_experiment.push(feedbackBlock);
   go_nogo_rdoc__fmri_experiment.push(fmri_wait_node);
   // test block
   go_nogo_rdoc__fmri_experiment.push(testNode);
+  go_nogo_rdoc__fmri_experiment.push(long_fixation_node);
+  go_nogo_rdoc__fmri_experiment.push(feedbackBlock);
   go_nogo_rdoc__fmri_experiment.push(endBlock);
   go_nogo_rdoc__fmri_experiment.push(exitFullscreen);
 };
