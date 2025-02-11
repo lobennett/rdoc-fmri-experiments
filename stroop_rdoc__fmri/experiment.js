@@ -1,3 +1,5 @@
+// TODO: Check if ring is 'r' and not 'c'
+
 const get_practice_feedback = () => {
   var last = jsPsych.data.get().last(1).values()[0];
   if (last.response === -1) {
@@ -85,41 +87,42 @@ const fixationDuration = 500;
 
 var possibleResponses;
 
+// TODO: Confirm ring is 'r' key and not 'c' key
 function getKeyMappingForTask(motor_perm) {
   if (motor_perm === 0) {
     possibleResponses = [
       ['index finger', 'y', 'index finger'], // red
       ['middle finger', 'g', 'middle finger'], // blue
-      ['ring finger', 'c', 'ring finger'], // green
+      ['ring finger', 'r', 'ring finger'], // green
     ];
   } else if (motor_perm === 1) {
     possibleResponses = [
       ['middle finger', 'g', 'middle finger'], // red
       ['index finger', 'y', 'index finger'], // blue
-      ['ring finger', 'c', 'ring finger'], // green
+      ['ring finger', 'r', 'ring finger'], // green
     ];
   } else if (motor_perm === 2) {
     possibleResponses = [
       ['middle finger', 'g', 'middle finger'], // red
-      ['ring finger', 'c', 'ring finger'], // blue
+      ['ring finger', 'r', 'ring finger'], // blue
       ['index finger', 'y', 'index finger'], // green
     ];
   } else if (motor_perm === 3) {
     possibleResponses = [
-      ['ring finger', 'c', 'ring finger'], // red
+      ['ring finger', 'r', 'ring finger'], // red
       ['index finger', 'y', 'index finger'], // blue
       ['middle finger', 'g', 'middle finger'], // green
     ];
   } else if (motor_perm === 4) {
     possibleResponses = [
-      ['ring finger', 'c', 'ring finger'], // red
+      ['ring finger', 'r', 'ring finger'], // red
       ['middle finger', 'g', 'middle finger'], // blue
       ['index finger', 'y', 'index finger'], // green
     ];
   } else if (motor_perm === 5) {
     possibleResponses = [
       ['index finger', 'y', 'index finger'], // blue
-      ['ring finger', 'c', 'ring finger'], // red
+      ['ring finger', 'r', 'ring finger'], // red
       ['middle finger', 'g', 'middle finger'], // green
     ];
   } else {
@@ -127,7 +130,7 @@ function getKeyMappingForTask(motor_perm) {
   }
 }
 
-const choices = ['y', 'g', 'c'];
+const choices = ['y', 'g', 'r']; // TODO: Check this should not be 'c'
 
 var feedbackInstructText = `
   <p class="center-block-text">
@@ -197,8 +200,8 @@ const setText = () => {
       getColorByKey('g').color
     }'>${getColorByKey('g').name}</span>.</p>
     <p class='block-text'>Press your <b>ring finger</b> if the color is <span style='color:${
-      getColorByKey('c').color
-    }'>${getColorByKey('c').name}</span>.</p>
+      getColorByKey('r').color
+    }'>${getColorByKey('r').name}</span>.</p>
     <p class='block-text'>We'll start with a practice round. During practice, you will receive feedback and a reminder of the rules. These will be taken out for the test, so make sure you understand the instructions before moving on.</p>
     ${speedReminder}
     </div>
@@ -218,7 +221,7 @@ const setText = () => {
     </p>
     <p class="center-block-text" style="font-size:16px; line-height:80%;">
       <span class="large" style="color:${
-        getColorByKey('c').color
+        getColorByKey('r').color
       }">WORD</span>: ring finger
     </p>
   </div>`;
@@ -239,7 +242,7 @@ const setText = () => {
   </li>
     <li>
     <span class="large" style="color:${
-      getColorByKey('c').color
+      getColorByKey('r').color
     };">WORD</span>: Ring
   </span>
   </li>
