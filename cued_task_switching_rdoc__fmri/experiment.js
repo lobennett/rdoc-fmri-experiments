@@ -269,44 +269,26 @@ const setText = () => {
   promptText = `
   <div class="prompt_box">
     <p class="center-block-text" style="font-size:16px; line-height:80%;">
-      "Parity" or "Odd-Even": 
-      <b>Index</b> for <b>${
-        responseMappings.oddEven.even === 'y' ? 'even' : 'odd'
-      }</b>, 
-      <b>Middle</b> for <b>${
-        responseMappings.oddEven.even === 'y' ? 'odd' : 'even'
-      }</b>
+      Index: ${responseMappings.oddEven.odd === 'y' ? 'Odd' : 'Even'}/${
+    responseMappings.higherLower.higher === 'y' ? 'High' : 'Low'
+  }
     </p>
     <p class="center-block-text" style="font-size:16px; line-height:80%;">
-      "Magnitude" or "High-Low": 
-      <b>Index</b> if <b>${
-        responseMappings.higherLower.higher === 'y' ? 'Above' : 'Below'
-      }</b> 5, 
-      <b>Middle</b> if <b>${
-        responseMappings.higherLower.higher === 'y' ? 'Below' : 'Above'
-      }</b> 5
+      Middle: ${responseMappings.oddEven.odd === 'y' ? 'Even' : 'Odd'}/${
+    responseMappings.higherLower.higher === 'y' ? 'Low' : 'High'
+  } 5
     </p>
   </div>
 `;
 
   promptTextList = `
   <ul style="text-align:left;font-size:24px;">
-    <li>"Parity" or "Odd-Even":</li>
-      <ul>
-        <li>${responseMappings.oddEven.odd === 'y' ? 'Odd' : 'Even'}: Index</li>
-        <li>${
-          responseMappings.oddEven.odd === 'y' ? 'Even' : 'Odd'
-        }: Middle</li>
-      </ul>
-    <li>"Magnitude" or "High-Low":</li>
-      <ul>
-        <li>${
-          responseMappings.higherLower.higher === 'y' ? 'Above' : 'Below'
-        }: Index</li>
-        <li>${
-          responseMappings.higherLower.higher === 'y' ? 'Below' : 'Above'
-        }: Middle</li>
-      </ul>
+    <li>Index: ${responseMappings.oddEven.odd === 'y' ? 'Odd' : 'Even'}/${
+    responseMappings.higherLower.higher === 'y' ? 'High' : 'Low'
+  }</li>
+    <li>Middle: ${responseMappings.oddEven.odd === 'y' ? 'Even' : 'Odd'}/${
+    responseMappings.higherLower.higher === 'y' ? 'Low' : 'High'
+  }</li>
   </ul>
 `;
 
