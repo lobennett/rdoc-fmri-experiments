@@ -740,53 +740,43 @@ var testNode = {
     var missedResponses = (totalTrials - sumResponses) / totalTrials;
     var avgRT = sumRT / sumResponses;
 
-    if (testCount === numTestBlocks) {
-      let text = `<div class=centerbox>
-        <p class=block-text>Done with this task.</p>
-        </div>`;
-      feedbackText = text;
-      feedback['done'] = {
-        value: true,
+    feedbackText = '<div class = centerbox>';
+    feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
+
+    if (accuracy < accuracyThresh) {
+      let text =
+        '<p class="block-text">Your accuracy was low.</p>' + promptTextList;
+      feedbackText += text;
+      feedback['accuracy'] = {
+        value: accuracy,
         text: text,
       };
-      block_level_feedback = feedback;
-      return false;
-    } else {
-      feedbackText = '<div class = centerbox>';
-
-      feedbackText += `<p class=block-text>You have completed ${testCount} out of ${numTestBlocks} blocks of trials.</p>`;
-
-      if (accuracy < accuracyThresh) {
-        let text =
-          '<p class="block-text">Your accuracy was low.</p>' + promptTextList;
-        feedbackText += text;
-        feedback['accuracy'] = {
-          value: accuracy,
-          text: text,
-        };
-      }
-      if (avgRT > rtThresh) {
-        let text = `<p class="block-text">Please respond more quickly without sacrificing accuracy.</p>`;
-        feedbackText += text;
-        feedback['rt'] = {
-          value: avgRT,
-          text: text,
-        };
-      }
-      if (missedResponses > missedResponseThresh) {
-        let text = `<p class="block-text">Respond on every trial.</p>`;
-        feedbackText += text;
-        feedback['missed_responses'] = {
-          value: missedResponses,
-          text: text,
-        };
-      }
-
-      feedbackText += '</div>';
-
-      block_level_feedback = feedback;
-      return true;
     }
+    if (avgRT > rtThresh) {
+      let text = `<p class="block-text">Please respond more quickly without sacrificing accuracy.</p>`;
+      feedbackText += text;
+      feedback['rt'] = {
+        value: avgRT,
+        text: text,
+      };
+    }
+    if (missedResponses > missedResponseThresh) {
+      let text = `<p class="block-text">Respond on every trial.</p>`;
+      feedbackText += text;
+      feedback['missed_responses'] = {
+        value: missedResponses,
+        text: text,
+      };
+    }
+
+    feedbackText += '</div>';
+
+    block_level_feedback = feedback;
+    if (testCount === numTestBlocks) {
+      return false;
+    }
+
+    return true;
   },
   on_timeline_finish: function () {
     // window.dataSync();
@@ -846,6 +836,8 @@ var visual_search_rdoc__fmri_init = () => {
   visual_search_rdoc__fmri_experiment.push(feedbackBlock);
   visual_search_rdoc__fmri_experiment.push(fmri_wait_node);
   visual_search_rdoc__fmri_experiment.push(testNode);
+  visual_search_rdoc__fmri_experiment.push(long_fixation_node);
+  visual_search_rdoc__fmri_experiment.push(feedbackBlock);
   visual_search_rdoc__fmri_experiment.push(endBlock);
   visual_search_rdoc__fmri_experiment.push(exitFullscreen);
 };

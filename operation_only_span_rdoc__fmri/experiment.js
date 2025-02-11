@@ -7373,50 +7373,36 @@ var testNode = {
       responseProcessingData
     );
 
-    if (testCount === numTestBlocks) {
-      let text = `
-        <div class=centerbox>
-        <p class=block-text>Done with this task.</p>
-        </div>
-      `;
+    feedbackText = '<div class = centerbox>';
+    feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
+
+    if (avgProcessingAcc < processingAccThresh) {
+      let text =
+        '<p class = block-text>Your accuracy was low.</p>' + promptTextList;
+
       feedbackText += text;
-      feedback['done'] = {
-        value: true,
+      feedback['processing_accuracy'] = {
+        value: avgProcessingAcc,
         text: text,
       };
-
-      block_level_feedback = feedback;
-
-      return false;
-    } else {
-      feedbackText = '<div class = centerbox>';
-
-      feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
-
-      if (avgProcessingAcc < processingAccThresh) {
-        let text =
-          '<p class = block-text>Your accuracy was low.</p>' + promptTextList;
-
-        feedbackText += text;
-        feedback['processing_accuracy'] = {
-          value: avgProcessingAcc,
-          text: text,
-        };
-      }
-      if (avgProcessingRT > processingRTThresh) {
-        let text = `<p class = block-text>Please respond more quickly without sacrificing accuracy.</p>`;
-        feedbackText += text;
-        feedback['processing_rt'] = {
-          value: avgProcessingRT,
-          text: text,
-        };
-      }
-
-      block_level_feedback = feedback;
-      feedbackText += '</div>';
-
-      return true;
     }
+    if (avgProcessingRT > processingRTThresh) {
+      let text = `<p class = block-text>Please respond more quickly without sacrificing accuracy.</p>`;
+      feedbackText += text;
+      feedback['processing_rt'] = {
+        value: avgProcessingRT,
+        text: text,
+      };
+    }
+
+    feedbackText += '</div>';
+
+    block_level_feedback = feedback;
+    if (testCount === numTestBlocks) {
+      return false;
+    }
+
+    return true;
   },
   on_timeline_finish: function () {
     // window.dataSync();
@@ -7479,6 +7465,8 @@ var operation_only_span_rdoc__fmri_init = () => {
 
   // Test blocks
   operation_only_span_rdoc__fmri_experiment.push(testNode);
+  operation_only_span_rdoc__fmri_experiment.push(long_fixation_node);
+  operation_only_span_rdoc__fmri_experiment.push(feedbackBlock);
   operation_only_span_rdoc__fmri_experiment.push(endBlock);
   operation_only_span_rdoc__fmri_experiment.push(exitFullscreen);
 };

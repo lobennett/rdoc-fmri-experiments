@@ -664,76 +664,62 @@ var testNode = {
     var missedResponses = (totalTrials - sumResponses) / totalTrials;
     var avgRT = sumRT / sumResponses;
 
-    if (testCount === numTestBlocks) {
+    feedbackText = '<div class = centerbox>';
+
+    feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
+
+    let current_delay =
+      stims[0].condition === 'starter_trial' &&
+      stims[1].condition === 'starter_trial'
+        ? 2
+        : 1;
+
+    delay = current_delay;
+
+    feedbackText += `<p class=block-text><b>Delay = ${delay}</b>.</p>`;
+
+    if (accuracy < accuracyThresh) {
       let text = `
-        <div class=centerbox>
-        <p class=block-text>Done with this task.</p>
-        </div>
-      `;
-      feedbackText += text;
-      feedback['done'] = {
-        value: true,
-        text: text,
-      };
-
-      block_level_feedback = feedback;
-
-      return false;
-    } else {
-      feedbackText = '<div class = centerbox>';
-
-      feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
-
-      let current_delay =
-        stims[0].condition === 'starter_trial' &&
-        stims[1].condition === 'starter_trial'
-          ? 2
-          : 1;
-
-      delay = current_delay;
-
-      feedbackText += `<p class=block-text><b>Delay = ${delay}</b>.</p>`;
-
-      if (accuracy < accuracyThresh) {
-        let text = `
         <p class="block-text">Your accuracy was low.</p>
         ${promptTextList}
       `;
-        feedbackText += text;
-        feedback['accuracy'] = {
-          value: accuracy,
-          text: text,
-        };
-      }
+      feedbackText += text;
+      feedback['accuracy'] = {
+        value: accuracy,
+        text: text,
+      };
+    }
 
-      if (avgRT > rtThresh) {
-        let text = `
+    if (avgRT > rtThresh) {
+      let text = `
         <p class="block-text">Please respond more quickly without sacrificing accuracy.</p>
       `;
-        feedbackText += text;
-        feedback['rt'] = {
-          value: avgRT,
-          text: text,
-        };
-      }
+      feedbackText += text;
+      feedback['rt'] = {
+        value: avgRT,
+        text: text,
+      };
+    }
 
-      if (missedResponses > missedResponseThresh) {
-        let text = `
+    if (missedResponses > missedResponseThresh) {
+      let text = `
         <p class="block-text">Respond on every trial.</p>
       `;
-        feedbackText += text;
-        feedback['missed_responses'] = {
-          value: missedResponses,
-          text: text,
-        };
-      }
-
-      feedbackText += '</div>';
-
-      block_level_feedback = feedback;
-
-      return true;
+      feedbackText += text;
+      feedback['missed_responses'] = {
+        value: missedResponses,
+        text: text,
+      };
     }
+
+    feedbackText += '</div>';
+
+    block_level_feedback = feedback;
+    if (testCount === numTestBlocks) {
+      return false;
+    }
+
+    return true;
   },
   on_timeline_finish: function () {
     // window.dataSync();
@@ -891,6 +877,9 @@ var n_back_rdoc__fmri_init = () => {
 
   // start test blocks
   n_back_rdoc__fmri_experiment.push(testNode);
+  n_back_rdoc__fmri_experiment.push(long_fixation_node);
+  n_back_rdoc__fmri_experiment.push(feedbackBlock);
+
   n_back_rdoc__fmri_experiment.push(endBlock);
   n_back_rdoc__fmri_experiment.push(exitFullscreen);
 };

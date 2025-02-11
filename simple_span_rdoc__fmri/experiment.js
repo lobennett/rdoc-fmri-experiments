@@ -754,43 +754,30 @@ var testNode = {
     var accuracy_irrespective_of_cell_order =
       calculate_accuracy_irrespective_of_cell_order(responseGridData);
 
-    if (testCount === numTestBlocks) {
-      let text = `
-        <div class=centerbox>
-        <p class=block-text>Done with this task.</p>
-        </div>
-      `;
+    feedbackText = '<div class = centerbox>';
+
+    feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
+
+    if (
+      accuracy_irrespective_of_cell_order <
+      accuracy_irrespective_of_cell_order_thresh
+    ) {
+      let text = `<p class = block-text>Your accuracy was low.</p>`;
       feedbackText += text;
-      feedback['done'] = {
-        value: true,
+      feedback['accuracy_irrespective_of_cell_order'] = {
+        value: accuracy_irrespective_of_cell_order,
         text: text,
       };
-      block_level_feedback = feedback;
-
-      return false;
-    } else {
-      feedbackText = '<div class = centerbox>';
-
-      feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
-
-      if (
-        accuracy_irrespective_of_cell_order <
-        accuracy_irrespective_of_cell_order_thresh
-      ) {
-        let text = `<p class = block-text>Your accuracy was low.</p>`;
-        feedbackText += text;
-        feedback['accuracy_irrespective_of_cell_order'] = {
-          value: accuracy_irrespective_of_cell_order,
-          text: text,
-        };
-      }
-
-      feedbackText += '</div>';
-
-      block_level_feedback = feedback;
-
-      return true;
     }
+
+    feedbackText += '</div>';
+
+    block_level_feedback = feedback;
+    if (testCount === numTestBlocks) {
+      return false;
+    }
+
+    return true;
   },
   on_timeline_finish: function () {
     // window.dataSync();
@@ -848,6 +835,8 @@ var simple_span_rdoc__fmri_init = () => {
 
   // Start test blocks
   simple_span_rdoc__fmri_experiment.push(testNode);
+  simple_span_rdoc__fmri_experiment.push(long_fixation_node);
+  simple_span_rdoc__fmri_experiment.push(feedbackBlock);
   simple_span_rdoc__fmri_experiment.push(endBlock);
   simple_span_rdoc__fmri_experiment.push(exitFullscreen);
 };

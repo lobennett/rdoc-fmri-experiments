@@ -968,67 +968,55 @@ var testNode = {
     var missed_responses = (total_trials - sum_responses) / total_trials;
     var ave_rt = sum_rt / sum_responses;
 
-    if (testCount === numTestBlocks) {
-      let text = `<div class=centerbox>
-        <p class=block-text>Done with this task.</p>
-        </div>`;
-      feedbackText += text;
-      feedback['done'] = {
-        value: true,
-        text: text,
-      };
-      block_level_feedback = feedback;
+    feedbackText = '<div class = centerbox>';
+    feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
 
-      return false;
-    } else {
-      feedbackText = '<div class = centerbox>';
-
-      feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
-
-      if (accuracy < accuracy_thresh) {
-        let text = `
+    if (accuracy < accuracy_thresh) {
+      let text = `
           <p class="block-text">Your accuracy was low.</p>
           ${prompt_text_list}
         `;
-        feedbackText += text;
-        feedback['accuracy'] = {
-          value: accuracy,
-          text: text,
-        };
-      }
+      feedbackText += text;
+      feedback['accuracy'] = {
+        value: accuracy,
+        text: text,
+      };
+    }
 
-      if (ave_rt > rt_thresh) {
-        let text = `
+    if (ave_rt > rt_thresh) {
+      let text = `
           <p class="block-text">Please respond more quickly without sacrificing accuracy.</p>
         `;
-        feedbackText += text;
-        feedback['rt'] = {
-          value: ave_rt,
-          text: text,
-        };
-      }
+      feedbackText += text;
+      feedback['rt'] = {
+        value: ave_rt,
+        text: text,
+      };
+    }
 
-      if (missed_responses > missed_response_thresh) {
-        let text = `
+    if (missed_responses > missed_response_thresh) {
+      let text = `
           <p class="block-text">Respond on every trial.</p>
         `;
-        feedbackText += text;
-        feedback['missed_responses'] = {
-          value: missed_responses,
-          text: text,
-        };
-      }
-
-      feedbackText += '</div>';
-
-      trial_designs = stim_designs.slice(0, numTrialsPerBlock);
-      stim_designs = stim_designs.slice(numTrialsPerBlock);
-      trial_designs = parse_design(trial_designs);
-      task_switches = trial_designs;
-      stims = createTrialTypes(task_switches);
-      block_level_feedback = feedback;
-      return true;
+      feedbackText += text;
+      feedback['missed_responses'] = {
+        value: missed_responses,
+        text: text,
+      };
     }
+
+    feedbackText += '</div>';
+    block_level_feedback = feedback;
+    if (testCount === numTestBlocks) {
+      return false;
+    }
+
+    trial_designs = stim_designs.slice(0, numTrialsPerBlock);
+    stim_designs = stim_designs.slice(numTrialsPerBlock);
+    trial_designs = parse_design(trial_designs);
+    task_switches = trial_designs;
+    stims = createTrialTypes(task_switches);
+    return true;
   },
   on_timeline_finish: function () {
     // window.dataSync();
@@ -1096,6 +1084,9 @@ var spatial_task_switching_rdoc__fmri_init = () => {
 
   // Test blocks
   spatial_task_switching_rdoc__fmri_experiment.push(testNode);
+  spatial_task_switching_rdoc__fmri_experiment.push(long_fixation_node);
+  spatial_task_switching_rdoc__fmri_experiment.push(feedbackBlock);
+
   spatial_task_switching_rdoc__fmri_experiment.push(endBlock);
   spatial_task_switching_rdoc__fmri_experiment.push(exit_fullscreen);
 };

@@ -659,78 +659,67 @@ var testNode = {
     var aveShapeRespondCorrect = sumGoCorrect / goLength;
     var stopSignalRespond = numStopResponses / stopLength;
 
-    if (testCount === numTestBlocks) {
-      let text = `<div class=centerbox>
-        <p class=block-text>Done with this task.</p>
-        </div>`;
-      feedbackText = text;
-      feedback['done'] = {
-        value: true,
-        text: text,
-      };
-      block_level_feedback = feedback;
-      return false;
-    } else {
-      feedbackText = '<div class="centerbox">';
+    feedbackText = '<div class="centerbox">';
+    feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
 
-      feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
-
-      if (aveShapeRespondCorrect < accuracyThresh) {
-        let text = `
+    if (aveShapeRespondCorrect < accuracyThresh) {
+      let text = `
         <p class="block-text">Your accuracy was low.</p>
         ${promptTextList}`;
-        feedbackText += text;
-        feedback['accuracy'] = {
-          value: aveShapeRespondCorrect,
-          text: text,
-        };
-      }
-
-      if (avgRT > rtThresh) {
-        let text =
-          '<p class="block-text">Please respond more quickly without sacrificing accuracy.</p>';
-        feedbackText += text;
-        feedback['rt'] = {
-          value: avgRT,
-          text: text,
-        };
-      }
-
-      if (missedResponses > missedResponseThresh) {
-        let text =
-          '<p class="block-text">Respond on every trial that requires a response.</p>';
-        feedbackText += text;
-        feedback['missed_responses'] = {
-          value: missedResponses,
-          text: text,
-        };
-      }
-
-      if (stopSignalRespond >= maxStopCorrect) {
-        let text =
-          '<p class="block-text">Please try your best to stop to stars.</p>';
-        feedbackText += text;
-        feedback['stop_signal_respond'] = {
-          value: stopSignalRespond,
-          text: text,
-        };
-      }
-
-      if (stopSignalRespond <= minStopCorrect) {
-        let text =
-          '<p class="block-text">Please do not slow down and wait for the star to appear.</p>';
-        feedbackText += text;
-        feedback['stop_signal_respond'] = {
-          value: stopSignalRespond,
-          text: text,
-        };
-      }
-
-      feedbackText += '</div>';
-
-      block_level_feedback = feedback;
-      return true;
+      feedbackText += text;
+      feedback['accuracy'] = {
+        value: aveShapeRespondCorrect,
+        text: text,
+      };
     }
+
+    if (avgRT > rtThresh) {
+      let text =
+        '<p class="block-text">Please respond more quickly without sacrificing accuracy.</p>';
+      feedbackText += text;
+      feedback['rt'] = {
+        value: avgRT,
+        text: text,
+      };
+    }
+
+    if (missedResponses > missedResponseThresh) {
+      let text =
+        '<p class="block-text">Respond on every trial that requires a response.</p>';
+      feedbackText += text;
+      feedback['missed_responses'] = {
+        value: missedResponses,
+        text: text,
+      };
+    }
+
+    if (stopSignalRespond >= maxStopCorrect) {
+      let text =
+        '<p class="block-text">Please try your best to stop to stars.</p>';
+      feedbackText += text;
+      feedback['stop_signal_respond'] = {
+        value: stopSignalRespond,
+        text: text,
+      };
+    }
+
+    if (stopSignalRespond <= minStopCorrect) {
+      let text =
+        '<p class="block-text">Please do not slow down and wait for the star to appear.</p>';
+      feedbackText += text;
+      feedback['stop_signal_respond'] = {
+        value: stopSignalRespond,
+        text: text,
+      };
+    }
+
+    feedbackText += '</div>';
+
+    block_level_feedback = feedback;
+    if (testCount === numTestBlocks) {
+      return false;
+    }
+    return true;
   },
   on_timeline_finish: function () {
     // window.dataSync();
@@ -795,6 +784,8 @@ var stop_signal_rdoc__fmri_init = () => {
 
   // Test block
   stop_signal_rdoc__fmri_experiment.push(testNode);
+  stop_signal_rdoc__fmri_experiment.push(long_fixation_node);
+  stop_signal_rdoc__fmri_experiment.push(feedbackBlock);
   stop_signal_rdoc__fmri_experiment.push(endBlock);
   stop_signal_rdoc__fmri_experiment.push(exitFullscreen);
 };

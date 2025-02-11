@@ -546,63 +546,50 @@ var testNode = {
     var missedResponses = missedResponse / totalGoTrials;
     var avgRT = sumRT / sumResponses;
 
-    if (testCount === numTestBlocks) {
-      let text = `<div class=centerbox>
-        <p class=block-text>Done with this task.</p>
-        </div>`;
-      feedbackText += text;
-      feedback['done'] = {
-        value: true,
-        text: text,
-      };
+    feedbackText = '<div class = centerbox>';
+    feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
 
-      block_level_feedback = feedback;
-
-      return false;
-    } else {
-      feedbackText = '<div class = centerbox>';
-
-      feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
-
-      if (accuracy < accuracyThresh) {
-        let text = `
+    if (accuracy < accuracyThresh) {
+      let text = `
        <p class="block-text">Your accuracy was low.</p>${promptTextList}
       `;
-        feedbackText += text;
-        feedback['accuracy'] = {
-          value: accuracy,
-          text: text,
-        };
-      }
+      feedbackText += text;
+      feedback['accuracy'] = {
+        value: accuracy,
+        text: text,
+      };
+    }
 
-      if (avgRT > rtThresh) {
-        let text = `
+    if (avgRT > rtThresh) {
+      let text = `
         <p class="block-text">Please respond more quickly without sacrificing accuracy.</p>
       `;
-        feedbackText += text;
-        feedback['rt'] = {
-          value: avgRT,
-          text: text,
-        };
-      }
+      feedbackText += text;
+      feedback['rt'] = {
+        value: avgRT,
+        text: text,
+      };
+    }
 
-      if (missedResponses > missedResponseThresh) {
-        let text = `
+    if (missedResponses > missedResponseThresh) {
+      let text = `
         <p class="block-text">Respond on every trial that requires a response.</p>
       `;
-        feedbackText += text;
-        feedback['missed_responses'] = {
-          value: missedResponses,
-          text: text,
-        };
-      }
-
-      feedbackText += '</div>';
-
-      block_level_feedback = feedback;
-
-      return true;
+      feedbackText += text;
+      feedback['missed_responses'] = {
+        value: missedResponses,
+        text: text,
+      };
     }
+
+    feedbackText += '</div>';
+
+    block_level_feedback = feedback;
+    if (testCount === numTestBlocks) {
+      return false;
+    }
+
+    return true;
   },
   on_timeline_finish: function () {
     // window.dataSync();
@@ -667,6 +654,8 @@ var go_nogo_rdoc__fmri_init = () => {
   go_nogo_rdoc__fmri_experiment.push(fmri_wait_node);
   // test block
   go_nogo_rdoc__fmri_experiment.push(testNode);
+  go_nogo_rdoc__fmri_experiment.push(long_fixation_node);
+  go_nogo_rdoc__fmri_experiment.push(feedbackBlock);
   go_nogo_rdoc__fmri_experiment.push(endBlock);
   go_nogo_rdoc__fmri_experiment.push(exitFullscreen);
 };

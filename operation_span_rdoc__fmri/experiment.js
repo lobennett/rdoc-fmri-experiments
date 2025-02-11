@@ -7663,69 +7663,54 @@ var testNode = {
       responseProcessingData
     );
 
-    if (testCount === numTestBlocks) {
-      let text = `
-        <div class=centerbox>
-        <p class=block-text>Done with this task.</p>
-        </div>
-      `;
+    feedbackText = '<div class = centerbox>';
+    feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
+
+    if (
+      accuracy_irrespective_of_cell_order <
+      accuracy_irrespective_of_cell_order_thresh
+    ) {
+      let text =
+        '<p class = block-text>Your accuracy for the 4x4 memory grid was low.</p>' +
+        '<p class = block-text>Remember the location of the black cells.</p>';
+
       feedbackText += text;
-      feedback['done'] = {
-        value: true,
+      feedback['accuracy_irrespective_of_cell_order'] = {
+        value: accuracy_irrespective_of_cell_order,
         text: text,
       };
-
-      block_level_feedback = feedback;
-
-      return false;
-    } else {
-      feedbackText = '<div class = centerbox>';
-
-      feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
-
-      if (
-        accuracy_irrespective_of_cell_order <
-        accuracy_irrespective_of_cell_order_thresh
-      ) {
-        let text =
-          '<p class = block-text>Your accuracy for the 4x4 memory grid was low.</p>' +
-          '<p class = block-text>Remember the location of the black cells.</p>';
-
-        feedbackText += text;
-        feedback['accuracy_irrespective_of_cell_order'] = {
-          value: accuracy_irrespective_of_cell_order,
-          text: text,
-        };
-      }
-
-      if (avgProcessingAcc < processingAccThresh) {
-        let text =
-          '<p class = block-text>Your accuracy for the symmetry judgement was low.</p>' +
-          promptTextList;
-
-        feedbackText += text;
-        feedback['processing_accuracy'] = {
-          value: avgProcessingAcc,
-          text: text,
-        };
-      }
-
-      if (avgProcessingRT > processingRTThresh) {
-        let text =
-          '<p class = block-text>Please respond more quickly to the symmetry judgements without sacrificing accuracy.</p>';
-        feedbackText += text;
-        feedback['processing_rt'] = {
-          value: avgProcessingRT,
-          text: text,
-        };
-      }
-
-      feedbackText += '</div>';
-
-      block_level_feedback = feedback;
-
-      return true;
     }
+
+    if (avgProcessingAcc < processingAccThresh) {
+      let text =
+        '<p class = block-text>Your accuracy for the symmetry judgement was low.</p>' +
+        promptTextList;
+
+      feedbackText += text;
+      feedback['processing_accuracy'] = {
+        value: avgProcessingAcc,
+        text: text,
+      };
+    }
+
+    if (avgProcessingRT > processingRTThresh) {
+      let text =
+        '<p class = block-text>Please respond more quickly to the symmetry judgements without sacrificing accuracy.</p>';
+      feedbackText += text;
+      feedback['processing_rt'] = {
+        value: avgProcessingRT,
+        text: text,
+      };
+    }
+
+    feedbackText += '</div>';
+
+    block_level_feedback = feedback;
+    if (testCount === numTestBlocks) {
+      return false;
+    }
+
+    return true;
   },
   on_timeline_finish: function () {
     // window.dataSync();
@@ -7784,6 +7769,8 @@ var operation_span_rdoc__fmri_init = () => {
 
   // Start test blocks
   operation_span_rdoc__fmri_experiment.push(testNode);
+  operation_span_rdoc__fmri_experiment.push(long_fixation_node);
+  operation_span_rdoc__fmri_experiment.push(feedbackBlock);
   operation_span_rdoc__fmri_experiment.push(endBlock);
   operation_span_rdoc__fmri_experiment.push(exitFullscreen);
 };
