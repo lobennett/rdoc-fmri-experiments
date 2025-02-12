@@ -163,7 +163,7 @@ var shapes = ['circle', 'square'];
 
 // IMAGES
 // path info
-var pathSource = '/static/experiments/stop_signal_rdoc__fmri/images/';
+var pathSource = '/static/experiments/stop_signal_rdoc_practice__fmri/images/';
 var postFileType = ".png'></img>";
 var preFileType = "<img class = center src='" + pathSource;
 // append to images array to preload

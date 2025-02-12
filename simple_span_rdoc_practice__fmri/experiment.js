@@ -791,7 +791,7 @@ var fullscreen = {
   on_finish: async function () {
     console.log('Reading in designs and ITIs...');
     const design_path =
-      'http://0.0.0.0:8080/static/experiments/simple_span_rdoc__fmri/designs';
+      'http://0.0.0.0:8080/static/experiments/simple_span_rdoc_practice__fmri/designs';
     const results = await loadDesignsAndITIs(design_perm, design_path, []);
     ITIs = results.ITIs;
   },
