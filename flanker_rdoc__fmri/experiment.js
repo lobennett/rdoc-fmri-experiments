@@ -497,7 +497,7 @@ var practiceNode = {
       feedbackText += text;
       feedback['accuracy'] = {
         value: accuracy,
-        text: feedbackText,
+        text: text,
       };
     }
 
@@ -508,7 +508,7 @@ var practiceNode = {
       feedbackText += text;
       feedback['missed_responses'] = {
         value: missedResponses,
-        text: feedbackText,
+        text: text,
       };
     }
 
@@ -519,7 +519,7 @@ var practiceNode = {
       feedbackText += text;
       feedback['rt'] = {
         value: aveRT,
-        text: feedbackText,
+        text: text,
       };
     }
 
