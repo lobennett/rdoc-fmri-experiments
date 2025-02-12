@@ -160,13 +160,13 @@ var possibleResponses;
 function getKeyMappingForTask(motor_perm) {
   if (motor_perm === 0) {
     possibleResponses = [
-      ['index finger', 'y', 'index finger'],
-      ['middle finger', 'g', 'middle finger'],
+      ['index finger', ',', 'index finger'],
+      ['middle finger', '.', 'middle finger'],
     ];
   } else {
     possibleResponses = [
-      ['middle finger', 'g', 'middle finger'],
-      ['index finger', 'y', 'index finger'],
+      ['middle finger', '.', 'middle finger'],
+      ['index finger', ',', 'index finger'],
     ];
   }
 }
@@ -339,10 +339,10 @@ var getPromptText = function () {
   } ago.</p>
       <p class="center-block-text" style="font-size:16px; line-height:80%;">${
         possibleResponses[0][0] === 'index finger' ? 'Match' : 'Mismatch'
-      }: index finger</p>
+      }: Index</p>
       <p class="center-block-text" style="font-size:16px; line-height:80%;">${
         possibleResponses[0][0] === 'index finger' ? 'Mismatch' : 'Match'
-      }: middle finger</p>
+      }: Middle</p>
     </div>
   `;
 };
@@ -617,8 +617,8 @@ var practiceNode = {
       feedbackText += '</div>';
       return false;
     } else {
-      feedbackText += '</div>';
       feedbackText += `<p class="block-text"><b>Delay = ${delay}</b>.</p>`;
+      feedbackText += '</div>';
     }
 
     return true;
