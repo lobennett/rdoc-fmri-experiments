@@ -223,28 +223,28 @@ function getKeyMappingForTask(motor_perm) {
     if (motor_perm === 0) {
       // Index is high and odd
       mappings = {
-        higherLower: { higher: 'y', lower: 'g' },
-        oddEven: { odd: 'y', even: 'g' },
+        higherLower: { higher: ',', lower: '.' },
+        oddEven: { odd: ',', even: '.' },
       };
     } else {
       // Index is high and even
       mappings = {
-        higherLower: { higher: 'y', lower: 'g' },
-        oddEven: { odd: 'g', even: 'y' },
+        higherLower: { higher: ',', lower: '.' },
+        oddEven: { odd: '.', even: ',' },
       };
     }
   } else {
     if (motor_perm === 2) {
       // Index is low and odd
       mappings = {
-        higherLower: { higher: 'g', lower: 'y' },
-        oddEven: { odd: 'y', even: 'g' },
+        higherLower: { higher: '.', lower: ',' },
+        oddEven: { odd: ',', even: '.' },
       };
     } else {
       // Index is low and even
       mappings = {
-        higherLower: { higher: 'g', lower: 'y' },
-        oddEven: { odd: 'g', even: 'y' },
+        higherLower: { higher: '.', lower: ',' },
+        oddEven: { odd: '.', even: ',' },
       };
     }
   }
@@ -252,7 +252,7 @@ function getKeyMappingForTask(motor_perm) {
 }
 
 var responseMappings;
-var choices = ['y', 'g'];
+var choices = [',', '.'];
 
 var promptText;
 var promptTextList;
@@ -269,13 +269,13 @@ const setText = () => {
   promptText = `
   <div class="prompt_box">
     <p class="center-block-text" style="font-size:16px; line-height:80%;">
-      Index: ${responseMappings.oddEven.odd === 'y' ? 'Odd' : 'Even'}/${
-    responseMappings.higherLower.higher === 'y' ? 'High' : 'Low'
+      Index: ${responseMappings.oddEven.odd === ',' ? 'Odd' : 'Even'}/${
+    responseMappings.higherLower.higher === ',' ? 'High' : 'Low'
   }
     </p>
     <p class="center-block-text" style="font-size:16px; line-height:80%;">
-      Middle: ${responseMappings.oddEven.odd === 'y' ? 'Even' : 'Odd'}/${
-    responseMappings.higherLower.higher === 'y' ? 'Low' : 'High'
+      Middle: ${responseMappings.oddEven.odd === ',' ? 'Even' : 'Odd'}/${
+    responseMappings.higherLower.higher === ',' ? 'Low' : 'High'
   }
     </p>
   </div>
@@ -283,11 +283,11 @@ const setText = () => {
 
   promptTextList = `
   <ul style="text-align:left;font-size:24px;">
-    <li>Index: ${responseMappings.oddEven.odd === 'y' ? 'Odd' : 'Even'}/${
-    responseMappings.higherLower.higher === 'y' ? 'High' : 'Low'
+    <li>Index: ${responseMappings.oddEven.odd === ',' ? 'Odd' : 'Even'}/${
+    responseMappings.higherLower.higher === ',' ? 'High' : 'Low'
   }</li>
-    <li>Middle: ${responseMappings.oddEven.odd === 'y' ? 'Even' : 'Odd'}/${
-    responseMappings.higherLower.higher === 'y' ? 'Low' : 'High'
+    <li>Middle: ${responseMappings.oddEven.odd === ',' ? 'Even' : 'Odd'}/${
+    responseMappings.higherLower.higher === ',' ? 'Low' : 'High'
   }</li>
   </ul>
 `;
@@ -323,7 +323,7 @@ var numTrialsPerBlock = 64;
 var numTestBlocks = 3;
 var expStage = 'practice';
 
-var practiceThresh = 1; // 1 practice block max
+var practiceThresh = 3;
 var rtThresh = 750;
 var missedResponseThresh = 0.1;
 var accuracyThresh = 0.8; // min acc for block-level feedback
@@ -331,7 +331,7 @@ var practiceAccuracyThresh = 0.75; // min acc to proceed to test blocks
 
 var fileTypePNG = ".png'></img>";
 var preFileType =
-  "<img class = center src='/static/experiments/cued_task_switching_rdoc__fmri/images/";
+  "<img class = center src='/static/experiments/cued_task_switching_rdoc_practice__fmri/images/";
 
 var tasks = {
   parity: {
@@ -360,7 +360,8 @@ var currentTrial = 0;
 var CTI = 150; // cue-target-interval or cue's length (7/29, changed from 300 to 150; less time to process the cue should increase cue switch costs and task switch costs)
 
 // PRE LOAD IMAGES HERE
-var pathSource = '/static/experiments/cued_task_switching_rdoc__fmri/images/';
+var pathSource =
+  '/static/experiments/cued_task_switching_rdoc_practice__fmri/images/';
 var numbersPreload = ['1', '2', '3', '4', '6', '7', '8', '9'];
 var images = [];
 for (i = 0; i < numbersPreload.length; i++) {
@@ -472,16 +473,7 @@ var feedbackBlock = {
   },
   choices: [' '],
   stimulus: getFeedback,
-  trial_duration: function () {
-    const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_middle' || trial_id === 'practice_feedback'
-      ? undefined
-      : 4000;
-  },
-  response_ends_trial: function () {
-    const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_middle' || trial_id === 'practice_feedback';
-  },
+  response_ends_trial: true,
   on_finish: function (data) {
     data['block_level_feedback'] = block_level_feedback;
   },
@@ -625,6 +617,7 @@ var practiceNode = {
 
     feedbackText = '<div class = centerbox>';
     feedbackText += '<p class = block-text>Please take a short break.</p>';
+    let trippedFlag = false;
 
     if (accuracy < practiceAccuracyThresh) {
       let text = `
@@ -636,6 +629,7 @@ var practiceNode = {
         value: accuracy,
         text: text,
       };
+      trippedFlag = true;
     }
 
     if (avgRT > rtThresh) {
@@ -647,6 +641,7 @@ var practiceNode = {
         value: avgRT,
         text: text,
       };
+      trippedFlag = true;
     }
 
     if (missedResponses > missedResponseThresh) {
@@ -658,18 +653,29 @@ var practiceNode = {
         value: missedResponses,
         text: text,
       };
+      trippedFlag = true;
     }
 
     feedbackText += '</div>';
 
-    // setting next block's stimuli
-    taskSwitches = trial_designs;
-    stims = genStims(numTrialsPerBlock + 1);
+    // Create block of conditions for first practice block
+    taskSwitches = jsPsych.randomization.repeat(
+      taskSwitchesArr,
+      practiceLen / 4
+    );
+    taskSwitches.unshift({
+      task_switch: 'na',
+      cue_switch: 'na',
+    });
+    stims = genStims(practiceLen + 1);
+
     block_level_feedback = feedback;
 
-    expStage = 'test';
+    if (practiceCount === practiceThresh || !trippedFlag) {
+      return false;
+    }
 
-    return false;
+    return true;
   },
 };
 
@@ -822,7 +828,7 @@ var fullscreen = {
      */
     console.log('Reading in designs and ITIs...');
     const design_path =
-      'http://0.0.0.0:8080/static/experiments/cued_task_switching_rdoc__fmri/designs';
+      'http://0.0.0.0:8080/static/experiments/cued_task_switching_rdoc_practice__fmri/designs';
     const results = await loadDesignsAndITIs(design_perm, design_path, [
       'stims',
     ]);
@@ -865,8 +871,8 @@ var endBlock = {
   choices: ['Enter'],
 };
 
-var cued_task_switching_rdoc__fmri_experiment = [];
-var cued_task_switching_rdoc__fmri_init = () => {
+var cued_task_switching_rdoc_practice__fmri_experiment = [];
+var cued_task_switching_rdoc_practice__fmri_init = () => {
   // Preload images
   jsPsych.pluginAPI.preloadImages(images);
 
@@ -878,25 +884,15 @@ var cued_task_switching_rdoc__fmri_init = () => {
   });
   stims = genStims(practiceLen + 1);
 
-  console.log(stims);
-  console.log(taskSwitches);
-
   // Add blocks to timeline
-  cued_task_switching_rdoc__fmri_experiment.push(motor_and_design_perm_block);
-  cued_task_switching_rdoc__fmri_experiment.push(fullscreen);
-  cued_task_switching_rdoc__fmri_experiment.push(check_fingers_node);
+  cued_task_switching_rdoc_practice__fmri_experiment.push(
+    motor_and_design_perm_block
+  );
+  cued_task_switching_rdoc_practice__fmri_experiment.push(fullscreen);
 
   // Begin practice block - 1 max
-  cued_task_switching_rdoc__fmri_experiment.push(practiceNode);
-  cued_task_switching_rdoc__fmri_experiment.push(feedbackBlock);
-
-  // Prep scan
-  cued_task_switching_rdoc__fmri_experiment.push(fmri_wait_node);
-
-  // Start test blocks
-  cued_task_switching_rdoc__fmri_experiment.push(testNode);
-  cued_task_switching_rdoc__fmri_experiment.push(long_fixation_node);
-  cued_task_switching_rdoc__fmri_experiment.push(feedbackBlock);
-  cued_task_switching_rdoc__fmri_experiment.push(endBlock);
-  cued_task_switching_rdoc__fmri_experiment.push(exitFullscreen);
+  cued_task_switching_rdoc_practice__fmri_experiment.push(practiceNode);
+  cued_task_switching_rdoc_practice__fmri_experiment.push(feedbackBlock);
+  cued_task_switching_rdoc_practice__fmri_experiment.push(endBlock);
+  cued_task_switching_rdoc_practice__fmri_experiment.push(exitFullscreen);
 };
