@@ -332,10 +332,10 @@ var getPromptText = function () {
   } ago.</p>
       <p class="center-block-text" style="font-size:16px; line-height:80%;">${
         possibleResponses[0][0] === 'index finger' ? 'Match' : 'Mismatch'
-      }: index finger</p>
+      }: Index</p>
       <p class="center-block-text" style="font-size:16px; line-height:80%;">${
         possibleResponses[0][0] === 'index finger' ? 'Mismatch' : 'Match'
-      }: middle finger</p>
+      }: Middle</p>
     </div>
   `;
 };
