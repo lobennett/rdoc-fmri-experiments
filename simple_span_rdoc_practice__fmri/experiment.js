@@ -805,7 +805,6 @@ var expID = 'simple_span_rdoc_practice__fmri';
 var endText = `
   <div class="centerbox" style="height: 50vh;">
     <p class="center-block-text">Thanks for completing this task!</p>
-     <p class="center-block-text">Please remain still for the remainder of the scan!</p>
   </div>`;
 
 var endBlock = {
