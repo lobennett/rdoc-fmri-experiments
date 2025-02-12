@@ -1,6 +1,6 @@
 [
   {
-    "name": "Operation Only Span",
+    "name": "Operation Only Span fMRI",
     "template": "jspsych",
     "run": [
       "static/js/math.min.js",
@@ -21,7 +21,7 @@
       "style.css",
       "experiment.js"
     ],
-    "exp_id": "operation_only_span_rdoc",
+    "exp_id": "operation_only_span_rdoc__fmri",
     "cognitive_atlas_task_id": "tsk_4a57abb949a0d",
     "contributors": ["Patrick Bissett", "Russell Poldrack", "Logan Bennett"],
     "time": 10,
@@ -29,7 +29,7 @@
       "jspsych_init": {
         "fullscreen": true,
         "display_element": "getDisplayElement",
-        "on_trial_finish": "addID('operation_only_span_rdoc')"
+        "on_trial_finish": "addID('operation_only_span_rdoc__fmri')"
       }
     }
   }
