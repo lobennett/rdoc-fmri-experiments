@@ -6840,8 +6840,9 @@ const setText = () => {
       When you make a response, a new 8x8 grid will immediately appear, and you should complete as many correct symmetry judgments as you can. Then a fixation (+) will appear on the screen. Keep your eyes in the center of this fixation. 
     </p>
     <p class="block-text">
-      This sequence of 8x8 grids and a fixation will alternate four times. After the fourth time, a blank 4x4 grid will be presented. Do not respond to this grid. 
+      This sequence of 8x8 grids and a fixation will alternate four times. After the fourth time, a fixation (+) will be presented. 
     </p>
+    <p class="block-text">We'll start with a practice round. During practice, you will receive feedback and a reminder of the rules. These will be taken out for the test, so make sure you understand the instructions before moving on.</p>
   </div>
 `;
 
@@ -6991,11 +6992,13 @@ var feedbackBlock = {
   stimulus: getFeedback,
   trial_duration: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_right_button' ? undefined : 4000;
+    return trial_id === 'check_right_button' || trial_id === 'practice_ITI'
+      ? undefined
+      : 4000;
   },
   response_ends_trial: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_right_button';
+    return trial_id === 'check_right_button' || trial_id === 'practice_ITI';
   },
   on_finish: function (data) {
     data['block_level_feedback'] = block_level_feedback;

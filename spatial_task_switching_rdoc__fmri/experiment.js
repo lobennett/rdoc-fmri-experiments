@@ -332,15 +332,11 @@ const setText = () => {
 
   prompt_text_list = `
   <ul style="text-align:left;">
-    <li>Top: <b>${
-      quadMappings.top.charAt(0).toUpperCase() + quadMappings.top.slice(1)
-    }</b>
-      <ul>
         <li><b>${
           quadMappings.top === 'form'
             ? responseMappings.form.circle === 'y'
-              ? 'Circle'
-              : 'Square'
+              ? 'Top Circle'
+              : 'Top Square'
             : quadMappings.top === 'color'
             ? responseMappings.color.blue === 'y'
               ? 'Blue'
@@ -350,103 +346,88 @@ const setText = () => {
         <li><b>${
           quadMappings.top === 'form'
             ? responseMappings.form.circle === 'g'
-              ? 'Circle'
-              : 'Square'
+              ? 'Top Circle'
+              : 'Top Square'
             : quadMappings.top === 'color'
             ? responseMappings.color.blue === 'g'
               ? 'Blue'
               : 'Orange'
             : ''
         }</b>: Middle</li>
-      </ul>
-    </li>
-    <li>Bottom: <b>${
-      quadMappings.bottom.charAt(0).toUpperCase() + quadMappings.bottom.slice(1)
-    }</b>
-      <ul>
-        <li><b>${
-          quadMappings.bottom === 'form'
-            ? responseMappings.form.circle === 'y'
-              ? 'Circle'
-              : 'Square'
-            : quadMappings.bottom === 'color'
-            ? responseMappings.color.blue === 'y'
-              ? 'Blue'
-              : 'Orange'
-            : ''
-        }</b>: Index</li>
+    <li><b>${
+      quadMappings.bottom === 'form'
+        ? responseMappings.form.circle === 'y'
+          ? 'Bottom Circle'
+          : 'Bottom Square'
+        : quadMappings.bottom === 'color'
+        ? responseMappings.color.blue === 'y'
+          ? 'Bottom Blue'
+          : 'Bottom Orange'
+        : ''
+    }</b>: Index</li>
         <li><b>${
           quadMappings.bottom === 'form'
             ? responseMappings.form.circle === 'g'
-              ? 'Circle'
-              : 'Square'
+              ? 'Bottom Circle'
+              : 'Bottom Square'
             : quadMappings.bottom === 'color'
             ? responseMappings.color.blue === 'g'
-              ? 'Blue'
-              : 'Orange'
+              ? 'Bottom Blue'
+              : 'Bottom Orange'
             : ''
         }</b>: Middle</li>
-      </ul>
-    </li>
   </ul>`;
 
   prompt_text = `
   <div class="prompt_box">
     <div class='prompt_content' style='margin-bottom: 80px;'>
-      <p>Top: <b>${
-        quadMappings.top.charAt(0).toUpperCase() + quadMappings.top.slice(1)
-      }</b></p>
       <ul>
         <li><b>${
           quadMappings.top === 'form'
             ? responseMappings.form.circle === 'y'
-              ? 'Circle'
-              : 'Square'
+              ? 'Top Circle'
+              : 'Top Square'
             : quadMappings.top === 'color'
             ? responseMappings.color.blue === 'y'
-              ? 'Blue'
-              : 'Orange'
+              ? 'Top Blue'
+              : 'Top Orange'
             : ''
         }</b>: Index</li>
         <li><b>${
           quadMappings.top === 'form'
             ? responseMappings.form.circle === 'g'
-              ? 'Circle'
-              : 'Square'
+              ? 'Top Circle'
+              : 'Top Square'
             : quadMappings.top === 'color'
             ? responseMappings.color.blue === 'g'
-              ? 'Blue'
-              : 'Orange'
+              ? 'Top Blue'
+              : 'Top Orange'
             : ''
         }</b>: Middle</li>
       </ul>
     </div>
     <div class='prompt_content' style='margin-top: 80px;'>
-      <p>Bottom: <b>${
-        quadMappings.bottom.charAt(0).toUpperCase() +
-        quadMappings.bottom.slice(1)
-      }</b></p>
        <ul>
         <li><b>${
           quadMappings.bottom === 'form'
             ? responseMappings.form.circle === 'y'
-              ? 'Circle'
-              : 'Square'
+              ? 'Bottom Circle'
+              : 'Bottom Square'
             : quadMappings.bottom === 'color'
             ? responseMappings.color.blue === 'y'
-              ? 'Blue'
-              : 'Orange'
+              ? 'Bottom Blue'
+              : 'Bottom Orange'
             : ''
         }</b>: Index</li>
         <li><b>${
           quadMappings.bottom === 'form'
             ? responseMappings.form.circle === 'g'
-              ? 'Circle'
-              : 'Square'
+              ? 'Bottom Circle'
+              : 'Bottom Square'
             : quadMappings.bottom === 'color'
             ? responseMappings.color.blue === 'g'
-              ? 'Blue'
-              : 'Orange'
+              ? 'Bottom Blue'
+              : 'Bottom Orange'
             : ''
         }</b>: Middle</li>
       </ul>
@@ -655,11 +636,13 @@ var feedbackBlock = {
   stimulus: getFeedback,
   trial_duration: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_middle' ? undefined : 4000;
+    return trial_id === 'check_middle' || trial_id === 'practice_feedback'
+      ? undefined
+      : 4000;
   },
   response_ends_trial: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_middle';
+    return trial_id === 'check_middle' || trial_id === 'practice_feedback';
   },
   on_finish: function (data) {
     data['block_level_feedback'] = block_level_feedback;

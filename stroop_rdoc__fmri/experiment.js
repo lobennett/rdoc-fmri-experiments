@@ -212,17 +212,17 @@ const setText = () => {
     <p class="center-block-text" style="font-size:16px; line-height:80%;">
       <span class="large" style="color:${
         getColorByKey('y').color
-      }">WORD</span>: index finger 
+      }">WORD</span>: Index
     </p>
     <p class="center-block-text" style="font-size:16px; line-height:80%;">
       <span class="large" style="color:${
         getColorByKey('g').color
-      }">WORD</span>: middle finger
+      }">WORD</span>: Middle
     </p>
     <p class="center-block-text" style="font-size:16px; line-height:80%;">
       <span class="large" style="color:${
         getColorByKey('r').color
-      }">WORD</span>: ring finger
+      }">WORD</span>: Ring
     </p>
   </div>`;
 
@@ -488,11 +488,13 @@ var feedbackBlock = {
   stimulus: getFeedback,
   trial_duration: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_ring' ? undefined : 4000;
+    return trial_id === 'check_ring' || trial_id === 'practice_feedback'
+      ? undefined
+      : 4000;
   },
   response_ends_trial: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_ring';
+    return trial_id === 'check_ring' || trial_id === 'practice_feedback';
   },
   on_finish: function (data) {
     data['block_level_feedback'] = block_level_feedback;

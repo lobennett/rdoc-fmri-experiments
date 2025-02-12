@@ -7158,11 +7158,13 @@ var feedbackBlock = {
   stimulus: getFeedback,
   trial_duration: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_middle_button' ? undefined : 4000;
+    return trial_id === 'check_middle_button' || trial_id === 'practice_ITI'
+      ? undefined
+      : 4000;
   },
   response_ends_trial: function () {
     const { trial_id } = jsPsych.data.get().last().trials[0];
-    return trial_id === 'check_middle_button';
+    return trial_id === 'check_middle_button' || trial_id === 'practice_ITI';
   },
   on_finish: function (data) {
     data['block_level_feedback'] = block_level_feedback;
