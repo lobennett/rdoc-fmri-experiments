@@ -7717,7 +7717,7 @@ var fullscreen = {
   on_finish: async function () {
     console.log('Reading in designs and ITIs...');
     const design_path =
-      'http://0.0.0.0:8080/static/experiments/operation_span_rdoc__fmri/designs';
+      'http://0.0.0.0:8080/static/experiments/operation_span_rdoc_practice__fmri/designs';
     const results = await loadDesignsAndITIs(design_perm, design_path, []);
     ITIs = results.ITIs;
   },
@@ -7727,7 +7727,7 @@ var exitFullscreen = {
   fullscreen_mode: false,
 };
 
-var expID = 'operation_span_rdoc__fmri';
+var expID = 'operation_span_rdoc_practice__fmri';
 var endText = `
   <div class="centerbox" style="height: 50vh;">
     <p class="center-block-text">Thanks for completing this task!</p>
