@@ -456,7 +456,7 @@ var practiceNode = {
 
     feedbackText = '<div class = centerbox>';
     feedbackText += '<p class = block-text>Please take a short break.</p>';
-    let trippedFeedback = false;
+    let trippedFlag = false;
 
     if (accuracy < practiceAccuracyThresh) {
       let text =
@@ -467,7 +467,7 @@ var practiceNode = {
         value: accuracy,
         text: text,
       };
-      trippedFeedback = true;
+      trippedFlag = true;
     }
 
     if (avgRT > rtThresh) {
@@ -478,7 +478,7 @@ var practiceNode = {
         value: avgRT,
         text: text,
       };
-      trippedFeedback = true;
+      trippedFlag = true;
     }
 
     if (missedResponses > missedResponseThresh) {
@@ -488,12 +488,12 @@ var practiceNode = {
         value: missedResponses,
         text: text,
       };
-      trippedFeedback = true;
+      trippedFlag = true;
     }
 
     feedbackText += '</div>';
 
-    if (practiceCount === practiceThresh || !trippedFeedback) {
+    if (practiceCount === practiceThresh || !trippedFlag) {
       return false;
     }
 
