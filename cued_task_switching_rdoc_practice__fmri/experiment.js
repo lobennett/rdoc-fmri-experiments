@@ -855,7 +855,6 @@ var expID = 'cued_task_switching_rdoc__fmri';
 var endText = `
   <div class="centerbox" style="height: 50vh;">
     <p class="center-block-text">Thanks for completing this task!</p>
-     <p class="center-block-text">Please remain still for the remainder of the scan!</p>
   </div>`;
 
 var endBlock = {
