@@ -27,11 +27,12 @@ var check_middle = {
   },
 };
 
+// TODO: Check ring finger is 'r' and not 'c'
 var check_ring = {
   // Check key press for ring finger.
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div><h1>Please press your ring finger.</h1></div>',
-  choices: ['c'],
+  choices: ['r'],
   post_trial_gap: 500,
   data: function () {
     return {
