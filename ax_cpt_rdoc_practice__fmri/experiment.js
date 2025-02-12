@@ -496,7 +496,8 @@ var practiceNode = {
     feedbackText += '</div>';
 
     // Here set first block of test trials
-    blockList = trial_designs;
+    blockList = conditionValues.concat(['AX']);
+    blockList = jsPsych.randomization.repeat(blockList, 1);
 
     // Set block-level feedback
     block_level_feedback = feedback;
