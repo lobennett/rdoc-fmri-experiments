@@ -1,6 +1,6 @@
 [
   {
-    "name": "Spatial Task Switching RDoC",
+    "name": "Spatial Task Switching RDoC fMRI",
     "template": "jspsych",
     "run": [
       "static/js/math.min.js",
