@@ -280,10 +280,10 @@ var feedback_node = {
 };
 
 var pathSource =
-  'http://0.0.0.0:8080/static/experiments/n_back_rdoc__fmri/images/';
+  'http://0.0.0.0:8080/static/experiments/n_back_rdoc_practice__fmri/images/';
 var fileTypePNG = ".png'></img>";
 var preFileType =
-  "<img class = center src='http://0.0.0.0:8080/static/experiments/n_back_rdoc__fmri/images/";
+  "<img class = center src='http://0.0.0.0:8080/static/experiments/n_back_rdoc_practice__fmri/images/";
 
 var promptTextList;
 var speedReminder;
@@ -348,7 +348,7 @@ var getPromptText = function () {
 };
 
 // IMAGES TO PRELOAD
-var pathSource = '/static/experiments/n_back_rdoc__fmri/images/';
+var pathSource = '/static/experiments/n_back_rdoc_practice__fmri/images/';
 var lettersPreload = ['B', 'D', 'G', 'T', 'V'];
 var casePreload = ['lowercase', 'uppercase'];
 var images = [];
@@ -777,7 +777,7 @@ var fullscreen = {
   on_finish: async function () {
     console.log('Reading in designs and ITIs...');
     const design_path =
-      'http://0.0.0.0:8080/static/experiments/n_back_rdoc__fmri/designs';
+      'http://0.0.0.0:8080/static/experiments/n_back_rdoc_practice__fmri/designs';
     const results = await loadDesignsAndITIs(design_perm, design_path, [
       'stims',
     ]);
