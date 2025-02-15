@@ -1,3 +1,7 @@
+// Adding all available keys for button box
+// - Four our configuration, keys can only be 'b', 'y', 'g', 'r', 'e'
+const buttonBoxKeys = ['b', 'y', 'g', 'r', 'e'];
+
 const OG_CHEIN_SYMM_GRIDS = [
   [
     'black',
@@ -6883,8 +6887,6 @@ const setText = () => {
     <p class="block-text">${speedReminder}</p>
   </div>
 `;
-
-  choices = [processingChoices[0].keycode, processingChoices[1].keycode];
 };
 
 /* ************************************ */
@@ -7010,6 +7012,7 @@ var expStage = 'practice';
 var stimulusBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
+  choices: buttonBoxKeys,
   stimulus_duration: stimStimulusDuration,
   trial_duration: stimTrialDuration,
   data: function () {
@@ -7021,6 +7024,7 @@ var stimulusBlock = {
       trial_duration: stimTrialDuration,
       stimulus_duration: stimStimulusDuration,
       block_num: stage === 'practice' ? practiceCount : testCount,
+      choices: buttonBoxKeys,
     };
   },
   response_ends_trial: false,
@@ -7053,6 +7057,7 @@ var waitBlock = {
   stimulus: function () {
     return getRandomSpatial();
   },
+  choices: buttonBoxKeys,
   trial_duration: function () {
     var { trial_id } = jsPsych.data.get().last(1).trials[0];
 
@@ -7084,6 +7089,7 @@ var waitBlock = {
       trial_duration: processingTrialDuration,
       stimulus_duration: processingStimulusDuration,
       block_num: getExpStage() == 'practice' ? practiceCount : testCount,
+      choices: buttonBoxKeys,
     };
   },
   on_finish: function (data) {
@@ -7189,7 +7195,7 @@ var ITIms = null;
 var ITIBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
-  is_html: true,
+  choices: buttonBoxKeys,
   response_ends_trial: false,
   data: function () {
     const stage = getExpStage();
@@ -7198,6 +7204,7 @@ var ITIBlock = {
       exp_stage: stage,
       block_num: stage === 'practice' ? practiceCount : testCount,
       condition: 'operation_only',
+      choices: buttonBoxKeys,
     };
 
     if (stage === 'practice') {
@@ -7320,6 +7327,7 @@ var long_fixation = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
   response_ends_trial: false,
+  choices: buttonBoxKeys,
   data: function () {
     return {
       trial_id: 'test_long_fixation',
@@ -7327,6 +7335,7 @@ var long_fixation = {
       trial_duration: 6000,
       stimulus_duration: 6000,
       block_num: testCount,
+      choices: buttonBoxKeys,
     };
   },
   stimulus_duration: 6000,

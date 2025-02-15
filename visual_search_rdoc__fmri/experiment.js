@@ -1,3 +1,7 @@
+// Adding all available keys for button box
+// - Four our configuration, keys can only be 'b', 'y', 'g', 'r', 'e'
+const buttonBoxKeys = ['b', 'y', 'g', 'r', 'e'];
+
 function createPracticeStimArrays(blockLen) {
   let blockStimConditions = [];
   let blockStimNums = [];
@@ -302,7 +306,6 @@ function getKeyMappingForTask(motor_perm) {
 }
 
 var possibleResponses;
-var choices;
 var speedReminder =
   '<p class = block-text>Try to respond as quickly and accurately as possible.</p>';
 
@@ -328,8 +331,6 @@ const setText = () => {
         possibleResponses[0][0] === 'index finger' ? 'Absent' : 'Present'
       }: Middle</p>
     </div>`;
-
-  choices = [possibleResponses[0][1], possibleResponses[1][1]];
 
   feedbackText = `<div class="centerbox" style='width: 60vw; height: auto !important;'>
     <p class="block-text">During this task, on each trial rectangles will appear on the screen. The rectangles can be either black or white in color.</p>
@@ -396,9 +397,9 @@ var blockStimConditions = [];
 var testTrial = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: getStim,
-  choices: choices,
-  stimulus_duration: stimStimulusDuration, // 1500,
-  trial_duration: stimTrialDuration, // 1500
+  choices: buttonBoxKeys,
+  stimulus_duration: stimStimulusDuration,
+  trial_duration: stimTrialDuration,
   response_ends_trial: false,
   prompt: function () {
     return getExpStage() === 'practice' ? promptText : '';
@@ -407,7 +408,7 @@ var testTrial = {
     const stage = getExpStage();
     return {
       trial_id: `${stage}_trial`,
-      choices: choices,
+      choices: buttonBoxKeys,
       trial_duration: stimTrialDuration,
       stimulus_duration: stimStimulusDuration,
       block_num: stage === 'practice' ? practiceCount : testCount,
@@ -482,7 +483,7 @@ var ITIms = null;
 var ITIBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
-  is_html: true,
+  choices: buttonBoxKeys,
   response_ends_trial: false,
   data: function () {
     const stage = getExpStage();
@@ -495,6 +496,7 @@ var ITIBlock = {
       },
       block_num: stage === 'practice' ? practiceCount : testCount,
       exp_stage: stage,
+      choices: buttonBoxKeys,
     };
   },
   trial_duration: function () {
@@ -564,6 +566,7 @@ var motor_and_design_perm_block = {
 
 var practiceFeedbackBlock = {
   type: jsPsychHtmlKeyboardResponse,
+  choices: buttonBoxKeys,
   stimulus: function () {
     var last = jsPsych.data.get().last(1).trials[0];
     if (last.response === null) {
@@ -582,6 +585,7 @@ var practiceFeedbackBlock = {
       trial_duration: 500,
       stimulus_duration: 500,
       block_num: practiceCount,
+      choices: buttonBoxKeys,
     };
   },
   response_ends_trial: false,
@@ -686,6 +690,7 @@ var long_fixation = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
   response_ends_trial: false,
+  choices: buttonBoxKeys,
   data: function () {
     return {
       trial_id: 'test_long_fixation',
@@ -693,6 +698,7 @@ var long_fixation = {
       trial_duration: 6000,
       stimulus_duration: 6000,
       block_num: testCount,
+      choices: buttonBoxKeys,
     };
   },
   stimulus_duration: 6000,

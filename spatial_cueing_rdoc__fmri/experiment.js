@@ -1,3 +1,7 @@
+// Adding all available keys for button box
+// - Four our configuration, keys can only be 'b', 'y', 'g', 'r', 'e'
+const buttonBoxKeys = ['b', 'y', 'g', 'r', 'e'];
+
 function sampleWithoutReplacement(arr, n) {
   let result = [];
   let tempArray = [...arr];
@@ -56,7 +60,7 @@ const possibleResponses = [
   ['middle finger', 'g', 'middle finger'],
 ];
 
-const choices = [possibleResponses[0][1], possibleResponses[1][1]];
+const choiceResponses = [possibleResponses[0][1], possibleResponses[1][1]];
 
 var endText = `
   <div class="centerbox">
@@ -138,7 +142,7 @@ const create_stimuli_objs = () => {
         cue_location: 'none',
         stim_location: loc,
         condition: 'nocue',
-        correct_response: choices[i],
+        correct_response: choiceResponses[i],
       },
     });
 
@@ -149,7 +153,7 @@ const create_stimuli_objs = () => {
         cue_location: 'both',
         stim_location: loc,
         condition: 'doublecue',
-        correct_response: choices[i],
+        correct_response: choiceResponses[i],
       },
     });
 
@@ -160,7 +164,7 @@ const create_stimuli_objs = () => {
         cue_location: loc,
         stim_location: loc,
         condition: 'valid',
-        correct_response: choices[i],
+        correct_response: choiceResponses[i],
       },
     });
 
@@ -172,7 +176,7 @@ const create_stimuli_objs = () => {
           cue_location: noloc,
           stim_location: loc,
           condition: 'invalid',
-          correct_response: choices[i],
+          correct_response: choiceResponses[i],
         },
       },
     ];
@@ -333,7 +337,7 @@ var ITIms = null;
 var ITIBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: images.left.box + images.right.box + fixation,
-  is_html: true,
+  choices: buttonBoxKeys,
   response_ends_trial: false,
   data: function () {
     const stage = getExpStage();
@@ -346,6 +350,7 @@ var ITIBlock = {
       },
       block_num: stage === 'practice' ? practiceCount : testCount,
       exp_stage: stage,
+      choices: buttonBoxKeys,
     };
   },
   trial_duration: function () {
@@ -370,12 +375,14 @@ for (let i = 0; i < practiceLen; i++) {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getCue,
     response_ends_trial: false,
+    choices: buttonBoxKeys,
     data: function () {
       return {
         trial_id: 'practice_cue',
         exp_stage: 'practice',
         trial_duration: cueTrialDuration,
         stimulus_duration: cueStimulusDuration,
+        choices: buttonBoxKeys,
       };
     },
     stimulus_duration: cueStimulusDuration,
@@ -387,11 +394,12 @@ for (let i = 0; i < practiceLen; i++) {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: images.left.box + images.right.box + fixation,
     response_ends_trial: false,
+    choices: buttonBoxKeys,
     data: {
       trial_id: 'practice_CTI',
       exp_stage: 'practice',
+      choices: buttonBoxKeys,
     },
-
     stimulus_duration: ctiDuration,
     trial_duration: ctiDuration,
     prompt: () => promptText,
@@ -405,12 +413,12 @@ for (let i = 0; i < practiceLen; i++) {
   var testTrial = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getStim,
-    choices: choices,
+    choices: buttonBoxKeys,
     data: function () {
       return Object.assign({}, getStimData(), {
         trial_id: 'practice_trial',
         exp_stage: 'practice',
-        choices: choices,
+        choices: buttonBoxKeys,
         trial_duration: stimTrialDuration,
         stimulus_duration: stimStimulusDuration,
       });
@@ -513,12 +521,14 @@ for (i = 0; i < numTrialsPerBlock; i++) {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getCue,
     response_ends_trial: false,
+    choices: buttonBoxKeys,
     data: function () {
       return {
         trial_id: 'test_cue',
         exp_stage: 'test',
         trial_duration: cueTrialDuration,
         stimulus_duration: cueStimulusDuration,
+        choices: buttonBoxKeys,
       };
     },
     stimulus_duration: cueStimulusDuration,
@@ -529,9 +539,11 @@ for (i = 0; i < numTrialsPerBlock; i++) {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: images.left.box + images.right.box + fixation,
     response_ends_trial: false,
+    choices: buttonBoxKeys,
     data: {
       trial_id: 'test_CTI',
       exp_stage: 'test',
+      choices: buttonBoxKeys,
     },
     stimulus_duration: ctiDuration,
     trial_duration: ctiDuration,
@@ -545,12 +557,12 @@ for (i = 0; i < numTrialsPerBlock; i++) {
   var testTrial = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getStim,
-    choices: choices,
+    choices: buttonBoxKeys,
     data: function () {
       return Object.assign({}, getStimData(), {
         trial_id: 'test_trial',
         exp_stage: 'test',
-        choices: choices,
+        choices: buttonBoxKeys,
         trial_duration: stimTrialDuration,
         stimulus_duration: stimStimulusDuration,
       });
@@ -567,6 +579,7 @@ var long_fixation = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
   response_ends_trial: false,
+  choices: buttonBoxKeys,
   data: function () {
     return {
       trial_id: 'test_long_fixation',
@@ -574,6 +587,7 @@ var long_fixation = {
       trial_duration: 6000,
       stimulus_duration: 6000,
       block_num: testCount,
+      choices: buttonBoxKeys,
     };
   },
   stimulus_duration: 6000,
@@ -776,7 +790,6 @@ var spatial_cueing_rdoc__fmri_init = () => {
     ...sampleWithoutReplacement(invalidCueStim, 1)
   );
   blockStims = jsPsych.randomization.repeat(practiceStimuli, 1);
-  console.log(blockStims);
 
   spatial_cueing_rdoc__fmri_experiment.push(motor_and_design_perm_block);
   spatial_cueing_rdoc__fmri_experiment.push(fullscreen);

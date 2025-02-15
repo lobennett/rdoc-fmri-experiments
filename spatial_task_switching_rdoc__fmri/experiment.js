@@ -1,3 +1,7 @@
+// Adding all available keys for button box
+// - Four our configuration, keys can only be 'b', 'y', 'g', 'r', 'e'
+const buttonBoxKeys = ['b', 'y', 'g', 'r', 'e'];
+
 const getExpStage = () => expStage;
 
 const getInstructFeedback = () =>
@@ -485,8 +489,6 @@ var motor_and_design_perm_block = {
   },
 };
 
-const choices = ['y', 'g'];
-
 var endText = `
   <div class="centerbox">
     <p class="center-block-text">Thanks for completing this task!</p>
@@ -651,15 +653,17 @@ var feedbackBlock = {
 
 var practiceTrials = [];
 for (i = 0; i < practiceLen + 1; i++) {
-  var practice_cue_block = {
+  var practiceCueBlock = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getCue,
     response_ends_trial: false,
+    choices: buttonBoxKeys,
     data: {
       exp_stage: 'practice',
       trial_id: 'practice_cue',
       trial_duration: 150,
       stimulus_duration: 150,
+      choices: buttonBoxKeys,
     },
     trial_duration: 150,
     stimulus_duration: 150,
@@ -670,16 +674,16 @@ for (i = 0; i < practiceLen + 1; i++) {
   var practiceTrial = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getStim,
-    choices: choices,
+    choices: buttonBoxKeys,
     data: {
       exp_stage: 'practice',
       trial_id: 'practice_trial',
-      choices: choices,
+      choices: buttonBoxKeys,
       trial_duration: 1500,
       stimulus_duration: 1000,
     },
-    stimulus_duration: 1000, // 1000
-    trial_duration: 1500, // 1500
+    stimulus_duration: 1000,
+    trial_duration: 1500,
     response_ends_trial: false,
     on_finish: appendData,
     prompt: () => prompt_text,
@@ -691,7 +695,7 @@ for (i = 0; i < practiceLen + 1; i++) {
   var ITIBlock = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
-    is_html: true,
+    choices: buttonBoxKeys,
     response_ends_trial: false,
     data: function () {
       const stage = getExpStage();
@@ -704,6 +708,7 @@ for (i = 0; i < practiceLen + 1; i++) {
         },
         block_num: stage === 'practice' ? practiceCount : testCount,
         exp_stage: stage,
+        choices: buttonBoxKeys,
       };
     },
     trial_duration: function () {
@@ -734,6 +739,7 @@ for (i = 0; i < practiceLen + 1; i++) {
         return '<div class = fb_box><div class = center-text><font size =20>Incorrect</font></div></div>';
       }
     },
+    choices: buttonBoxKeys,
     data: function () {
       return {
         exp_stage: 'practice',
@@ -741,6 +747,7 @@ for (i = 0; i < practiceLen + 1; i++) {
         trial_duration: 500,
         stimulus_duration: 500,
         block_num: practiceCount,
+        choices: buttonBoxKeys,
       };
     },
     response_ends_trial: false,
@@ -750,7 +757,7 @@ for (i = 0; i < practiceLen + 1; i++) {
   };
   practiceTrials.push(
     ITIBlock,
-    practice_cue_block,
+    practiceCueBlock,
     practiceTrial,
     practiceFeedbackBlock
   );
@@ -851,15 +858,17 @@ var feedback_node = {
 
 var testTrials = [];
 for (i = 0; i < numTrialsPerBlock + 1; i++) {
-  var cue_block = {
+  var cueBlock = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getCue,
     response_ends_trial: false,
+    choices: buttonBoxKeys,
     data: {
       exp_stage: 'test',
       trial_id: 'test_cue',
       trial_duration: 150,
       stimulus_duration: 150,
+      choices: buttonBoxKeys,
     },
     trial_duration: 150,
     stimulus_duration: 150,
@@ -869,22 +878,21 @@ for (i = 0; i < numTrialsPerBlock + 1; i++) {
   var testTrial = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getStim,
-    choices: choices,
+    choices: buttonBoxKeys,
     data: {
       exp_stage: 'test',
       trial_id: 'test_trial',
-      choices: choices,
+      choices: buttonBoxKeys,
       trial_duration: 1500,
       stimulus_duration: 1000,
     },
-    stimulus_duration: 1000, // 1000
-    trial_duration: 1500, // 1500
-
+    stimulus_duration: 1000,
+    trial_duration: 1500,
     response_ends_trial: false,
     on_finish: appendData,
   };
   testTrials.push(ITIBlock);
-  testTrials.push(cue_block);
+  testTrials.push(cueBlock);
   testTrials.push(testTrial);
 }
 
@@ -892,6 +900,7 @@ var long_fixation = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
   response_ends_trial: false,
+  choices: buttonBoxKeys,
   data: function () {
     return {
       trial_id: 'test_long_fixation',
@@ -899,6 +908,7 @@ var long_fixation = {
       trial_duration: 6000,
       stimulus_duration: 6000,
       block_num: testCount,
+      choices: buttonBoxKeys,
     };
   },
   stimulus_duration: 6000,

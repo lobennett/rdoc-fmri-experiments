@@ -1,3 +1,7 @@
+// Adding all available keys for button box
+// - Four our configuration, keys can only be 'b', 'y', 'g', 'r', 'e'
+const buttonBoxKeys = ['b', 'y', 'g', 'r', 'e'];
+
 const getExpStage = () => expStage;
 
 const getInstructFeedback =
@@ -122,8 +126,6 @@ function getKeyMappingForTask(motor_perm) {
   }
 }
 
-var choices;
-
 var expStage = 'practice';
 // *: Timing
 const stimStimulusDuration = 1000;
@@ -180,7 +182,6 @@ var speedReminder =
 var feedbackText;
 
 const setText = () => {
-  choices = [possibleResponses[0][1], possibleResponses[1][1]];
   promptText = `
     <div class="prompt_box">
       <p class="center-block-text" style="font-size:16px; line-height:80%;">${
@@ -324,7 +325,7 @@ var ITIms = null;
 var ITIBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
-  is_html: true,
+  choices: buttonBoxKeys,
   response_ends_trial: false,
   data: function () {
     const stage = getExpStage();
@@ -337,6 +338,7 @@ var ITIBlock = {
       },
       block_num: stage === 'practice' ? practiceCount : testCount,
       exp_stage: stage,
+      choices: buttonBoxKeys,
     };
   },
   trial_duration: function () {
@@ -363,6 +365,7 @@ var long_fixation = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
   response_ends_trial: false,
+  choices: buttonBoxKeys,
   data: function () {
     return {
       trial_id: 'test_long_fixation',
@@ -370,6 +373,7 @@ var long_fixation = {
       trial_duration: 6000,
       stimulus_duration: 6000,
       block_num: testCount,
+      choices: buttonBoxKeys,
     };
   },
   stimulus_duration: 6000,
@@ -400,13 +404,13 @@ for (i = 0; i < practiceLen; i++) {
       trial_duration: stimTrialDuration,
       stimulus_duration: stimStimulusDuration,
     },
-    choices: () => choices,
+    choices: buttonBoxKeys,
     correct_choice: getCorrectResponse,
-    stimulus_duration: stimStimulusDuration, // 1000
-    trial_duration: stimTrialDuration, // 1500
+    stimulus_duration: stimStimulusDuration,
+    trial_duration: stimTrialDuration,
     response_ends_trial: false,
     SSD: getSSD,
-    SS_duration: 500, // 500
+    SS_duration: 500,
     on_finish: function (data) {
       appendData(data);
     },
@@ -415,6 +419,8 @@ for (i = 0; i < practiceLen; i++) {
 
   var practiceFeedbackBlock = {
     type: jsPsychHtmlKeyboardResponse,
+    choices: buttonBoxKeys,
+    response_ends_trial: false,
     data: function () {
       return {
         exp_stage: 'practice',
@@ -422,9 +428,9 @@ for (i = 0; i < practiceLen; i++) {
         trial_duration: 500,
         stimulus_duration: 500,
         block_num: practiceCount,
+        choices: buttonBoxKeys,
       };
     },
-    response_ends_trial: false,
     stimulus: function () {
       var last = jsPsych.data.get().last(1).trials[0];
       if (last.condition == 'stop') {
@@ -458,8 +464,8 @@ for (i = 0; i < practiceLen; i++) {
         }
       }
     },
-    stimulus_duration: 500, // 500
-    trial_duration: 500, // 500
+    stimulus_duration: 500,
+    trial_duration: 500,
     response_ends_trial: false,
     prompt: () => promptText,
   };
@@ -591,15 +597,16 @@ for (i = 0; i < numTrialsPerBlock; i++) {
       exp_stage: 'test',
       trial_duration: stimTrialDuration,
       stimulus_duration: stimStimulusDuration,
+      choices: buttonBoxKeys,
     },
-    choices: () => choices,
+    choices: buttonBoxKeys,
     correct_choice: getCorrectResponse,
-    stimulus_duration: stimStimulusDuration, // 1000
-    trial_duration: stimTrialDuration, // 1500
+    stimulus_duration: stimStimulusDuration,
+    trial_duration: stimTrialDuration,
     timing_duration: 1500,
     response_ends_trial: false,
     SSD: getSSD,
-    SS_duration: 500, // 500
+    SS_duration: 500,
     on_finish: function (data) {
       appendData(data);
     },

@@ -1,10 +1,14 @@
+// Adding all available keys for button box
+// - Four our configuration, keys can only be 'b', 'y', 'g', 'r', 'e'
+const buttonBoxKeys = ['b', 'y', 'g', 'r', 'e'];
+
 const getExpStage = () => expStage;
 
 /* Append gap and current trial to data and then recalculate for next trial*/
 var appendData = function (data) {
   var currentTrial = jsPsych.data.get().last().trials[0];
   var correctTrial = 0;
-  console.log(currentTrial);
+
   if (currentTrial.response == correctResponse) {
     correctTrial = 1;
   }
@@ -40,7 +44,6 @@ var getData = function () {
 const fixationDuration = 500;
 
 var goResponse;
-var choices;
 var correctResponses;
 var practiceStimuli;
 var testStimuliBlock;
@@ -215,7 +218,7 @@ var ITIms = null;
 var ITIBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
-  is_html: true,
+  choices: buttonBoxKeys,
   response_ends_trial: false,
   data: function () {
     const stage = getExpStage();
@@ -267,6 +270,7 @@ var motor_and_design_perm_block = {
     design_perm = data.response.design_perm;
 
     getKeyMappingForTask();
+
     // set practice stimuli
     blockStims = jsPsych.randomization.repeat(
       practiceStimuli,
@@ -280,6 +284,7 @@ var long_fixation = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
   response_ends_trial: false,
+  choices: buttonBoxKeys,
   data: function () {
     return {
       trial_id: 'test_long_fixation',
@@ -287,6 +292,7 @@ var long_fixation = {
       trial_duration: 6000,
       stimulus_duration: 6000,
       block_num: testCount,
+      choices: buttonBoxKeys,
     };
   },
   stimulus_duration: 6000,
@@ -308,10 +314,12 @@ for (var i = 0; i < practiceLen; i++) {
   var practiceTrial = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getStim,
+    choices: buttonBoxKeys,
     data: function () {
       return Object.assign(getData(), {
         exp_stage: 'practice',
         block_num: practiceCount,
+        choices: buttonBoxKeys,
       });
     },
     stimulus_duration: stimStimulusDuration, // 1000,
@@ -323,6 +331,7 @@ for (var i = 0; i < practiceLen; i++) {
 
   var practiceFeedbackBlock = {
     type: jsPsychHtmlKeyboardResponse,
+    choices: buttonBoxKeys,
     stimulus: function () {
       var last = jsPsych.data.get().last(1).values()[0];
       if (last.condition == 'go') {
@@ -346,6 +355,7 @@ for (var i = 0; i < practiceLen; i++) {
         trial_duration: 500,
         stimulus_duration: 500,
         block_num: practiceCount,
+        choices: buttonBoxKeys,
       };
     },
     response_ends_trial: false,
@@ -614,8 +624,6 @@ var fullscreen = {
     ]);
     ITIs = results.ITIs;
     stim_designs = create_test_stimuli(results.stims);
-    console.log(ITIs);
-    console.log(stim_designs);
   },
 };
 

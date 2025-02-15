@@ -1,3 +1,7 @@
+// Adding all available keys for button box
+// - Four our configuration, keys can only be 'b', 'y', 'g', 'r', 'e'
+const buttonBoxKeys = ['b', 'y', 'g', 'r', 'e'];
+
 /* ********** GETTERS ****************** */
 const get_practice_feedback = () => {
   var last = jsPsych.data.get().last(1).values()[0];
@@ -54,8 +58,6 @@ var appendData = function () {
     jsPsych.data.get().addToLast({
       correct_trial: correctTrial,
     });
-
-    console.log(jsPsych.data.get().last().trials[0]);
   }
 };
 
@@ -252,7 +254,6 @@ function getKeyMappingForTask(motor_perm) {
 }
 
 var responseMappings;
-var choices = ['y', 'g'];
 
 var promptText;
 var promptTextList;
@@ -381,7 +382,7 @@ var ITIBlock = {
             <div class="lowerbox">
               <div class="fixation">+</div>
             </div>`,
-  is_html: true,
+  choices: buttonBoxKeys,
   response_ends_trial: false,
   data: function () {
     const stage = getExpStage();
@@ -391,6 +392,7 @@ var ITIBlock = {
         stage === 'practice' ? { min: 0.5, max: 5.5, mean: 1.0 } : null,
       block_num: stage === 'practice' ? 0 : testCount,
       exp_stage: stage,
+      choices: buttonBoxKeys,
     };
   },
   trial_duration: function () {
@@ -502,6 +504,7 @@ var long_fixation = {
   stimulus:
     '<div class = upperbox><div class = fixation>+</div></div><div class = lowerbox><div class = fixation>+</div></div>',
   response_ends_trial: false,
+  choices: buttonBoxKeys,
   data: function () {
     return {
       trial_id: 'test_long_fixation',
@@ -509,6 +512,7 @@ var long_fixation = {
       trial_duration: 6000,
       stimulus_duration: 6000,
       block_num: testCount,
+      choices: buttonBoxKeys,
     };
   },
   stimulus_duration: 6000,
@@ -530,12 +534,14 @@ for (var i = 0; i < practiceLen + 1; i++) {
   var practiceCueBlock = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getCue,
+    choices: buttonBoxKeys,
     response_ends_trial: false,
     data: {
       trial_id: 'practice_cue',
       exp_stage: 'practice',
       trial_duration: getCTI(),
       stimulus_duration: getCTI(),
+      choices: buttonBoxKeys,
     },
     trial_duration: getCTI,
     stimulus_duration: getCTI,
@@ -546,11 +552,11 @@ for (var i = 0; i < practiceLen + 1; i++) {
   var practiceTrial = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getStim,
-    choices: choices,
+    choices: buttonBoxKeys,
     data: {
       exp_stage: 'practice',
       trial_id: 'practice_trial',
-      choices: choices,
+      choices: buttonBoxKeys,
       trial_duration: stimTrialDuration,
       stimulus_duration: stimStimulusDuration,
     },
@@ -564,6 +570,7 @@ for (var i = 0; i < practiceLen + 1; i++) {
   var practiceFeedbackBlock = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: get_practice_feedback,
+    choices: buttonBoxKeys,
     data: function () {
       return {
         exp_stage: 'practice',
@@ -571,6 +578,7 @@ for (var i = 0; i < practiceLen + 1; i++) {
         trial_duration: 500,
         stimulus_duration: 500,
         block_num: practiceCount,
+        choices: buttonBoxKeys,
       };
     },
     response_ends_trial: false,
@@ -679,11 +687,13 @@ for (i = 0; i < numTrialsPerBlock + 1; i++) {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getCue,
     response_ends_trial: false,
+    choices: buttonBoxKeys,
     data: {
       trial_id: 'test_cue',
       exp_stage: 'test',
       trial_duration: getCTI(),
       stimulus_duration: getCTI(),
+      choices: buttonBoxKeys,
     },
     trial_duration: getCTI,
     stimulus_duration: getCTI,
@@ -693,11 +703,11 @@ for (i = 0; i < numTrialsPerBlock + 1; i++) {
   var testTrial = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getStim,
-    choices: choices,
+    choices: buttonBoxKeys,
     data: {
       trial_id: 'test_trial',
       exp_stage: 'test',
-      choices: choices,
+      choices: buttonBoxKeys,
       trial_duration: stimTrialDuration,
       stimulus_duration: stimStimulusDuration,
     },
@@ -877,9 +887,6 @@ var cued_task_switching_rdoc__fmri_init = () => {
     cue_switch: 'na',
   });
   stims = genStims(practiceLen + 1);
-
-  console.log(stims);
-  console.log(taskSwitches);
 
   // Add blocks to timeline
   cued_task_switching_rdoc__fmri_experiment.push(motor_and_design_perm_block);

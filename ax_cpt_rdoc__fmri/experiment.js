@@ -1,7 +1,10 @@
+// Adding all available keys for button box
+// - Four our configuration, keys can only be 'b', 'y', 'g', 'r', 'e'
+const buttonBoxKeys = ['b', 'y', 'g', 'r', 'e'];
+
 /* ************************************ */
 /* Define helper functions */
 /* ************************************ */
-
 /* ********** GETTERS ****************** */
 const get_practice_feedback = () => {
   var last = jsPsych.data.get().last(1).values()[0];
@@ -45,8 +48,6 @@ function getKeyMappingForTask(motor_perm) {
     ];
   }
 }
-
-var choices;
 
 function extractTextFromStimulus(obj) {
   // Create a temporary DOM element to parse the HTML string
@@ -197,10 +198,12 @@ const probeTrialDuration = 1500;
 /* ******************************* */
 /* THRESHOLDS */
 /* ******************************* */
+/* Practice */
 var practiceThresh = 1; // 1 practice blocks max
 var accuracyThresh = 0.8; // block-level accuracy feedback
 var practiceAccuracyThresh = 0.8; // min accuracy to proceed to test
 
+/* Test */
 var rtThresh = 750;
 var missedResponseThresh = 0.1; // get feedback if missed responses > 10% of trials
 
@@ -240,6 +243,7 @@ var ISI = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
   response_ends_trial: false,
+  choices: buttonBoxKeys,
   data: function () {
     const stage = getExpStage();
     return {
@@ -268,8 +272,8 @@ var ITIms = null;
 var ITIBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
+  choices: buttonBoxKeys,
   response_ends_trial: false,
-  is_html: true,
   data: function () {
     const stage = getExpStage();
     return {
@@ -278,6 +282,7 @@ var ITIBlock = {
         stage === 'practice' ? { min: 0.5, max: 5.5, mean: 1.0 } : null,
       block_num: stage === 'practice' ? 0 : testCount,
       exp_stage: stage,
+      choices: buttonBoxKeys,
     };
   },
   trial_duration: function () {
@@ -303,6 +308,7 @@ var ITIBlock = {
 var practiceFeedbackBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: get_practice_feedback,
+  choices: buttonBoxKeys,
   response_ends_trial: false,
   data: function () {
     return {
@@ -374,7 +380,7 @@ for (i = 0; i < practiceLen; i++) {
   var cueBlock = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getCue,
-    is_html: true,
+    choices: buttonBoxKeys,
     data: function () {
       return {
         trial_id: 'practice_cue',
@@ -393,16 +399,17 @@ for (i = 0; i < practiceLen; i++) {
       data['cue_letter'] = extractTextFromStimulus(data);
     },
   };
+
   var probeBlock = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getStim,
-    choices: choices,
+    choices: buttonBoxKeys,
     data: function () {
       return {
         trial_id: 'practice_trial',
         exp_stage: 'practice',
         condition: getCondition(),
-        choices: choices,
+        choices: buttonBoxKeys,
         trial_duration: probeTrialDuration,
         stimulus_duration: probeStimulusDuration,
         correct_response:
@@ -513,6 +520,7 @@ var long_fixation = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
   response_ends_trial: false,
+  choices: buttonBoxKeys,
   data: function () {
     return {
       trial_id: 'test_long_fixation',
@@ -520,6 +528,7 @@ var long_fixation = {
       trial_duration: 6000,
       stimulus_duration: 6000,
       block_num: testCount,
+      choices: buttonBoxKeys,
     };
   },
   stimulus_duration: 6000,
@@ -541,7 +550,7 @@ for (i = 0; i < numTrialsPerBlock; i++) {
   var cueBlock = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getCue,
-    is_html: true,
+    choices: buttonBoxKeys,
     data: function () {
       return {
         trial_id: 'test_cue',
@@ -562,13 +571,13 @@ for (i = 0; i < numTrialsPerBlock; i++) {
   var probeBlock = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getStim,
-    choices: choices,
+    choices: buttonBoxKeys,
     data: function () {
       return {
         trial_id: 'test_trial',
         exp_stage: 'test',
         condition: getCondition(),
-        choices: choices,
+        choices: buttonBoxKeys,
         trial_duration: probeTrialDuration,
         stimulus_duration: probeStimulusDuration,
         correct_response:
@@ -717,8 +726,6 @@ var motor_and_design_perm_block = {
 
     getKeyMappingForTask(motor_perm);
     setText();
-
-    choices = [possibleResponses[0][1], possibleResponses[1][1]];
   },
 };
 
@@ -749,10 +756,6 @@ var fullscreen = {
     cue_designs = results.cues;
     stim_designs = results.stims;
     delay_designs = results.delays;
-    console.log(ITIs);
-    console.log(cue_designs);
-    console.log(stim_designs);
-    console.log(delay_designs);
 
     trial_designs = cue_designs.map((cue, index) => ({
       cue: cue,

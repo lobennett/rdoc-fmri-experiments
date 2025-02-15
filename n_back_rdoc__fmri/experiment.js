@@ -1,3 +1,7 @@
+// Adding all available keys for button box
+// - Four our configuration, keys can only be 'b', 'y', 'g', 'r', 'e'
+const buttonBoxKeys = ['b', 'y', 'g', 'r', 'e'];
+
 const getExpStage = () => expStage;
 
 const getFeedback = () =>
@@ -165,8 +169,6 @@ function getKeyMappingForTask(motor_perm) {
   }
 }
 
-var choices;
-
 var expStage = 'practice';
 var letters = 'bBdDgGtTvV'.split('');
 
@@ -240,6 +242,7 @@ var long_fixation = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
   response_ends_trial: false,
+  choices: buttonBoxKeys,
   data: function () {
     return {
       trial_id: 'test_long_fixation',
@@ -247,6 +250,7 @@ var long_fixation = {
       trial_duration: 500,
       stimulus_duration: 500,
       block_num: testCount,
+      choices: buttonBoxKeys,
     };
   },
   stimulus_duration: 500,
@@ -410,7 +414,7 @@ var ITIms = null;
 var ITIBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
-  is_html: true,
+  choices: buttonBoxKeys,
   response_ends_trial: false,
   data: function () {
     const stage = getExpStage();
@@ -423,6 +427,7 @@ var ITIBlock = {
       },
       block_num: stage === 'practice' ? practiceCount : testCount,
       exp_stage: stage,
+      choices: buttonBoxKeys,
     };
   },
   trial_duration: function () {
@@ -449,14 +454,14 @@ for (i = 0; i < practiceLen + 2; i++) {
   var practiceTrial = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getStim,
+    choices: buttonBoxKeys,
     data: {
       trial_id: 'practice_trial',
       exp_stage: 'practice',
-      choices: () => choices,
+      choices: buttonBoxKeys,
       trial_duration: stimTrialDuration,
       stimulus_duration: stimStimulusDuration,
     },
-    choices: () => choices,
     stimulus_duration: stimStimulusDuration, // 1000
     trial_duration: stimTrialDuration, // 1500
     response_ends_trial: false,
@@ -476,6 +481,7 @@ for (i = 0; i < practiceLen + 2; i++) {
         return '<div class=center-box><div class=center-text><font size =20>Incorrect</font></div></div>';
       }
     },
+    choices: buttonBoxKeys,
     data: function () {
       return {
         exp_stage: 'practice',
@@ -591,14 +597,14 @@ const create_test_trials = (delay) => {
     var testTrial = {
       type: jsPsychHtmlKeyboardResponse,
       stimulus: getStim,
+      choices: buttonBoxKeys,
       data: {
         trial_id: 'test_trial',
         exp_stage: 'test',
-        choices: () => choices,
+        choices: buttonBoxKeys,
         trial_duration: stimTrialDuration,
         stimulus_duration: stimStimulusDuration,
       },
-      choices: () => choices,
       stimulus_duration: stimStimulusDuration, // 1000
       trial_duration: stimTrialDuration, // 1500
       response_ends_trial: false,
