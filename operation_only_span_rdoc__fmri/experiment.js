@@ -7170,12 +7170,14 @@ var testTrial = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
   response_ends_trial: false,
+  choices: buttonBoxKeys,
   data: function () {
     return {
       trial_id: getExpStage() == 'test' ? 'test_trial' : 'practice_trial',
       exp_stage: getExpStage(),
       trial_duration: responseBlockDuration,
       stimulus_duration: responseBlockDuration,
+      choices: buttonBoxKeys
     };
   },
   trial_duration: responseBlockDuration,

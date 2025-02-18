@@ -7376,6 +7376,7 @@ var testTrial = {
       exp_stage: getExpStage(),
       trial_duration: responseBlockDuration,
       stimulus_duration: responseBlockDuration,
+      choices: buttonBoxKeys
     };
   },
   trial_duration: responseBlockDuration,
