@@ -489,6 +489,7 @@ for (i = 0; i < practiceLen + 2; i++) {
         trial_duration: 500,
         stimulus_duration: 500,
         block_num: practiceCount,
+        choices: buttonBoxKeys,
       };
     },
     response_ends_trial: false,

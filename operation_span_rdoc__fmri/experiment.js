@@ -7184,6 +7184,7 @@ var stimulusBlock = {
   },
   stimulus_duration: stimStimulusDuration,
   trial_duration: stimTrialDuration,
+  choices: buttonBoxKeys,
   data: function () {
     const stage = getExpStage();
     return {
@@ -7193,6 +7194,7 @@ var stimulusBlock = {
       trial_duration: stimTrialDuration,
       stimulus_duration: stimStimulusDuration,
       block_num: stage === 'practice' ? practiceCount : testCount,
+      choices: buttonBoxKeys
     };
   },
   response_ends_trial: false,
@@ -7270,6 +7272,7 @@ var waitBlock = {
       trial_duration: processingTrialDuration,
       stimulus_duration: processingStimulusDuration,
       block_num: getExpStage() == 'practice' ? practiceCount : testCount,
+      choices: buttonBoxKeys
     };
   },
   on_finish: function (data) {
