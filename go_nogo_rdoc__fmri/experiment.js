@@ -322,8 +322,8 @@ for (var i = 0; i < practiceLen; i++) {
         choices: buttonBoxKeys,
       });
     },
-    stimulus_duration: stimStimulusDuration, // 1000,
-    trial_duration: stimTrialDuration, // 1500
+    stimulus_duration: stimStimulusDuration, 
+    trial_duration: stimTrialDuration,
     response_ends_trial: false,
     on_finish: appendData,
     prompt: () => promptText,
@@ -334,14 +334,14 @@ for (var i = 0; i < practiceLen; i++) {
     choices: buttonBoxKeys,
     stimulus: function () {
       var last = jsPsych.data.get().last(1).values()[0];
-      if (last.condition == 'go') {
-        if (last.response == last.correct_response) {
-          return '<div class = center-box><divp class = center-text>Correct!</div></div>';
+      if (last.condition === 'go') {
+        if (last.response === last.correct_response) {
+          return '<div class = center-box><div class = center-text>Correct!</div></div>';
         } else {
           return '<div class = center-box><div class = center-text>The shape was solid</div></div>';
         }
       } else {
-        if (last.response == last.correct_response) {
+        if (last.response === last.correct_response) {
           return '<div class = center-box><div class = center-text>Correct!</div></div>';
         } else {
           return '<div class = center-box><div class = center-text>The shape was outlined</div></div>';
@@ -492,14 +492,16 @@ for (var i = 0; i < numTrialsPerBlock; i++) {
   var testTrial = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: getStim,
+    choices: buttonBoxKeys,
     data: function () {
       return Object.assign(getData(), {
         exp_stage: 'test',
         block_num: testCount,
+        choices: buttonBoxKeys,
       });
     },
-    stimulus_duration: stimStimulusDuration, // 1000
-    trial_duration: stimTrialDuration, // 1500
+    stimulus_duration: stimStimulusDuration, 
+    trial_duration: stimTrialDuration,
     response_ends_trial: false,
     on_finish: appendData,
   };
@@ -535,20 +537,20 @@ var testNode = {
 
     for (var i = 0; i < data.trials.length; i++) {
       if (
-        data.trials[i].trial_id == 'test_trial' &&
-        data.trials[i].block_num == getCurrBlockNum() - 1
+        data.trials[i].trial_id === 'test_trial' &&
+        data.trials[i].block_num === getCurrBlockNum() - 1
       ) {
         totalTrials += 1;
-        if (data.trials[i].rt != null) {
+        if (data.trials[i].rt !== null) {
           sumRT += data.trials[i].rt;
           sumResponses += 1;
         }
-        if (data.trials[i].response == data.trials[i].correct_response) {
+        if (data.trials[i].response === data.trials[i].correct_response) {
           correct += 1;
         }
-        if (data.trials[i].condition == 'go') {
+        if (data.trials[i].condition === 'go') {
           totalGoTrials += 1;
-          if (data.trials[i].rt == null) {
+          if (data.trials[i].rt === null) {
             missedResponse += 1;
           }
         }
