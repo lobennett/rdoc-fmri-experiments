@@ -45,12 +45,12 @@ var check_ring = {
 var check_left_button = {
   // Check key press for left button.
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: '<div><h1>Please press the left button.</h1></div>',
-  choices: ['b'],
+  stimulus: "<div><h1>Please press the left button.</h1></div>",
+  choices: ["g"],
   post_trial_gap: 500,
   data: function () {
     return {
-      trial_id: 'check_left_button',
+      trial_id: "check_left_button",
     };
   },
 };
@@ -58,12 +58,12 @@ var check_left_button = {
 var check_right_button = {
   // Check key press for right button.
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: '<div><h1>Please press the right button.</h1></div>',
-  choices: ['g'],
+  stimulus: "<div><h1>Please press the right button.</h1></div>",
+  choices: ["b"],
   post_trial_gap: 500,
   data: function () {
     return {
-      trial_id: 'check_right_button',
+      trial_id: "check_right_button",
     };
   },
 };
@@ -71,12 +71,12 @@ var check_right_button = {
 var check_up_button = {
   // Check key press for up button.
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: '<div><h1>Please press the up button.</h1></div>',
-  choices: ['y'],
+  stimulus: "<div><h1>Please press the up button.</h1></div>",
+  choices: ["r"],
   post_trial_gap: 500,
   data: function () {
     return {
-      trial_id: 'check_up_button',
+      trial_id: "check_up_button",
     };
   },
 };
@@ -84,12 +84,12 @@ var check_up_button = {
 var check_down_button = {
   // Check key press for down button.
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: '<div><h1>Please press the down button.</h1></div>',
-  choices: ['r'],
+  stimulus: "<div><h1>Please press the down button.</h1></div>",
+  choices: ["y"],
   post_trial_gap: 500,
   data: function () {
     return {
-      trial_id: 'check_down_button',
+      trial_id: "check_down_button",
     };
   },
 };
@@ -97,12 +97,12 @@ var check_down_button = {
 var check_middle_button = {
   // Check key press for middle button.
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: '<div><h1>Please press the middle button.</h1></div>',
-  choices: ['e'],
+  stimulus: "<div><h1>Please press the middle button.</h1></div>",
+  choices: ["e"],
   post_trial_gap: 500,
   data: function () {
     return {
-      trial_id: 'check_middle_button',
+      trial_id: "check_middle_button",
     };
   },
 };
