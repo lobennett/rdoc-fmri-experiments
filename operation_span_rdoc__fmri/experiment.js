@@ -6857,7 +6857,7 @@ var generateGrid = function () {
       newActiveIndex = activeIndex + 1;
     } else if (key === 'r' && activeIndex >= 4) {
       newActiveIndex = activeIndex - 4;
-    } else if (key === 'b' && activeIndex < 12) {
+    } else if (key === 'y' && activeIndex < 12) {
       newActiveIndex = activeIndex + 4;
     }
 
