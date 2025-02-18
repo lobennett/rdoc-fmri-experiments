@@ -7068,13 +7068,13 @@ var processingChoices;
 function getKeyMappingForTask(motor_perm) {
   if (motor_perm === 0) {
     processingChoices = [
-      { keycode: 'b', keyname: 'left button' },
-      { keycode: 'g', keyname: 'right button' },
+      { keycode: 'g', keyname: 'left button' },
+      { keycode: 'b', keyname: 'right button' },
     ];
   } else {
     processingChoices = [
-      { keycode: 'g', keyname: 'right button' },
-      { keycode: 'b', keyname: 'left button' },
+      { keycode: 'b', keyname: 'right button' },
+      { keycode: 'g', keyname: 'left button' },
     ];
   }
 }
