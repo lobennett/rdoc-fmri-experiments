@@ -6851,13 +6851,13 @@ var generateGrid = function () {
 
     // Update activeIndex based on arrow key input
     let newActiveIndex = activeIndex;
-    if (key === 'b' && activeIndex % 4 !== 0) {
+    if (key === 'g' && activeIndex % 4 !== 0) {
       newActiveIndex = activeIndex - 1;
-    } else if (key === 'g' && activeIndex % 4 !== 3) {
+    } else if (key === 'b' && activeIndex % 4 !== 3) {
       newActiveIndex = activeIndex + 1;
-    } else if (key === 'y' && activeIndex >= 4) {
+    } else if (key === 'r' && activeIndex >= 4) {
       newActiveIndex = activeIndex - 4;
-    } else if (key === 'r' && activeIndex < 12) {
+    } else if (key === 'b' && activeIndex < 12) {
       newActiveIndex = activeIndex + 4;
     }
 
