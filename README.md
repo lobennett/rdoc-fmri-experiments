@@ -14,7 +14,7 @@ To run this code, you will need to install "expfactory deploy local". This codeb
 
 The differences between the two codebases are:
 
-- The forked codebase outputs data in a BIDS-like format by allowing the user to specify flags when running the task (see [run.sh](./run.sh#L72)).
+- The forked codebase outputs data in a BIDS-like format by allowing the user to specify flags when running the task (see [run.sh](./run.sh#L111)).
 - The forked codebase includes the jspsych7 [poldrack-plugins](https://github.com/lobennett/expfactory-deploy/tree/main/expfactory_deploy_local/src/expfactory_deploy_local/static/jspsych7/poldrack-plugins) used to run the fMRI tasks.
 
 
