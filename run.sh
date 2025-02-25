@@ -2,7 +2,7 @@
 
 # Activate virtual environment if not already activated
 if [ -z "$VIRTUAL_ENV" ]; then
-    source .deploy/.venv/bin/activate
+    source ./.venv/bin/activate
 fi
 
 echo "Using virtual environment: $VIRTUAL_ENV"
