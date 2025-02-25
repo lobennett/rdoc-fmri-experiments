@@ -17,7 +17,7 @@ The differences between the two codebases are:
 
 ### Designs
 
-(Jeanette)[https://github.com/jmumford] created the designs for the tasks in [this repository](https://github.com/jmumford/efficiency_model_mockups). She also created a [slidedeck](https://docs.google.com/presentation/d/15qc8DHQ_8VCVIX6gASrjQIuLV7KIRNbVxNnqPzLIUC8/edit?usp=sharing) to visualize the different phases of the tasks.
+[Jeanette](https://github.com/jmumford) created the designs for the tasks in [this repository](https://github.com/jmumford/efficiency_model_mockups). She also created a [slidedeck](https://docs.google.com/presentation/d/15qc8DHQ_8VCVIX6gASrjQIuLV7KIRNbVxNnqPzLIUC8/edit?usp=sharing) to visualize the different phases of the tasks.
 
 ## Run the tasks 
 
