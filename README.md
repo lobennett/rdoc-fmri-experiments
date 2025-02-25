@@ -6,9 +6,9 @@
 
 ### uv 
 
-[uv](https://docs.astral.sh/uv/getting-started/installation/) is a tool for managing Python environments, dependencies, and projects. Follow the instructions there to install UV. 
+[uv](https://docs.astral.sh/uv/getting-started/installation/) is a tool for managing Python environments, dependencies, and projects. Follow the instructions there to install uv. 
 
-### Expfactory Deploy Local
+### expfactory deploy local
 
 To run this code, you will need to install "expfactory deploy local". This codebase uses a fork of the expfactory deploy local codebase, which can be found [here](https://github.com/lobennett/expfactory-deploy).
 
