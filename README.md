@@ -4,6 +4,9 @@
 
 ## Documentation
 
+### uv 
+
+[uv](https://docs.astral.sh/uv/getting-started/installation/) is a tool for managing Python environments, dependencies, and projects. Follow the instructions there to install UV. 
 
 ### Expfactory Deploy Local
 
