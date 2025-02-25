@@ -53,9 +53,8 @@ Run the task by executing the `run.sh` script.
 # 3. Select the number of participants you would like to run
 # 4. Enter subject ID (e.g., s001)
 # 5. Enter session ID (e.g., ses-01)
-# 6. Enter run ID (e.g., run-01)
-# 7. Enter run number (e.g., 1)
-# 8. Launches the task in your browser (http://0.0.0.0:8080/)
+# 6. Enter run number (e.g., 1)
+# 7. Launches the task in your browser (http://0.0.0.0:8080/)
 
 ./run.sh
 
