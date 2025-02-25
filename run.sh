@@ -59,11 +59,11 @@ function prompt_user_for_experiment() {
 #   Run number, subject ID, and session number
 #######################################
 function prompt_user_for_metadata() {
-    read -p "Enter run number (e.g., 1): " run_num
     read -p "Enter subject ID (e.g. 001 or s001): " subject_id
     read -p "Enter session number (1-10): " session_num
+    read -p "Enter run number (e.g., 1): " run_num
 
-    echo "$run_num $subject_id $session_num"
+    echo "$subject_id $session_num $run_num"
 }
 
 #######################################
@@ -85,13 +85,10 @@ function launch_experiment() {
     
     echo "### Launching experiment: $experiment_name ###"
     echo "### Subject: $subject_id, Session: $session_num, Run: $run_num ###"
-    
-    expfactory_deploy_local -e "$experiment_name" \
-                           -raw "$raw_path" \
-                           -bids "$bids_path" \
-                           -sub "$subject_id" \
-                           -ses "$session_num" \
-                           -run "$run_num"
+
+    cmd="expfactory_deploy_local -e "$experiment_name" -raw "$raw_path" -bids "$bids_path" -sub "$subject_id" -ses "$session_num" -run "$run_num""
+    echo "$cmd"
+    eval "$cmd"
 }
 
 #######################################
