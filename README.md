@@ -42,7 +42,7 @@ uv venv --python 3.12.1
 Install the expfactory-deploy package. 
 
 ```bash
-uv pip install /path/to/expfactory-deploy/expfactory_deploy_local
+uv pip install -e /path/to/expfactory-deploy/expfactory_deploy_local
 ```
 
 Run the task by executing the `run.sh` script. 
