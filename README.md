@@ -26,17 +26,26 @@ The differences between the two codebases are:
 
 ### Set up the environment
 
-First create a virtual environment in this directory. 
+
+First, clone the expfactory-deploy repository. 
+
+```bash
+git clone https://github.com/lobennett/expfactory-deploy.git
+```
+
+Next, create a virtual environment in this directory. 
 
 ```bash
 uv venv --python 3.12.1
 ```
 
+Install the expfactory-deploy package. 
 
 ```bash
 uv pip install /path/to/expfactory-deploy/expfactory_deploy_local
 ```
 
+Run the task by executing the `run.sh` script. 
 
 ```bash
 # 1. Activates virtual environment in ./.venv
