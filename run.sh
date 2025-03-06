@@ -79,9 +79,9 @@ function launch_experiment() {
     local bids_path="$(pwd)/.output/bids"
     local raw_path="$(pwd)/.output/raw"
     local experiment_name=$1
-    local run_num=$2
-    local subject_id=$3
-    local session_num=$4
+    local subject_id=$2
+    local session_num=$3
+    local run_num=$4
     
     echo "### Launching experiment: $experiment_name ###"
     echo "### Subject: $subject_id, Session: $session_num, Run: $run_num ###"
@@ -102,10 +102,10 @@ function main() {
     selected_experiment=$(prompt_user_for_experiment "${fmri_dirs[@]}")
     
     # Prompt user for metadata
-    read run_num subject_id session_num < <(prompt_user_for_metadata)
+    read subject_id session_num run_num < <(prompt_user_for_metadata)
     
     # Launch the experiment
-    launch_experiment "$selected_experiment" "$run_num" "$subject_id" "$session_num"
+    launch_experiment "$selected_experiment" "$subject_id" "$session_num" "$run_num"
 }
 
 # Execute main function
