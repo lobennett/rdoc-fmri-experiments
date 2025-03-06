@@ -6,11 +6,11 @@ function calculate_accuracy_irrespective_of_cell_order(trials) {
   if (trials.length === 0) return 0; // Handle case where trials array is empty
 
   const totalAccuracy = trials.reduce((acc, trial) => {
-    const { response, spatial_sequence } = trial;
-    const correctCount = spatial_sequence.filter((item) =>
-      response.includes(item)
+    const { valid_responses, correct_cell_order } = trial;
+    const correctCount = correct_cell_order.filter((item) =>
+      valid_responses.includes(item)
     ).length;
-    const accuracy = correctCount / spatial_sequence.length;
+    const accuracy = correctCount / correct_cell_order.length;
     return acc + accuracy;
   }, 0);
 
@@ -103,9 +103,20 @@ function getProcessingStimProperties(htmlString) {
   return parsedClassList;
 }
 
+// Tracking submitted cell values
 var submittedAnswers = [];
+var extraSubmittedAnswers = [];
+var duplicateSubmittedAnswers = [];
+
+// Tracking timestamps for submissions
 var timestampsSubmissions = [];
+var timestampsDuplicateSubmissions = [];
+var timestampsExtraSubmissions = [];
+
+// Tracking timestamps for moving through grid
 var timestampsMovingThroughGrid = [];
+
+// Tracking cell moving through grid
 var trackingCellMovingThroughGrid = [];
 var startingCellInGrid;
 
@@ -135,10 +146,6 @@ var generateGrid = function () {
   // Declare a variable to store the setTimeout ID
   let timeoutId;
   function handleKeyDown(event) {
-    let currentTime = Date.now();
-    let timeDifference = currentTime - initialCallTime;
-    timestampsMovingThroughGrid.push(timeDifference); // Store timestamp
-
     const key = event.key;
     const container = document.querySelector('.container');
     const boxes = container.querySelectorAll('.box');
@@ -147,6 +154,13 @@ var generateGrid = function () {
     boxes.forEach(function (box) {
       box.classList.remove('spacebar-box');
     });
+
+    let currentTime = Date.now();
+    let timeDifference = currentTime - initialCallTime;
+
+    if (key === 'g' || key === 'b' || key === 'r' || key === 'y') {
+      timestampsMovingThroughGrid.push(timeDifference); 
+    }
 
     // Update activeIndex based on arrow key input
     let newActiveIndex = activeIndex;
@@ -160,7 +174,9 @@ var generateGrid = function () {
       newActiveIndex = activeIndex + 4;
     }
 
-    trackingCellMovingThroughGrid.push(newActiveIndex);
+    if (key === 'g' || key === 'b' || key === 'r' || key === 'y') {
+      trackingCellMovingThroughGrid.push(newActiveIndex);
+    }
 
     if (newActiveIndex !== activeIndex) {
       // Remove active-box class from all boxes
@@ -176,16 +192,28 @@ var generateGrid = function () {
 
     if (key === 'e') {
       event.preventDefault(); // handling default behavior on keydown event for spacebar. Prevents scrolling of the page.
+      
       let currentTime = Date.now();
       let timeDifference = currentTime - initialCallTime;
-      timestampsSubmissions.push(timeDifference); // Store timestamp
 
-      if (spacebarCount < 4) {
-        boxes[activeIndex].classList.add('spacebar-box'); // Add spacebar-box class for spacebar selection
-        activeBoxes.push(activeIndex);
-        selectedIndexes.push(activeIndex);
-        spacebarCount++;
-        submittedAnswers.push(activeIndex);
+      // Check if this cell has already been selected
+      if (!submittedAnswers.includes(activeIndex)) {
+        if (spacebarCount < 4) {
+          timestampsSubmissions.push(timeDifference); // Store valid timestamp
+          boxes[activeIndex].classList.add('spacebar-box'); // Add spacebar-box class for spacebar selection
+          activeBoxes.push(activeIndex);
+          selectedIndexes.push(activeIndex);
+          spacebarCount++;
+          submittedAnswers.push(activeIndex);
+        } else {
+          console.log('Already included all valid responses');
+          timestampsExtraSubmissions.push(timeDifference); // Store timestamp for extra submissions
+          extraSubmittedAnswers.push(activeIndex);
+        }
+      } else {
+        console.log('This cell has already been selected');
+        timestampsDuplicateSubmissions.push(timeDifference);
+        duplicateSubmittedAnswers.push(activeIndex);
       }
 
       // Clear any existing setTimeout calls
@@ -212,6 +240,8 @@ var generateGrid = function () {
 
     // Clear any remaining state or perform other necessary actions
     submittedAnswers = [];
+    extraSubmittedAnswers = [];
+    duplicateSubmittedAnswers = [];
 
     // Also reset the initial call time when the grid is reset
     initialCallTime = Date.now();
@@ -540,11 +570,36 @@ var testTrial = {
     var lastTrials = stimTrials.slice(-4);
     var correctResponses = lastTrials.map((trial) => trial.spatial_location);
 
-    data['response'] = submittedAnswers;
+    data['valid_responses'] = submittedAnswers;
+
+    // Log submisisons occuring after 4 valid responses
+    if (extraSubmittedAnswers.length === 0) {
+      data['extra_responses'] = null;
+    } else {
+      data['extra_responses'] = extraSubmittedAnswers;
+    }
+
+    if (duplicateSubmittedAnswers.length === 0) {
+      data['duplicate_responses'] = null;
+    } else {
+      data['duplicate_responses'] = duplicateSubmittedAnswers;
+    }
+
+    if (timestampsDuplicateSubmissions.length === 0) {
+      data['duplicate_responses_timestamps'] = null;
+    } else {
+      data['duplicate_responses_timestamps'] = timestampsDuplicateSubmissions;
+    }
+
+    if (timestampsExtraSubmissions.length === 0) {
+      data['extra_responses_timestamps'] = null;
+    } else {
+      data['extra_responses_timestamps'] = timestampsExtraSubmissions;
+    }
 
     if (submittedAnswers.length < 4) {
       data['correct_trial'] = null;
-    } else if (submittedAnswers.length == 4) {
+    } else if(submittedAnswers.length == 4) {
       const correct = arraysAreEqual(correctResponses, submittedAnswers);
       data['correct_trial'] = correct ? 1 : 0;
     }
@@ -568,21 +623,21 @@ var testTrial = {
         .slice(-4)
         .map((trial) => trial.spatial_location);
     }
-    data['starting_cell_in_grid'] = startingCellInGrid;
 
-    data['spatial_sequence'] = lastInterStimTrialsCorrectAnswers;
+    // Trial-specific data
     data['block_num'] = getExpStage() == 'practice' ? practiceCount : testCount;
-    data['rt_each_spatial_location_response_grid'] =
-      timestampsSubmissions.slice(0, 4);
+    data['starting_cell'] = startingCellInGrid;
+    data['correct_cell_order'] = lastInterStimTrialsCorrectAnswers;
+    data['valid_responses_timestamps'] = timestampsSubmissions;
+    data['moving_through_grid_timestamps'] = timestampsMovingThroughGrid;
+    data['cell_order_through_grid'] = trackingCellMovingThroughGrid;
 
-    data['rt_moving_each_spatial_location_response_grid'] =
-      timestampsMovingThroughGrid;
-
-    data['moving_order_spatial_location'] = trackingCellMovingThroughGrid;
-
+    // Reset variables 
     trackingCellMovingThroughGrid = [];
-    timestampsSubmissions = [];
     timestampsMovingThroughGrid = [];
+    timestampsSubmissions = [];
+    timestampsDuplicateSubmissions = [];
+    timestampsExtraSubmissions = [];
 
     activeGrid.resetGrid();
   },
