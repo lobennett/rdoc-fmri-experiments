@@ -741,8 +741,8 @@ var fullscreen = {
      * This is where the designs and ITIs are read in
      * Uses the design number from a global variable
      */
-    const design_path =
-      'http://0.0.0.0:8080/static/experiments/ax_cpt_rdoc_practice__fmri/designs';
+    const base = window.location.origin;
+    const design_path = `${base}/static/experiments/ax_cpt_rdoc_practice__fmri/designs`;
     const results = await loadDesignsAndITIs(design_perm, design_path, [
       'cues',
       'stims',

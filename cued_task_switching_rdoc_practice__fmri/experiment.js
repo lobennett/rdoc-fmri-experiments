@@ -827,8 +827,8 @@ var fullscreen = {
      * Uses the design number from a global variable
      */
     console.log('Reading in designs and ITIs...');
-    const design_path =
-      'http://0.0.0.0:8080/static/experiments/cued_task_switching_rdoc_practice__fmri/designs';
+    const base = window.location.origin;
+    const design_path = `${base}/static/experiments/cued_task_switching_rdoc_practice__fmri/designs`;
     const results = await loadDesignsAndITIs(design_perm, design_path, [
       'stims',
     ]);

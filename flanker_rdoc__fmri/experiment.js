@@ -683,8 +683,9 @@ var fullscreen = {
   fullscreen_mode: true,
   on_finish: async function () {
     console.log('Reading in designs and ITIs...');
+    const base = window.location.origin;
     const design_path =
-      'http://0.0.0.0:8080/static/experiments/flanker_rdoc__fmri/designs';
+      `${base}/static/experiments/flanker_rdoc__fmri/designs`;
     const results = await loadDesignsAndITIs(design_perm, design_path, [
       'stims',
     ]);
