@@ -295,11 +295,9 @@ const setText = () => {
 
   feedbackText = `
   <div class="centerbox">
-    <p class="block-text">During this task, you will respond to a sequence of numbers.</p>
-    <p class="block-text">Your response will depend on the current task, which can change each trial. On some trials, you will have to indicate whether the number is <b>odd or even</b>, and on other trials, you will indicate whether the number is <b>higher or lower than 5</b>. Each trial will start with a cue telling you which task to do on that trial.</p>
-    <p class="block-text">The cue before the number will be a word indicating the task. There will be <b>four</b> different cues indicating <b>two</b> different tasks. The cues and tasks are described below:</p>
+    <p class="block-text">During this task, you will have to indicate whether the number is <b>odd or even</b>, and on other trials, you will indicate whether the number is <b>higher or lower than 5</b>. </p>
+    <p class="block-text">The cue before the number will be a word indicating the task. There will be <b>four</b> different cues indicating <b>two</b> different tasks. </p>
     ${promptTextList}
-    <p class="block-text">We'll start with a practice round. During practice, you will receive feedback and a reminder of the rules. These will be taken out for the test, so make sure you understand the instructions before moving on.</p>
     ${speedReminder}
   </div>
 `;

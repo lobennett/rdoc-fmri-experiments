@@ -214,17 +214,10 @@ const setText = () => {
   feedbackText = `
     <div class="centerbox">
     <p class="block-text">
-      During this task, on each trial you will see two boxes on the screen, and then a star appear in either the left or right box.
+      On each trial you will see two boxes on the screen, and then a star appear in either the left or right box.
     </p>
     <p class="block-text">
-      Your task is to press your <b>${possibleResponses[0][0]}</b> if the star appears in the <b>left box</b>, and your <b>${possibleResponses[1][0]}</b> if the star appears in the <b>right box</b>.
-    </p>
-    <p class="block-text">
-      On some trials, one or both of the boxes will be highlighted before the star appears.
-    </p>
-    <p class="block-text">
-      We'll start with a practice round. During practice, you will receive feedback and a reminder of the rules.
-      These will be taken out for the test, so make sure you understand the instructions before moving on.
+      Press your <b>${possibleResponses[0][0]}</b> if the star appears in the <b>left box</b>, and your <b>${possibleResponses[1][0]}</b> if the star appears in the <b>right box</b>.
     </p>
     ${speedReminder}
   </div>`;

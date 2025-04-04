@@ -267,71 +267,12 @@ var prompt_text;
 const setText = () => {
   feedbackText = `
   <div class = centerbox>
-    <p class = block-text>During this task, on each trial you will see a single shape in one of the four quadrants of the screen.
-    Based upon which quadrant the shape is presented, you will complete a different task for that shape.
-    </p>
-    <p class = block-text>In the top two quadrants, please judge the shape based on its <b>${
-      quadMappings.top
-    }</b>. Press your <b>index finger</b> ${
-    quadMappings.top === 'form' ? "if it's a" : "if it's"
-  }
-    <b>${
-      quadMappings.top === 'form'
-        ? responseMappings.form.circle === 'y'
-          ? 'circle'
-          : 'square'
-        : quadMappings.top === 'color'
-        ? responseMappings.color.blue === 'y'
-          ? "<span style='color:#87CEEB'>blue</span>"
-          : "<span style='color:#FFD700'>orange</span>"
-        : ''
-    }</b> and your <b>middle finger</b> ${
-    quadMappings.top === 'form' ? "if it's a" : "if it's"
-  }
-    <b>${
-      quadMappings.top === 'form'
-        ? responseMappings.form.circle === 'g'
-          ? 'circle'
-          : 'square'
-        : quadMappings.top === 'color'
-        ? responseMappings.color.blue === 'g'
-          ? "<span style='color:#87CEEB'>blue</span>"
-          : "<span style='color:#FFD700'>orange</span>"
-        : ''
-    }</b>. 
-    </p>
-     <p class = block-text>In the bottom two quadrants, please judge the shape based on its <b>${
-       quadMappings.bottom
-     }</b>. Press your <b>index finger</b> ${
-    quadMappings.bottom === 'form' ? "if it's a" : "if it's"
-  }
-    <b>${
-      quadMappings.bottom === 'form'
-        ? responseMappings.form.circle === 'y'
-          ? 'circle'
-          : 'square'
-        : quadMappings.bottom === 'color'
-        ? responseMappings.color.blue === 'y'
-          ? "<span style='color:#87CEEB'>blue</span>"
-          : "<span style='color:#FFD700'>orange</span>"
-        : ''
-    }</b> and your <b>middle finger</b> ${
-    quadMappings.bottom === 'form' ? "if it's a" : "if it's"
-  }
-    <b>${
-      quadMappings.bottom === 'form'
-        ? responseMappings.form.circle === 'g'
-          ? 'circle'
-          : 'square'
-        : quadMappings.bottom === 'color'
-        ? responseMappings.color.blue === 'g'
-          ? "<span style='color:#87CEEB'>blue</span>"
-          : "<span style='color:#FFD700'>orange</span>"
-        : ''
-    }</b>. 
-    </p>
-    <p class = block-text>We'll start with a practice round. During practice, you will receive feedback and a reminder of the rules. These will be taken out for the test, so make sure you understand the instructions before moving on.</p>
-    ${speedReminder}
+    <p class = block-text>On each trial, you will see a single shape in one of the four quadrants of the screen.</p>
+    <p class = block-text>In the top two quadrants, judge the shape based on its <b>form</b>. </p>
+    <p class = block-text>In the bottom two quadrants, judge the shape based on its <b>color</b>. </p>
+      <li><b>Index:</b> ${responseMappings.form.circle === 'y' ? 'Circle' : 'Square'}/${responseMappings.color.blue === 'y' ? 'Blue' : 'Orange'}</li>
+      <li><b>Middle:</b> ${responseMappings.form.circle === 'g' ? 'Circle' : 'Square'}/${responseMappings.color.blue === 'g' ? 'Blue' : 'Orange'}</li>
+    </ul>
   </div>`;
 
   prompt_text_list = `

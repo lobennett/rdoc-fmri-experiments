@@ -199,18 +199,14 @@ const setText = () => {
 
   feedbackText = `
   <div class="centerbox">
-    <p class="block-text">During this task, on each trial you will see a string of F's and H's. For instance, you might see 'FFFFF' or 'HHFHH'.</p>
-    <p class="block-text">Your task is to respond by pressing the key corresponding to the <b>middle</b> letter.</p>
+    <p class="block-text">On each trial you will see a string of F's and H's. </p>
     <p class="block-text">If the middle letter is an <b>${
       possibleResponses[0][0] === 'index finger' ? 'H' : 'F'
     }</b>, press your <b>index finger</b>.</p>
     <p class="block-text">If the middle letter is an <b>${
       possibleResponses[0][0] === 'index finger' ? 'F' : 'H'
     }</b>, press your <b>middle finger</b>.</p>
-    <p class="block-text">So, if you see <b>'FFHFF'</b>, you would press your <b>${
-      possibleResponses[0][0]
     }</b>.</p>
-    <p class="block-text">We'll start with a practice round. During practice, you will receive feedback and a reminder of the rules. These will be taken out for the test, so make sure you understand the instructions before moving on.</p>
     ${speedReminder}
   </div>
 `;

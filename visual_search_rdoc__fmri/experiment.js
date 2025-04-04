@@ -333,25 +333,19 @@ const setText = () => {
     </div>`;
 
   feedbackText = `<div class="centerbox" style='width: 60vw; height: auto !important;'>
-    <p class="block-text">During this task, on each trial rectangles will appear on the screen. The rectangles can be either black or white in color.</p>
-    <p class="block-text">On some trials, <b>one</b> of these rectangles will be a <b>vertical white rectangle</b>. We will call this rectangle the 'target'.</p>
+    <p class="block-text">On each trial rectangles will appear on the screen. </p>
+    <p class="block-text">On some trials, <b>one</b> of these rectangles will be a <b>vertical white rectangle</b>.</p>
     <div style="display: flex; align-items: center; justify-content: center; padding-top: 80px; padding-bottom: 80px;">
     <p style="width: 70%; font-size: 24px;">The target looks like: </p>
     <div style="display: flex; justify-content: center; align-items: center; width:100%;">
     <div id="target" class="box" style="background-color:white; width:40px; height:80px;"></div>
     </div>
     </div>
-    <p class="block-text">Your task is to determine whether a target is ${
+    <p class="block-text">If it is <b>${
       possibleResponses[0][0] === 'index finger' ? 'present' : 'absent'
-    } or ${
-    possibleResponses[0][0] === 'index finger' ? 'absent' : 'present'
-  } on each trial.</p>
-    <p class="block-text">If you determine a target is <b>${
-      possibleResponses[0][0] === 'index finger' ? 'present' : 'absent'
-    }</b>, press your <b>index finger</b>, and if you determine a target is <b>${
+    }</b>, press your <b>index finger</b>, and if it is <b>${
     possibleResponses[0][0] === 'index finger' ? 'absent' : 'present'
   }</b>, press your <b>middle finger</b>.</p>
-    <p class="block-text">We'll start with a practice round. During practice, you will receive feedback and a reminder of the rules. These will be taken out for the test, so make sure you understand the instructions before moving on.</p>
     ${speedReminder}
   </div>`;
 };
