@@ -231,19 +231,15 @@ const setText = () => {
 
   feedbackText = `
   <div class="centerbox">
-    <p class="block-text">During this task, on each trial you will see shapes appear on the screen one at a time.</p>
+    <p class="block-text">On each trial you will see shapes appear on the screen one at a time.</p>
     <p class="block-text">If the shape is a <b>${
       possibleResponses[0][0] == 'index finger' ? shapes[0] : shapes[1]
     }</b>, press your <b>index finger</b>.</p>
     <p class="block-text">If the shape is a <b>${
       possibleResponses[1][0] == 'middle finger' ? shapes[1] : shapes[0]
     }</b>, press your <b>middle finger</b>.</p>
-    <p class="block-text">You should respond as quickly and accurately as possible to each shape.</p>
     <p class="block-text">On some trials, a star will appear around the shape, with or shortly after the shape appears.</p>
     <p class="block-text">If you see the star, please try your best to <b>withhold your response</b> on that trial.</p>
-    <p class="block-text">If the star appears and you try your best to withhold your response, you will find that you will be able to stop sometimes, but not always.</p>
-    <p class="block-text">Please <b>do not</b> slow down your responses in order to wait for the star. It is equally important to respond quickly on trials without the star as it is to stop on trials with the star.</p>
-    <p class="block-text">We'll start with a practice round. During practice, you will receive feedback and a reminder of the rules. These will be taken out for the test, so make sure you understand the instructions before moving on.</p>
     ${speedReminder}
   </div>`;
 };

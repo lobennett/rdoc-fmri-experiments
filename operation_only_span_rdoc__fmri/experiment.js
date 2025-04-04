@@ -6825,28 +6825,18 @@ const setText = () => {
   feedbackText = `
   <div style='height: 85vh !important; display:flex; flex-direction:column; justify-content: center;' class="centerbox">
     <p class="block-text">
-      During this task, you will first encounter an 8x8 grid filled with black and gray cells. You have to determine if the grid is ${
+      During this task, you will first encounter an 8x8 grid filled with black and gray cells. 
+      Press your <b>left button</b> for <b>${
         processingChoices[0].keyname === 'left button'
           ? 'symmetric'
           : 'asymmetric'
-      } or ${
-    processingChoices[0].keyname === 'left button' ? 'asymmetric' : 'symmetric'
-  }.
-      Press the <b>left button</b> if the grid is <b>${
-        processingChoices[0].keyname === 'left button'
-          ? 'symmetric'
-          : 'asymmetric'
-      }</b> and press the <b>right button</b> if it is <b>${
+      }</b> and press your <b>right button</b> for <b>${
     processingChoices[0].keyname === 'left button' ? 'asymmetric' : 'symmetric'
   }</b>.
     </p>
     <p class="block-text">
-      When you make a response, a new 8x8 grid will immediately appear, and you should complete as many correct symmetry judgments as you can. Then a fixation (+) will appear on the screen. Keep your eyes in the center of this fixation. 
+      When you make a response, a new 8x8 grid will appear, and you should complete as many correct symmetry judgments as you can.
     </p>
-    <p class="block-text">
-      This sequence of 8x8 grids and a fixation will alternate four times. After the fourth time, a fixation (+) will be presented. 
-    </p>
-    <p class="block-text">We'll start with a practice round. During practice, you will receive feedback and a reminder of the rules. These will be taken out for the test, so make sure you understand the instructions before moving on.</p>
   </div>
 `;
 

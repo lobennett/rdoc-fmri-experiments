@@ -311,16 +311,16 @@ const setText = () => {
   feedbackText = `
     <div class="centerbox">
       <p class="block-text">
-        During this task, you will see a fixation (****) followed by a 4x4 grid. This 4x4 grid will have one cell colored black. Try to remember the location of the black cell.
+        During this task, you will see a set of stars (****) followed by a 4x4 grid. This 4x4 grid will have one cell colored black. Try to remember the location of the black cell.
       </p>
       <p class="block-text">
-        This sequence of a fixation (****) and 4x4 grid will alternate four times. After the fourth time, a blank 4x4 grid will be presented.
+        This sequence of a set of stars (****) and 4x4 grid will alternate four times. After the fourth time, a blank 4x4 grid will be presented.
       </p>
       <p class="block-text">
-        On the blank 4x4 grid, use the <b>buttons</b> to navigate the grid and the <b>center button</b> to select the cells you think were colored black in the preceding 4 4x4 grids. Please select them in the order they were shown (i.e., respond with the location of the first black square in the 4x4 grid, then the 2nd, …).
+        On the blank 4x4 grid, use the <b>buttons</b> to navigate the grid and the <b>center button</b> to select the cells you think were colored black in the preceding 4 4x4 grids. Select them in the order they were shown.
       </p>
       <p class='block-text'>
-        <b>Please note</b>, it's important to be ready to respond promptly when the grid appears, as the screen will move on automatically after a limited time, whether you have responded or not.
+        It's important to be ready to respond promptly when the grid appears, as the screen will move on automatically after a limited time.
       </p>
     </div>
   `;

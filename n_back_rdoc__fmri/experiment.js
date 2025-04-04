@@ -309,20 +309,18 @@ var setText = () => {
 
   feedbackText = `
   <div class="centerbox" style="height: auto;">
-    <p class="block-text">During this task, on each trial you will see a letter.</p>
-    <p class="block-text">Your task is to match the current letter to the letter that appeared either 1 or 2 trials ago, depending on the delay given to you for that block.</p>
+    <p class="block-text">On each trial you will see a letter.</p>
+    <p class="block-text">Your task is to match the current letter to the letter that appeared either 1 or 2 trials ago, depending on the delay (1- or 2-back) presented at the beginning of the block.</p>
     <p class="block-text">Press your <b>index finger</b> if the letters <b>${
       possibleResponses[0][0] === 'index finger' ? 'match' : 'mismatch'
     }</b>, and your <b>middle finger</b> if they <b>${
     possibleResponses[0][0] === 'index finger' ? 'mismatch' : 'match'
   }</b>.</p>
-    <p class="block-text">Your delay (the number of trials ago to which you compare the current letter) will change from block to block. You will be given the delay at the start of every block of trials.</p>
     <p class="block-text">Capitalization does not matter, so "T" matches with "t".</p>
     <p class="block-text"><b>Your delay for this practice round is ${delay}</b>.</p>
-    <p class="block-text">For blocks with a delay of <b>${delay}</b>, please respond <b>mismatch</b> for the <b>first ${
+    <p class="block-text">For blocks with a delay of <b>${delay}</b>, respond <b>mismatch</b> for the <b>first ${
     delay === 1 ? 'trial' : 'two trials'
   }</b>.</p>
-    <p class="block-text">We'll start with a practice round. During practice, you will receive feedback and a reminder of the rules. These will be taken out for the test, so make sure you understand the instructions before moving on.</p>
     ${speedReminder}
   </div>
   `;

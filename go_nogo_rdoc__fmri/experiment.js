@@ -141,10 +141,9 @@ const setText = () => {
 
   feedbackText = `
   <div class="centerbox">
-    <p class="block-text">In this experiment, on each trial a ${stims[0][0]} or ${stims[1][0]} square will appear on the screen.</p>
-    <p class="block-text">If you see the <b>${stims[0][0]} square</b>, you should respond by pressing your <b>index finger</b> as quickly as possible.</p>
-    <p class="block-text">If you see the <b>${stims[1][0]} square</b>, you should <b>not respond</b>.</p>
-    <p class="block-text">We'll start with a practice round. During practice, you will receive feedback and a reminder of the rules. These will be taken out for the test, so make sure you understand the instructions before moving on.</p>
+    <p class="block-text">On each trial a ${stims[0][0]} or ${stims[1][0]} square will appear on the screen.</p>
+    <p class="block-text">If the square is filled, press your <b>index finger</b>.</p>
+    <p class="block-text">If it is outlined, you should <b>not respond</b>.</p>
     ${speedReminder}
   </div>
 `;

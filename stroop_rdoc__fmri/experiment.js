@@ -192,19 +192,18 @@ var testStimuli;
 const setText = () => {
   feedbackText = `
   <div class='centerbox'>
-    <p class='block-text'>During this task, on each trial you will be presented with a single word on the screen. This word will be <b>'RED'</b>, <b>'BLUE'</b>, or <b>'GREEN'</b>.</p>
-    <p class='block-text'>Each word will appear in colored ink. The color of the word may not match the word itself. For example, you might see the word 'RED' in green ink, like this: <span style='color:#70FF70'>RED</span>.</p>
-    <p class='block-text'>Your task is to identify the <b>color of the ink in which the word is displayed</b>, not the word itself. So, if you see the word <b>'RED'</b> in green ink, you should press the key corresponding to <b>green</b>.</p>
-    <p class='block-text'>Press your <b>index finger</b> if the color is <span style='color:${
+    <p class='block-text'>On each trial you will be presented with a single word on the screen. This word will be <b>'RED'</b>, <b>'BLUE'</b>, or <b>'GREEN'</b>.</p>
+    <p class='block-text'>Each word will appear in colored ink. The color of the word may not match the word itself.</p>
+    <p class='block-text'>Your task is to identify the <b>color of the ink in which the word is displayed</b>, not the word itself.</p>
+    <p class='block-text'>Press your <b>index finger</b> to <span style='color:${
       getColorByKey('y').color
-    }'>${getColorByKey('y').name}</span>.</p>
-    <p class='block-text'>Press your <b>middle finger</b> if the color is <span style='color:${
+    }'>${getColorByKey('y').name}</span>,</p>
+    <p class='block-text'> your <b>middle finger</b> to <span style='color:${
       getColorByKey('g').color
-    }'>${getColorByKey('g').name}</span>.</p>
-    <p class='block-text'>Press your <b>ring finger</b> if the color is <span style='color:${
+    }'>${getColorByKey('g').name}</span>,</p>
+    <p class='block-text'> and <b>ring finger</b> to <span style='color:${
       getColorByKey('r').color
     }'>${getColorByKey('r').name}</span>.</p>
-    <p class='block-text'>We'll start with a practice round. During practice, you will receive feedback and a reminder of the rules. These will be taken out for the test, so make sure you understand the instructions before moving on.</p>
     ${speedReminder}
     </div>
     `;

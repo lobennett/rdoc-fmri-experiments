@@ -7012,32 +7012,26 @@ const setText = () => {
   feedbackText = `
   <div style='height: 85vh !important; display:flex; flex-direction:column; justify-content: center;' class="centerbox">
     <p class="block-text">
-      During this task, you will first encounter an 8x8 grid filled with black and gray cells. You have to determine if the grid is ${
+      During this task, you will first encounter an 8x8 grid filled with black and gray cells.
+      Press the <b>left button</b> for <b>${
         processingChoices[0].keyname === 'left button'
           ? 'symmetric'
           : 'asymmetric'
-      } or ${
-    processingChoices[0].keyname === 'left button' ? 'asymmetric' : 'symmetric'
-  }.
-      Press the <b>left button</b> if the grid is <b>${
-        processingChoices[0].keyname === 'left button'
-          ? 'symmetric'
-          : 'asymmetric'
-      }</b> and press the <b>right button</b> if it is <b>${
+      }</b> and press the <b>right button</b> for <b>${
     processingChoices[0].keyname === 'left button' ? 'asymmetric' : 'symmetric'
   }</b>.
     </p>
     <p class="block-text">
-      When you make a response, a new 8x8 grid will immediately appear, and you should complete as many correct symmetry judgments as you can. Then a single 4x4 grid will appear. This grid will have one cell colored black. Try to remember the location of the black cell.
+      When you make a response, a new 8x8 grid will appear, and you should complete as many correct symmetry judgments as you can. After each set of 8x8 grids, a 4x4 grid will have one cell colored black. You should remember the cell’s location.
     </p>
     <p class="block-text">
       This sequence of 8x8 grids and 4x4 grid will alternate four times. After the fourth time, a blank 4x4 grid will be presented.
     </p>
-    <p class='block-text'>
-      <b>Please note</b>, it's important to be ready to respond promptly when the grid appears, as the screen will move on automatically after a limited time, whether you have responded or not.
-    </p>
     <p class="block-text">
-      On the blank 4x4 grid, use the <b>buttons</b> to navigate the grid and the <b>center button</b> to select the cells you think were colored black in the preceding 4 4x4 grids. Please select them in the order they were shown (i.e., respond with the location of the first black square in the 4x4 grid, then the 2nd, …).
+      On the blank 4x4 grid, use the <b>buttons</b> to navigate the grid and the <b>center button</b> to select the cells you think were colored black in the preceding 4 4x4 grids. Select them in the order they were shown (i.e., respond with the location of the first black square in the 4x4 grid, then the 2nd, …).
+    </p>
+    <p class='block-text'>
+      It's important to respond promptly when the grid appears, as the screen will move on automatically after a limited time.
     </p>
   </div>
 `;
