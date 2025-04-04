@@ -405,7 +405,7 @@ const create_test_stimuli = (conditions) => {
   return stimuli;
 };
 
-var practiceLen = 4;
+var practiceLen = 1;
 var numTrialsPerBlock = 40;
 var numTestBlocks = 3;
 
@@ -509,17 +509,14 @@ var ITIBlock = {
     return {
       trial_id: `${stage}_ITI`,
       ITIParams:
-        stage === 'practice' ? { min: 0.5, max: 5.5, mean: 1.0 } : null,
+        stage === 'practice' ? 0.5 : null,
       block_num: stage === 'practice' ? 0 : testCount,
       exp_stage: stage,
       choices: buttonBoxKeys,
     };
   },
   trial_duration: function () {
-    ITIms =
-      getExpStage() === 'practice'
-        ? sampleFromDecayingExponential(1, 0.5, 5.5)
-        : ITIs.shift();
+    ITIms = getExpStage() === 'practice' ? 0.5 : ITIs.shift();
     return ITIms * 1000;
   },
   prompt: function () {
@@ -575,6 +572,9 @@ var motor_and_design_perm_block = {
     let tempArray = selectedCongruent.concat(selectedIncongruent);
     tempArray = jsPsych.randomization.repeat(tempArray, 1);
     blockStims = tempArray;
+    // Take only the first trial 
+    blockStims = blockStims.slice(0, 1);
+    console.log('blockStims', blockStims);
   },
 };
 

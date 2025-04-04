@@ -95,7 +95,7 @@ var rtThresh = 750;
 var missedResponseThresh = 0.1;
 var practiceThresh = 3;
 
-var practiceLen = 4; // reduced from 12 -> showing one of each condition.
+var practiceLen = 1; // reduced from 12 -> showing one of each condition.
 var numTestBlocks = 3;
 var numTrialsPerBlock = 72; // should be multiple of 24
 
@@ -343,21 +343,14 @@ var ITIBlock = {
     const stage = getExpStage();
     return {
       trial_id: `${stage}_ITI`,
-      ITIParams: {
-        min: 0,
-        max: 5,
-        mean: 0.5,
-      },
+      ITIParams: stage === 'practice' ? 0.5 : null,
       block_num: stage === 'practice' ? practiceCount : testCount,
       exp_stage: stage,
       choices: buttonBoxKeys,
     };
   },
   trial_duration: function () {
-    ITIms =
-      getExpStage() === 'practice'
-        ? sampleFromDecayingExponential(1, 0.5, 5.5)
-        : ITIs.shift();
+    ITIms = getExpStage() === 'practice' ? 0.5 : ITIs.shift();
     return ITIms * 1000;
   },
   prompt: function () {
@@ -790,6 +783,9 @@ var spatial_cueing_rdoc__fmri_init = () => {
     ...sampleWithoutReplacement(invalidCueStim, 1)
   );
   blockStims = jsPsych.randomization.repeat(practiceStimuli, 1);
+  // Take only the first trial 
+  blockStims = blockStims.slice(0, 1);
+  console.log('blockStims', blockStims);
 
   spatial_cueing_rdoc__fmri_experiment.push(motor_and_design_perm_block);
   spatial_cueing_rdoc__fmri_experiment.push(fullscreen);

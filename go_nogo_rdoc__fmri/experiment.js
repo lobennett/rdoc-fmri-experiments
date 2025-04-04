@@ -203,7 +203,7 @@ var practiceAccuracyThresh = 0.85; // min acc to proceed to test blocks, 6 out o
 var rtThresh = 750;
 var missedResponseThresh = 0.1;
 
-var practiceLen = 7;
+var practiceLen = 1;
 var practiceThresh = 3;
 var numTrialsPerBlock = 63; // multiple of 7 (6go:1nogo)
 var numTestBlocks = 3;
@@ -212,9 +212,8 @@ var numTestBlocks = 3;
 /* Set up jsPsych blocks */
 /* ************************************ */
 
-var ITIms = null;
-
 // *** ITI *** //
+var ITIms = null;
 var ITIBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
@@ -225,20 +224,18 @@ var ITIBlock = {
     return {
       trial_id: `${stage}_ITI`,
       ITIParams:
-        stage === 'practice' ? { min: 0.5, max: 5.5, mean: 1.0 } : null,
+        stage === 'practice' ? 0.5 : null,
       block_num: stage === 'practice' ? 0 : testCount,
       exp_stage: stage,
+      choices: buttonBoxKeys,
     };
   },
   trial_duration: function () {
-    ITIms =
-      getExpStage() === 'practice'
-        ? sampleFromDecayingExponential(1, 0.5, 5.5)
-        : ITIs.shift();
+    ITIms = getExpStage() === 'practice' ? 0.5 : ITIs.shift();
     return ITIms * 1000;
   },
   prompt: function () {
-    return getExpStage() == 'practice' ? promptText : '';
+    return getExpStage() === 'practice' ? promptText : '';
   },
   on_finish: function (data) {
     data['trial_duration'] = ITIms * 1000;
@@ -276,6 +273,9 @@ var motor_and_design_perm_block = {
       practiceStimuli,
       practiceLen / practiceStimuli.length
     );
+    // Take only the first trial 
+    blockStims = blockStims.slice(0, 1);
+    console.log('blockStims', blockStims);
     setText();
   },
 };
