@@ -144,7 +144,6 @@ const setText = () => {
     <p class="block-text">On each trial a ${stims[0][0]} or ${stims[1][0]} square will appear on the screen.</p>
     <p class="block-text">If the square is filled, press your <b>index finger</b>.</p>
     <p class="block-text">If it is outlined, you should <b>not respond</b>.</p>
-    ${speedReminder}
   </div>
 `;
 };

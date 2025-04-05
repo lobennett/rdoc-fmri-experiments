@@ -336,7 +336,6 @@ const setText = () => {
     <p class="block-text">On each trial rectangles will appear on the screen. </p>
     <p class="block-text">On some trials, <b>one</b> of these rectangles will be a <b>vertical white rectangle</b>.</p>
     <div style="display: flex; align-items: center; justify-content: center; padding-top: 80px; padding-bottom: 80px;">
-    <p style="width: 70%; font-size: 24px;">The target looks like: </p>
     <div style="display: flex; justify-content: center; align-items: center; width:100%;">
     <div id="target" class="box" style="background-color:white; width:40px; height:80px;"></div>
     </div>
@@ -344,9 +343,8 @@ const setText = () => {
     <p class="block-text">If it is <b>${
       possibleResponses[0][0] === 'index finger' ? 'present' : 'absent'
     }</b>, press your <b>index finger</b>, and if it is <b>${
-    possibleResponses[0][0] === 'index finger' ? 'absent' : 'present'
+    possibleResponses[0][0] === 'index finger' ? 'not' : 'present'
   }</b>, press your <b>middle finger</b>.</p>
-    ${speedReminder}
   </div>`;
 };
 

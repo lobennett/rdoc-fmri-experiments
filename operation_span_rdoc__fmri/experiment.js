@@ -7028,7 +7028,7 @@ const setText = () => {
       This sequence of 8x8 grids and 4x4 grid will alternate four times. After the fourth time, a blank 4x4 grid will be presented.
     </p>
     <p class="block-text">
-      On the blank 4x4 grid, use the <b>buttons</b> to navigate the grid and the <b>center button</b> to select the cells you think were colored black in the preceding 4 4x4 grids. Select them in the order they were shown (i.e., respond with the location of the first black square in the 4x4 grid, then the 2nd, …).
+      On the blank 4x4 grid, use the <b>buttons</b> to navigate the grid and the <b>center button</b> to select the cells you think were colored black in the preceding 4 4x4 grids. Select them in the order they were shown.
     </p>
     <p class='block-text'>
       It's important to respond promptly when the grid appears, as the screen will move on automatically after a limited time.

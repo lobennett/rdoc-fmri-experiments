@@ -240,7 +240,6 @@ const setText = () => {
     }</b>, press your <b>middle finger</b>.</p>
     <p class="block-text">On some trials, a star will appear around the shape, with or shortly after the shape appears.</p>
     <p class="block-text">If you see the star, please try your best to <b>withhold your response</b> on that trial.</p>
-    ${speedReminder}
   </div>`;
 };
 

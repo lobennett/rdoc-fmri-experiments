@@ -219,7 +219,6 @@ const setText = () => {
     <p class="block-text">
       Press your <b>${possibleResponses[0][0]}</b> if the star appears in the <b>left box</b>, and your <b>${possibleResponses[1][0]}</b> if the star appears in the <b>right box</b>.
     </p>
-    ${speedReminder}
   </div>`;
 };
 
