@@ -7181,16 +7181,7 @@ var ITIBlock = {
       condition: 'operation_only',
     };
 
-    if (stage === 'practice') {
-      commonData.ITIParams = { duration: 5 };
-    } else {
-      commonData.ITIParams = {
-        min: 2,
-        max: 20,
-        mean: 5,
-      };
-    }
-
+    stage === 'practice' ? commonData.ITIParams = 0.5 : commonData.ITIParams = null;
     return commonData;
   },
   trial_duration: function () {

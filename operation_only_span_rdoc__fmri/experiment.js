@@ -7194,21 +7194,11 @@ var ITIBlock = {
     const commonData = {
       trial_id: `${stage}_ITI`,
       exp_stage: stage,
-      block_num: stage === 'practice' ? practiceCount : testCount,
+      block_num: stage === 'practice' ? 0 : testCount,
       condition: 'operation_only',
       choices: buttonBoxKeys,
     };
-
-    if (stage === 'practice') {
-      commonData.ITIParams = { duration: 5 };
-    } else {
-      commonData.ITIParams = {
-        min: 2,
-        max: 20,
-        mean: 5,
-      };
-    }
-
+    stage === 'practice' ? commonData.ITIParams = 0.5 : commonData.ITIParams = null;
     return commonData;
   },
   trial_duration: function () {

@@ -316,7 +316,7 @@ var instructTimeThresh = 5; // /in seconds
 /* TASK TEXT */
 /* ******************************* */
 
-var practiceLen = 4;
+var practiceLen = 1;
 var numTrialsPerBlock = 64;
 var numTestBlocks = 3;
 var expStage = 'practice';
@@ -368,9 +368,9 @@ for (i = 0; i < numbersPreload.length; i++) {
 /* ************************************ */
 /* Set up jsPsych blocks */
 /* ************************************ */
+
 // *** ITI *** //
 var ITIms = null;
-
 var ITIBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `<div class="upperbox">
@@ -386,21 +386,18 @@ var ITIBlock = {
     return {
       trial_id: `${stage}_ITI`,
       ITIParams:
-        stage === 'practice' ? { min: 0.5, max: 5.5, mean: 1.0 } : null,
+        stage === 'practice' ? 0.5 : null,
       block_num: stage === 'practice' ? 0 : testCount,
       exp_stage: stage,
       choices: buttonBoxKeys,
     };
   },
   trial_duration: function () {
-    ITIms =
-      getExpStage() === 'practice'
-        ? sampleFromDecayingExponential(1, 0.5, 5.5)
-        : ITIs.shift();
+    ITIms = getExpStage() === 'practice' ? 0.5 : ITIs.shift();
     return ITIms * 1000;
   },
   prompt: function () {
-    return getExpStage() == 'practice' ? promptText : '';
+    return getExpStage() === 'practice' ? promptText : '';
   },
   on_finish: function (data) {
     data['trial_duration'] = ITIms * 1000;
@@ -885,6 +882,11 @@ var cued_task_switching_rdoc__fmri_init = () => {
     cue_switch: 'na',
   });
   stims = genStims(practiceLen + 1);
+  // Take only the first two trials 
+  // - now only using 1 practice trial 
+  // - need the first because it is N/A trial 
+  taskSwitches = taskSwitches.slice(0, 2);
+  stims = stims.slice(0, 2);
 
   // Add blocks to timeline
   cued_task_switching_rdoc__fmri_experiment.push(motor_and_design_perm_block);

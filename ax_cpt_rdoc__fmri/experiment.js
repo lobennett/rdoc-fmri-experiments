@@ -84,7 +84,6 @@ function appendData() {
 
 const setStims = () => {
   if (getExpStage() === 'practice') {
-    currCondition = blockList.shift();
     switch (currCondition) {
       case 'AX':
         currStim = '<div class = centerbox><div class = AX_text>X</div></div>';
@@ -228,7 +227,7 @@ var trialProportions = [
 /* ************ TASK LENGTH SETUP ************ */
 var numTestBlocks = 3; // 3 test blocks - 150 trials total
 var numTrialsPerBlock = trialProportions.length * 5; // 50 trials per test block
-var practiceLen = trialProportions.length / 2; // 5
+var practiceLen = 1;
 var currCondition = '';
 var expStage = 'practice';
 
@@ -264,9 +263,8 @@ var ISI = {
       : (data['delay_ms'] = current_delay),
 };
 
-var ITIms = null;
-
 // *** ITI *** //
+var ITIms = null;
 var ITIBlock = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
@@ -277,22 +275,18 @@ var ITIBlock = {
     return {
       trial_id: `${stage}_ITI`,
       ITIParams:
-        stage === 'practice' ? { min: 0.5, max: 5.5, mean: 1.0 } : null,
+        stage === 'practice' ? 0.5 : null,
       block_num: stage === 'practice' ? 0 : testCount,
       exp_stage: stage,
       choices: buttonBoxKeys,
     };
   },
   trial_duration: function () {
-    ITIms =
-      getExpStage() === 'practice'
-        ? sampleFromDecayingExponential(1, 0.5, 5.5)
-        : ITIs.shift();
-
+    ITIms = getExpStage() === 'practice' ? 0.5 : ITIs.shift();
     return ITIms * 1000;
   },
   prompt: function () {
-    return getExpStage() == 'practice' ? promptText : '';
+    return getExpStage() === 'practice' ? promptText : '';
   },
   on_finish: function (data) {
     data['trial_duration'] = ITIms * 1000;
@@ -794,6 +788,7 @@ var ax_cpt_rdoc__fmri_init = () => {
   // Create block of conditions for first practice block
   blockList = conditionValues.concat(['AX']);
   blockList = jsPsych.randomization.repeat(blockList, 1);
+  currCondition = blockList[0];
 
   // Add blocks to timeline
   ax_cpt_rdoc__fmri_experiment.push(motor_and_design_perm_block);

@@ -135,7 +135,7 @@ const stimTrialDuration = 1500;
 var sumInstructTime = 0; // ms
 var instructTimeThresh = 5; // /in seconds
 
-var practiceLen = 6; // must be divisible by shapes.length * stopSignalsConditions.length
+var practiceLen = 1; // must be divisible by shapes.length * stopSignalsConditions.length
 var numTrialsPerBlock = 60; // must be divisible by shapes.length * stopSignalsConditions.length
 var numTestBlocks = 3;
 
@@ -310,6 +310,8 @@ var motor_and_design_perm_block = {
     getKeyMappingForTask(motor_perm);
     setText();
     stims = createTrialTypes(practiceLen);
+    // Take only the first trial 
+    stims = stims.slice(0, 1);
     console.log('Starting stims: ', stims);
   },
 };
@@ -326,21 +328,14 @@ var ITIBlock = {
     const stage = getExpStage();
     return {
       trial_id: `${stage}_ITI`,
-      ITIParams: {
-        min: 0,
-        max: 5,
-        mean: 0.5,
-      },
+      ITIParams: stage === 'practice' ? 0.5 : null,
       block_num: stage === 'practice' ? practiceCount : testCount,
       exp_stage: stage,
       choices: buttonBoxKeys,
     };
   },
   trial_duration: function () {
-    ITIms =
-      getExpStage() === 'practice'
-        ? sampleFromDecayingExponential(1, 0.5, 5.5)
-        : ITIs.shift();
+    ITIms = getExpStage() === 'practice' ? 0.5 : ITIs.shift();
     return ITIms * 1000;
   },
   prompt: function () {
