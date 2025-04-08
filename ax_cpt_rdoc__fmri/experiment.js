@@ -153,7 +153,6 @@ const setText = () => {
   <div class = centerbox>
     <p class = block-text>On each trial you will see a letter presented, a short break, and then a second letter.</p>
     <p class = block-text>If the first letter was an "A" <b>AND</b> the second letter is an "X", press your <b>${possibleResponses[0][0]}</b>. Otherwise, press your <b>${possibleResponses[1][0]}</b>.</p>
-    ${speedReminder}
   </div>
 `;
 
