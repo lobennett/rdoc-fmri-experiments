@@ -228,13 +228,13 @@ var appendData = function () {
 /* ************************************ */
 function getResponseMappings(motor_perm) {
   const formMappings = [
-    { circle: ',', square: '.' },
-    { circle: '.', square: ',' },
+    { circle: 'y', square: 'g' },
+    { circle: 'g', square: 'y' },
   ];
 
   const colorMappings = [
-    { blue: ',', orange: '.' },
-    { blue: '.', orange: ',' },
+    { blue: 'y', orange: 'g' },
+    { blue: 'g', orange: 'y' },
   ];
 
   const formIndex = motor_perm % formMappings.length;
@@ -273,11 +273,11 @@ const setText = () => {
   }
     <b>${
       quadMappings.top === 'form'
-        ? responseMappings.form.circle === ','
+        ? responseMappings.form.circle === 'y'
           ? 'circle'
           : 'square'
         : quadMappings.top === 'color'
-        ? responseMappings.color.blue === ','
+        ? responseMappings.color.blue === 'y'
           ? "<span style='color:#87CEEB'>blue</span>"
           : "<span style='color:#FFD700'>orange</span>"
         : ''
@@ -286,11 +286,11 @@ const setText = () => {
   }
     <b>${
       quadMappings.top === 'form'
-        ? responseMappings.form.circle === '.'
+        ? responseMappings.form.circle === 'g'
           ? 'circle'
           : 'square'
         : quadMappings.top === 'color'
-        ? responseMappings.color.blue === '.'
+        ? responseMappings.color.blue === 'g'
           ? "<span style='color:#87CEEB'>blue</span>"
           : "<span style='color:#FFD700'>orange</span>"
         : ''
@@ -303,11 +303,11 @@ const setText = () => {
   }
     <b>${
       quadMappings.bottom === 'form'
-        ? responseMappings.form.circle === ','
+        ? responseMappings.form.circle === 'y'
           ? 'circle'
           : 'square'
         : quadMappings.bottom === 'color'
-        ? responseMappings.color.blue === ','
+        ? responseMappings.color.blue === 'y'
           ? "<span style='color:#87CEEB'>blue</span>"
           : "<span style='color:#FFD700'>orange</span>"
         : ''
@@ -316,11 +316,11 @@ const setText = () => {
   }
     <b>${
       quadMappings.bottom === 'form'
-        ? responseMappings.form.circle === '.'
+        ? responseMappings.form.circle === 'g'
           ? 'circle'
           : 'square'
         : quadMappings.bottom === 'color'
-        ? responseMappings.color.blue === '.'
+        ? responseMappings.color.blue === 'g'
           ? "<span style='color:#87CEEB'>blue</span>"
           : "<span style='color:#FFD700'>orange</span>"
         : ''
@@ -334,44 +334,44 @@ const setText = () => {
   <ul style="text-align:left;">
         <li><b>${
           quadMappings.top === 'form'
-            ? responseMappings.form.circle === ','
+            ? responseMappings.form.circle === 'y'
               ? 'Top Circle'
               : 'Top Square'
             : quadMappings.top === 'color'
-            ? responseMappings.color.blue === ','
+            ? responseMappings.color.blue === 'y'
               ? 'Blue'
               : 'Orange'
             : ''
         }</b>: Index</li>
         <li><b>${
           quadMappings.top === 'form'
-            ? responseMappings.form.circle === '.'
+            ? responseMappings.form.circle === 'g'
               ? 'Top Circle'
               : 'Top Square'
             : quadMappings.top === 'color'
-            ? responseMappings.color.blue === '.'
+            ? responseMappings.color.blue === 'g'
               ? 'Blue'
               : 'Orange'
             : ''
         }</b>: Middle</li>
     <li><b>${
       quadMappings.bottom === 'form'
-        ? responseMappings.form.circle === ','
+        ? responseMappings.form.circle === 'y'
           ? 'Bottom Circle'
           : 'Bottom Square'
         : quadMappings.bottom === 'color'
-        ? responseMappings.color.blue === ','
+        ? responseMappings.color.blue === 'y'
           ? 'Bottom Blue'
           : 'Bottom Orange'
         : ''
     }</b>: Index</li>
         <li><b>${
           quadMappings.bottom === 'form'
-            ? responseMappings.form.circle === '.'
+            ? responseMappings.form.circle === 'g'
               ? 'Bottom Circle'
               : 'Bottom Square'
             : quadMappings.bottom === 'color'
-            ? responseMappings.color.blue === '.'
+            ? responseMappings.color.blue === 'g'
               ? 'Bottom Blue'
               : 'Bottom Orange'
             : ''
@@ -384,22 +384,22 @@ const setText = () => {
       <ul>
         <li><b>${
           quadMappings.top === 'form'
-            ? responseMappings.form.circle === ','
+            ? responseMappings.form.circle === 'y'
               ? 'Top Circle'
               : 'Top Square'
             : quadMappings.top === 'color'
-            ? responseMappings.color.blue === ','
+            ? responseMappings.color.blue === 'y'
               ? 'Top Blue'
               : 'Top Orange'
             : ''
         }</b>: Index</li>
         <li><b>${
           quadMappings.top === 'form'
-            ? responseMappings.form.circle === '.'
+            ? responseMappings.form.circle === 'g'
               ? 'Top Circle'
               : 'Top Square'
             : quadMappings.top === 'color'
-            ? responseMappings.color.blue === '.'
+            ? responseMappings.color.blue === 'g'
               ? 'Top Blue'
               : 'Top Orange'
             : ''
@@ -410,22 +410,22 @@ const setText = () => {
        <ul>
         <li><b>${
           quadMappings.bottom === 'form'
-            ? responseMappings.form.circle === ','
+            ? responseMappings.form.circle === 'y'
               ? 'Bottom Circle'
               : 'Bottom Square'
             : quadMappings.bottom === 'color'
-            ? responseMappings.color.blue === ','
+            ? responseMappings.color.blue === 'y'
               ? 'Bottom Blue'
               : 'Bottom Orange'
             : ''
         }</b>: Index</li>
         <li><b>${
           quadMappings.bottom === 'form'
-            ? responseMappings.form.circle === '.'
+            ? responseMappings.form.circle === 'g'
               ? 'Bottom Circle'
               : 'Bottom Square'
             : quadMappings.bottom === 'color'
-            ? responseMappings.color.blue === '.'
+            ? responseMappings.color.blue === 'g'
               ? 'Bottom Blue'
               : 'Bottom Orange'
             : ''
@@ -480,7 +480,7 @@ var motor_and_design_perm_block = {
   },
 };
 
-const choices = [',', '.'];
+const choices = ['y', 'g'];
 
 var endText = `
   <div class="centerbox">

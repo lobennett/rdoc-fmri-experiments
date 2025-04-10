@@ -46,7 +46,7 @@ var practiceStimuli;
 var testStimuliBlock;
 
 function getKeyMappingForTask() {
-  goResponse = ',';
+  goResponse = 'y';
 
   correctResponses = [
     ['go', goResponse],

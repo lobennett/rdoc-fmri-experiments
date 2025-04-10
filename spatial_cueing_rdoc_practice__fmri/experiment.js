@@ -52,8 +52,8 @@ const getCurrBlockNum = () =>
 const fixationDuration = 500;
 
 const possibleResponses = [
-  ['index finger', ',', 'index finger'],
-  ['middle finger', '.', 'middle finger'],
+  ['index finger', 'y', 'index finger'],
+  ['middle finger', 'g', 'middle finger'],
 ];
 
 const choices = [possibleResponses[0][1], possibleResponses[1][1]];

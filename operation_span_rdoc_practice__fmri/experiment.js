@@ -7009,18 +7009,18 @@ const setText = () => {
   <div style='height: 85vh !important; display:flex; flex-direction:column; justify-content: center;' class="centerbox">
     <p class="block-text">
       During this task, you will first encounter an 8x8 grid filled with black and gray cells. You have to determine if the grid is ${
-        processingChoices[0].keyname === 'left arrow'
+        processingChoices[0].keyname === 'left button'
           ? 'symmetric'
           : 'asymmetric'
       } or ${
-    processingChoices[0].keyname === 'left arrow' ? 'asymmetric' : 'symmetric'
+    processingChoices[0].keyname === 'left button' ? 'asymmetric' : 'symmetric'
   }.
-      Press the <b>left arrow</b> if the grid is <b>${
-        processingChoices[0].keyname === 'left arrow'
+      Press the <b>left button</b> if the grid is <b>${
+        processingChoices[0].keyname === 'left button'
           ? 'symmetric'
           : 'asymmetric'
-      }</b> and press the <b>right arrow</b> if it is <b>${
-    processingChoices[0].keyname === 'left arrow' ? 'asymmetric' : 'symmetric'
+      }</b> and press the <b>right button</b> if it is <b>${
+    processingChoices[0].keyname === 'left button' ? 'asymmetric' : 'symmetric'
   }</b>.
     </p>
     <p class="block-text">
@@ -7033,26 +7033,26 @@ const setText = () => {
       <b>Please note</b>, it's important to be ready to respond promptly when the grid appears, as the screen will move on automatically after a limited time, whether you have responded or not.
     </p>
     <p class="block-text">
-      On the blank 4x4 grid, use the <b>arrows</b> to navigate the grid and the <b>spacebar</b> to select the cells you think were colored black in the preceding 4 4x4 grids. Please select them in the order they were shown (i.e., respond with the location of the first black square in the 4x4 grid, then the 2nd, …).
+      On the blank 4x4 grid, use the <b>buttons</b> to navigate the grid and the <b>center button</b> to select the cells you think were colored black in the preceding 4 4x4 grids. Please select them in the order they were shown (i.e., respond with the location of the first black square in the 4x4 grid, then the 2nd, …).
     </p>
   </div>
 `;
 
   promptText = `<div class=prompt_box_operation>
     <p class = center-block-text style = "font-size:16px; line-height:80%%;">Memorize all the black colored cells.</p>
-    <p class = center-block-text style = "font-size:16px; line-height:80%%;">Press <b>"left arrow"</b> if 8x8 is <b>${
-      processingChoices[0].keyname === 'left arrow' ? 'symmetric' : 'asymmetric'
-    }</b> and <b>"right arrow"</b> if <b>${
-    processingChoices[0].keyname === 'left arrow' ? 'asymmetric' : 'symmetric'
+    <p class = center-block-text style = "font-size:16px; line-height:80%%;">Press <b>"left button"</b> if 8x8 is <b>${
+      processingChoices[0].keyname === 'left button' ? 'symmetric' : 'asymmetric'
+    }</b> and <b>"right button"</b> if <b>${
+    processingChoices[0].keyname === 'left button' ? 'asymmetric' : 'symmetric'
   }</b>.</p>
   </div>`;
 
   promptTextList = `<ul style="text-align:left;">
     <li>${
-      processingChoices[0].keyname === 'left arrow' ? 'Symmetric' : 'Asymmetric'
+      processingChoices[0].keyname === 'left button' ? 'Symmetric' : 'Asymmetric'
     }: Left</li>
     <li>${
-      processingChoices[0].keyname === 'left arrow' ? 'Asymmetric' : 'Symmetric'
+      processingChoices[0].keyname === 'left button' ? 'Asymmetric' : 'Symmetric'
     }: Right</li>
   </ul>`;
 
@@ -7088,13 +7088,13 @@ var processingChoices;
 function getKeyMappingForTask(motor_perm) {
   if (motor_perm === 0) {
     processingChoices = [
-      { keycode: 'ArrowLeft', keyname: 'left arrow' },
-      { keycode: 'ArrowRight', keyname: 'right arrow' },
+      { keycode: 'ArrowLeft', keyname: 'left button' },
+      { keycode: 'ArrowRight', keyname: 'right button' },
     ];
   } else {
     processingChoices = [
-      { keycode: 'ArrowRight', keyname: 'right arrow' },
-      { keycode: 'ArrowLeft', keyname: 'left arrow' },
+      { keycode: 'ArrowRight', keyname: 'right button' },
+      { keycode: 'ArrowLeft', keyname: 'left button' },
     ];
   }
 }
@@ -7121,7 +7121,7 @@ var expStage = 'practice';
 var currSeq = [];
 
 var practicePromptResponse = `<div class = prompt_box_response>
-  <p class = center-block-text style = "font-size:16px; line-height:80%%;">Use the <b>arrows</b> to navigate the grid and the <b>spacebar</b> to select the cells colored black in the order they were shown.
+  <p class = center-block-text style = "font-size:16px; line-height:80%%;">Use the <b>buttons</b> to navigate the grid and the <b>center button</b> to select the cells colored black in the order they were shown.
   </p>
 </div>`;
 

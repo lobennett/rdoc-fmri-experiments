@@ -223,28 +223,28 @@ function getKeyMappingForTask(motor_perm) {
     if (motor_perm === 0) {
       // Index is high and odd
       mappings = {
-        higherLower: { higher: ',', lower: '.' },
-        oddEven: { odd: ',', even: '.' },
+        higherLower: { higher: 'y', lower: 'g' },
+        oddEven: { odd: 'y', even: 'g' },
       };
     } else {
       // Index is high and even
       mappings = {
-        higherLower: { higher: ',', lower: '.' },
-        oddEven: { odd: '.', even: ',' },
+        higherLower: { higher: 'y', lower: 'g' },
+        oddEven: { odd: 'g', even: 'y' },
       };
     }
   } else {
     if (motor_perm === 2) {
       // Index is low and odd
       mappings = {
-        higherLower: { higher: '.', lower: ',' },
-        oddEven: { odd: ',', even: '.' },
+        higherLower: { higher: 'g', lower: 'y' },
+        oddEven: { odd: 'y', even: 'g' },
       };
     } else {
       // Index is low and even
       mappings = {
-        higherLower: { higher: '.', lower: ',' },
-        oddEven: { odd: '.', even: ',' },
+        higherLower: { higher: 'g', lower: 'y' },
+        oddEven: { odd: 'g', even: 'y' },
       };
     }
   }
@@ -252,7 +252,7 @@ function getKeyMappingForTask(motor_perm) {
 }
 
 var responseMappings;
-var choices = [',', '.'];
+var choices = ['y', 'g'];
 
 var promptText;
 var promptTextList;
@@ -269,13 +269,13 @@ const setText = () => {
   promptText = `
   <div class="prompt_box">
     <p class="center-block-text" style="font-size:16px; line-height:80%;">
-      Index: ${responseMappings.oddEven.odd === ',' ? 'Odd' : 'Even'}/${
-    responseMappings.higherLower.higher === ',' ? 'High' : 'Low'
+      Index: ${responseMappings.oddEven.odd === 'y' ? 'Odd' : 'Even'}/${
+    responseMappings.higherLower.higher === 'y' ? 'High' : 'Low'
   }
     </p>
     <p class="center-block-text" style="font-size:16px; line-height:80%;">
-      Middle: ${responseMappings.oddEven.odd === ',' ? 'Even' : 'Odd'}/${
-    responseMappings.higherLower.higher === ',' ? 'Low' : 'High'
+      Middle: ${responseMappings.oddEven.odd === 'y' ? 'Even' : 'Odd'}/${
+    responseMappings.higherLower.higher === 'y' ? 'Low' : 'High'
   }
     </p>
   </div>
@@ -283,11 +283,11 @@ const setText = () => {
 
   promptTextList = `
   <ul style="text-align:left;font-size:24px;">
-    <li>Index: ${responseMappings.oddEven.odd === ',' ? 'Odd' : 'Even'}/${
-    responseMappings.higherLower.higher === ',' ? 'High' : 'Low'
+    <li>Index: ${responseMappings.oddEven.odd === 'y' ? 'Odd' : 'Even'}/${
+    responseMappings.higherLower.higher === 'y' ? 'High' : 'Low'
   }</li>
-    <li>Middle: ${responseMappings.oddEven.odd === ',' ? 'Even' : 'Odd'}/${
-    responseMappings.higherLower.higher === ',' ? 'Low' : 'High'
+    <li>Middle: ${responseMappings.oddEven.odd === 'y' ? 'Even' : 'Odd'}/${
+    responseMappings.higherLower.higher === 'y' ? 'Low' : 'High'
   }</li>
   </ul>
 `;
