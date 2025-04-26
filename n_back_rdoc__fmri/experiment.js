@@ -12,94 +12,29 @@ const randomDraw = (lst) => {
   return lst[index];
 };
 
+// Function to shuffle the array
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 const create_conditions = () => {
   // Create an array with 4 "match" and 1 "mismatch"
-  let conditions = ['mismatch', 'mismatch', 'mismatch', 'mismatch', 'match'];
-
-  // Function to shuffle the array
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-  }
-
-  // Shuffle the array
-  shuffleArray(conditions);
+  let conditions = shuffleArray([
+    'mismatch',
+    'mismatch',
+    'mismatch',
+    'mismatch',
+    'match',
+  ]);
 
   conditions.unshift('starter_trial', 'starter_trial');
 
   // Return the shuffled array
   return conditions;
-};
-
-const create_conditions_from_designs = (designs) => {
-  const createBlocks = (blocks) => {
-    let matchTarget = (numTrialsPerBlock * numTestBlocks) / 5;
-    let matchCount = 0;
-
-    // Assign each block one "match" condition
-    blocks.forEach((block) => {
-      let randomIndex = Math.floor(Math.random() * block.length); // Use block.length to stay within bounds
-      block[randomIndex] = 'match';
-      matchCount++;
-    });
-
-    // Go through remaining blocks at random and assign remaining match conditions
-    let remainingMatchTrials = matchTarget - matchCount;
-    let randomBlockIndices = [];
-    for (let i = 0; i < remainingMatchTrials; i++) {
-      let randomIndex = Math.floor(Math.random() * blocks.length); // Use blocks.length to stay within bounds
-      randomBlockIndices.push(randomIndex);
-    }
-
-    randomBlockIndices.forEach((i) => {
-      if (i < blocks.length) {
-        // Ensure i is within the range of blocks array
-        let randomIndex = Math.floor(Math.random() * blocks[i].length);
-
-        // Keep generating a new random index until we find one that isn't "match"
-        while (blocks[i][randomIndex] !== 'mismatch') {
-          randomIndex = Math.floor(Math.random() * blocks[i].length);
-        }
-
-        // Set the selected index's value to "match"
-        blocks[i][randomIndex] = 'match';
-      }
-    });
-
-    return blocks;
-  };
-  let conditions = [];
-  let blockStart = [];
-
-  designs.forEach((design, index) => {
-    if (design === 'starter_trial') {
-      if (
-        designs[index - 1] === 'one_back' ||
-        designs[index - 1] === 'two_back' ||
-        designs[index - 1] === undefined
-      ) {
-        blockStart.push(index);
-      }
-      conditions.push(design);
-    } else {
-      conditions.push('mismatch');
-    }
-  });
-
-  let subArrays = [];
-
-  for (let i = 0; i < blockStart.length; i++) {
-    // Use blockStart[i] as start, blockStart[i+1] as end for slice. If it's the last one, slice until the end of the array.
-    let end = blockStart[i + 1] || conditions.length;
-    let subset = conditions.slice(blockStart[i], end);
-    subArrays.push(subset);
-  }
-
-  const blocks = createBlocks(subArrays);
-  const trials = blocks.flat();
-  return trials;
 };
 
 var getStim = function () {
@@ -232,10 +167,8 @@ var motor_and_design_perm_block = {
     getKeyMappingForTask(motor_perm);
 
     practiceConditions = create_conditions();
-    stims = create_trial_types(practiceConditions);
-    // Take only the first trial 
-    stims = stims.slice(0, 3);
-    console.log('Starting practice stims: ', stims);
+    practiceConditions = practiceConditions.slice(0, 3);
+    stims = create_practice_trial_types(practiceConditions);
     setText();
   },
 };
@@ -281,8 +214,7 @@ var feedback_node = {
 const base = window.location.origin;
 const pathSource = `${base}/static/experiments/n_back_rdoc__fmri/images/`;
 var fileTypePNG = ".png'></img>";
-var preFileType =
-  `<img class=center src='${pathSource}`;
+var preFileType = `<img class=center src='${pathSource}`;
 
 var promptTextList;
 var speedReminder;
@@ -418,8 +350,7 @@ var ITIBlock = {
     const stage = getExpStage();
     return {
       trial_id: `${stage}_ITI`,
-      ITIParams:
-        stage === 'practice' ? 0.5 : null,
+      ITIParams: stage === 'practice' ? 0.5 : null,
       block_num: stage === 'practice' ? 0 : testCount,
       exp_stage: stage,
       choices: buttonBoxKeys,
@@ -669,12 +600,8 @@ var testNode = {
 
     feedbackText += `<p class=block-text>Completed ${testCount} of ${numTestBlocks} blocks.</p>`;
 
-    let current_delay =
-      stims[0].condition === 'starter_trial' &&
-      stims[1].condition === 'starter_trial'
-        ? 2
-        : 1;
-
+    // Alternate delay from 1 to 2 or from 2 to 1
+    let current_delay = delay === 1 ? 2 : 1;
     delay = current_delay;
 
     feedbackText += `<p class=block-text><b>Delay = ${delay}</b>.</p>`;
@@ -741,8 +668,7 @@ var fullscreen = {
       'stims',
     ]);
     ITIs = results.ITIs;
-    let testConditions = create_conditions_from_designs(results.stims);
-    stim_designs = create_trial_types(testConditions);
+    stim_designs = create_test_trial_types(results.stims, design_perm);
   },
 };
 
@@ -771,96 +697,202 @@ var endBlock = {
   choices: ['Enter'],
 };
 
-const check_conditions = (conditions) => {
-  let mm = 0; // Count of mismatches
-  let m = 0; // Count of matches
-  let st = 0; // Count of starter trials
+var delays = [];
 
-  conditions.forEach((o) => {
-    if (o === 'mismatch') {
-      mm++;
-    } else if (o === 'match') {
-      m++;
-    } else if (o === 'starter_trial') {
-      st++;
-    }
+const create_practice_trial_types = (conditions) => {
+  /* 
+  ** Each stimulus must look like this: **
+  ** The probe should be selected at random, but needs to be 
+  ** the same letter if the nth-back is a match, otherwise 
+  ** sample randomly from the letters array after excluding 
+  ** that letter from the pool of letters. 
+  {
+    "condition": "starter_trial",
+    "probe": "D",
+    "correct_response": "g",
+    "delay": 2
+  } 
+  */
+
+  console.log('Conditions to create trial types: ', conditions);
+  let blockList = [];
+  /* Since we're always using a delay of 2 for practice, 
+    we already know the 'block structure' and can set
+    the second trial without reference to the first. 
+  */
+  blockList.push({
+    condition: conditions[0],
+    probe: randomDraw(letters),
+    correct_response: possibleResponses[1][1], // mismatch
+    delay: 2,
   });
 
-  // Construct error message if conditions don't match expected values
+  let filteredLetters = letters.filter(
+    (letter) => letter !== blockList[0].probe
+  );
 
-  if (m !== (numTrialsPerBlock * numTestBlocks) / 5) {
-    throw new Error(
-      `Wrong number of condition counts: mismatches=${mm}, matches=${m}, starter_trials=${st}`
-    );
+  blockList.push({
+    condition: conditions[1],
+    probe: randomDraw(filteredLetters),
+    correct_response: possibleResponses[1][1], // mismatch
+    delay: 2,
+  });
+
+  if (conditions[2] === 'match') {
+    blockList.push({
+      condition: conditions[2],
+      probe: blockList[1].probe,
+      correct_response: possibleResponses[0][1], // match
+      delay: 2,
+    });
+  } else if (conditions[2] === 'mismatch') {
+    blockList.push({
+      condition: conditions[2],
+      probe: randomDraw(filteredLetters),
+      correct_response: possibleResponses[1][1], // mismatch
+      delay: 2,
+    });
+  } else {
+    throw new Error('Invalid condition: ' + conditions[2]);
   }
+
+  return blockList;
 };
 
-var delays = [];
-const create_trial_types = (conditions) => {
-  let blockStart = [];
-  conditions.forEach((c, index) => {
-    if (c === 'starter_trial') {
-      if (
-        conditions[index - 1] === 'match' ||
-        conditions[index - 1] === 'mismatch' ||
-        conditions[index - 1] === undefined
-      ) {
-        blockStart.push(index);
-      }
+const createMatchMismatchArray = (delaysList) => {
+  let matchMismatchArray = [];
+
+  /*
+   * Notes on how we're distributing the match trials:
+   * - Total trials: 120
+   * - Match trial proportion: 20% (24 trials)
+   * - Number of blocks: 10
+   * - Base distribution: 2 match trials per block (20 trials)
+   * - Remaining match trials: 4
+   * - These 4 trials will be randomly distributed across blocks
+   */
+
+  let randomBlocks = [];
+  let possibleBlocks = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  randomBlocks = shuffleArray(possibleBlocks).slice(0, 4);
+  for (let i = 0; i < numTestBlocks; i++) {
+    let blockDelay = delaysList[i];
+    let blockMatchMismatchArray = [];
+    let numMatchTrials;
+    let numMismatchTrials;
+    if (randomBlocks.includes(i)) {
+      numMatchTrials = 3;
+      numMismatchTrials = 9;
+    } else {
+      numMatchTrials = 2;
+      numMismatchTrials = 10;
     }
-  });
 
-  let subArrays = [];
-
-  for (let i = 0; i < blockStart.length; i++) {
-    let end = blockStart[i + 1] || conditions.length;
-    let subset = conditions.slice(blockStart[i], end);
-    subArrays.push(subset);
+    for (let j = 0; j < numMatchTrials; j++) {
+      blockMatchMismatchArray.push('match');
+    }
+    for (let j = 0; j < numMismatchTrials; j++) {
+      blockMatchMismatchArray.push('mismatch');
+    }
+    let blockTrials = shuffleArray(blockMatchMismatchArray);
+    if (blockDelay === 1) {
+      blockTrials.unshift('starter_trial');
+    } else if (blockDelay === 2) {
+      blockTrials.unshift('starter_trial', 'starter_trial');
+    }
+    matchMismatchArray.push(blockTrials);
   }
 
-  let all = [];
-  subArrays.forEach((s, index) => {
-    let probeHistory = [];
-    let delay = s[0] === 'starter_trial' && s[1] === 'starter_trial' ? 2 : 1;
-    let stims = [];
+  return matchMismatchArray;
+};
 
-    s.forEach((c) => {
-      let temp = {
-        condition: c,
-        probe: null,
-        correct_response: null,
-        delay: delay,
-      };
+const create_test_trial_types = (designs, design_perm) => {
+  /* 
+  ** Each stimulus must look like this: **
+  ** The probe should be selected at random, but needs to be 
+  ** the same letter if the nth-back is a match, otherwise 
+  ** sample randomly from the letters array after excluding 
+  ** that letter from the pool of letters. 
+  {
+    "condition": "starter_trial",
+    "probe": "D",
+    "correct_response": "g",
+    "delay": 2
+  } 
+  */
 
-      if (c === 'starter_trial') {
-        temp.probe = randomDraw(letters);
-        temp.correct_response = possibleResponses[1][1];
-      } else if (c === 'match' && probeHistory.length >= delay) {
-        let lastProbe = probeHistory[probeHistory.length - delay];
-        temp.probe =
-          Math.random() < 0.5
-            ? lastProbe.toLowerCase()
-            : lastProbe.toUpperCase();
-        temp.correct_response = possibleResponses[0][1];
-      } else if (c === 'mismatch' && probeHistory.length) {
-        let lastProbe = probeHistory[probeHistory.length - delay];
-        let filteredLetters = letters.filter(
-          (letter) =>
-            letter.toLowerCase() !== lastProbe.toLowerCase() && // Ensure consistent case comparison
-            letter.toUpperCase() !== lastProbe.toUpperCase()
-        );
-        temp.probe = randomDraw(filteredLetters);
-        temp.correct_response = possibleResponses[1][1];
+  // Need 24 match and 96 mismatch trials.
+  // Try to distribute these pretty evenly across the blocks.
+  // That means at least 2 match and 8 mismatch trials per block.
+  // For the remaining trials, distribute randomly.
+
+  let delaysList = [];
+  if (design_perm % 2 === 0) {
+    delaysList = [2, 1, 2, 1, 2, 1, 2, 1, 2, 1];
+  } else {
+    delaysList = [1, 2, 1, 2, 1, 2, 1, 2, 1, 2];
+  }
+
+  let matchMismatchArray = createMatchMismatchArray(delaysList);
+  console.log('Match mismatch array: ', matchMismatchArray);
+
+  let allBlockStim = [];
+  matchMismatchArray.forEach((block, index) => {
+    let blockStim = [];
+    let blockDelay = delaysList[index];
+
+    block.forEach((condition, idx) => {
+      if (condition === 'starter_trial' && idx === 0) {
+        blockStim.push({
+          condition: condition,
+          probe: randomDraw(letters),
+          correct_response: possibleResponses[1][1], // mismatch
+          delay: blockDelay,
+        });
+      } else if (condition === 'starter_trial' && idx === 1) {
+        let lastProbe = blockStim[0].probe;
+        let filteredLetters = letters.filter((letter) => letter !== lastProbe);
+        blockStim.push({
+          condition: condition,
+          probe: randomDraw(filteredLetters),
+          correct_response: possibleResponses[1][1], // mismatch
+          delay: blockDelay,
+        });
+      } else {
+        let targetProbe = blockStim[idx - blockDelay].probe;
+        let currentProbe;
+        let currentCorrectResponse;
+
+        if (condition === 'match') {
+          // determine probe
+          currentProbe = targetProbe;
+          // determine correct response
+          currentCorrectResponse = possibleResponses[0][1];
+        } else if (condition === 'mismatch') {
+          // determine probe
+          let filteredLetters = letters.filter(
+            (letter) => letter !== targetProbe
+          );
+          currentProbe = randomDraw(filteredLetters);
+          // determine correct response
+          currentCorrectResponse = possibleResponses[1][1];
+        } else {
+          throw new Error('Invalid condition: ' + condition);
+        }
+        blockStim.push({
+          condition: condition,
+          probe: currentProbe,
+          correct_response: currentCorrectResponse,
+          delay: blockDelay,
+        });
       }
-
-      // Store the current probe in the history, maintain case
-      probeHistory.push(temp.probe);
-      stims.push(temp);
     });
-    all.push(stims);
-  });
 
-  return all.flat();
+    // Add the completed block ONCE after all its trials are processed
+    allBlockStim.push(blockStim);
+  });
+  console.log('All block stimuli: ', allBlockStim);
+  return allBlockStim.flat();
 };
 
 var n_back_rdoc__fmri_experiment = [];
