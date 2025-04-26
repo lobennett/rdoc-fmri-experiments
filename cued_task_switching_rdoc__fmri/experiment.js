@@ -295,10 +295,9 @@ const setText = () => {
 
   feedbackText = `
   <div class="centerbox">
-    <p class="block-text">During this task, you will have to indicate whether the number is <b>odd or even</b>, and on other trials, you will indicate whether the number is <b>higher or lower than 5</b>. </p>
-    <p class="block-text">The cue before the number will be a word indicating the task. There will be <b>four</b> different cues indicating <b>two</b> different tasks. </p>
+    <p class="block-text">During this task, you will indicate whether the number is <b>odd or even</b>, and on other trials, you will indicate whether the number is <b>higher or lower than 5</b>. </p>
+    <p class="block-text">The cue before the number will be a word indicating the task. There will be four different cues indicating two different tasks. </p>
     ${promptTextList}
-    ${speedReminder}
   </div>
 `;
 };

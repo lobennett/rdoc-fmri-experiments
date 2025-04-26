@@ -206,8 +206,6 @@ const setText = () => {
     <p class="block-text">If the middle letter is an <b>${
       possibleResponses[0][0] === 'index finger' ? 'F' : 'H'
     }</b>, press your <b>middle finger</b>.</p>
-    }</b>.</p>
-    ${speedReminder}
   </div>
 `;
 

@@ -253,7 +253,6 @@ var setText = () => {
     <p class="block-text">For blocks with a delay of <b>${delay}</b>, respond <b>mismatch</b> for the <b>first ${
     delay === 1 ? 'trial' : 'two trials'
   }</b>.</p>
-    ${speedReminder}
   </div>
   `;
 

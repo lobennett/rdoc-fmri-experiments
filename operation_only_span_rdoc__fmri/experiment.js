@@ -6826,11 +6826,11 @@ const setText = () => {
   <div style='height: 85vh !important; display:flex; flex-direction:column; justify-content: center;' class="centerbox">
     <p class="block-text">
       During this task, you will first encounter an 8x8 grid filled with black and gray cells. 
-      Press your <b>left button</b> for <b>${
+      Press the <b>left button</b> for <b>${
         processingChoices[0].keyname === 'left button'
           ? 'symmetric'
           : 'asymmetric'
-      }</b> and press your <b>right button</b> for <b>${
+      }</b> and press the <b>right button</b> for <b>${
     processingChoices[0].keyname === 'left button' ? 'asymmetric' : 'symmetric'
   }</b>.
     </p>

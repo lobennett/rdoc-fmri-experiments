@@ -198,13 +198,12 @@ const setText = () => {
     <p class='block-text'>Press your <b>index finger</b> to <span style='color:${
       getColorByKey('y').color
     }'>${getColorByKey('y').name}</span>,</p>
-    <p class='block-text'> your <b>middle finger</b> to <span style='color:${
+    <p class='block-text'> <b>middle</b> to <span style='color:${
       getColorByKey('g').color
     }'>${getColorByKey('g').name}</span>,</p>
-    <p class='block-text'> and <b>ring finger</b> to <span style='color:${
+    <p class='block-text'> and <b>ring</b> to <span style='color:${
       getColorByKey('r').color
     }'>${getColorByKey('r').name}</span>.</p>
-    ${speedReminder}
     </div>
     `;
 
