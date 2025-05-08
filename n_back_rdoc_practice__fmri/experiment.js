@@ -160,13 +160,13 @@ var possibleResponses;
 function getKeyMappingForTask(motor_perm) {
   if (motor_perm === 0) {
     possibleResponses = [
-      ['index finger', ',', 'index finger'],
-      ['middle finger', '.', 'middle finger'],
+      ['index finger', 'y', 'index finger'],
+      ['middle finger', 'g', 'middle finger'],
     ];
   } else {
     possibleResponses = [
-      ['middle finger', '.', 'middle finger'],
-      ['index finger', ',', 'index finger'],
+      ['middle finger', 'g', 'middle finger'],
+      ['index finger', 'y', 'index finger'],
     ];
   }
 }
@@ -282,8 +282,7 @@ var feedback_node = {
 const base = window.location.origin;
 var pathSource = `${base}/static/experiments/n_back_rdoc_practice__fmri/images/`;
 var fileTypePNG = ".png'></img>";
-var preFileType =
-  `<img class=center src='${pathSource}`;
+var preFileType = `<img class=center src='${pathSource}`;
 
 var promptTextList;
 var speedReminder;

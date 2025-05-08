@@ -1,4 +1,4 @@
-// TODO: Check if ring is '/' and not 'c'
+// TODO: Check if ring is 'r' and not 'c'
 
 const get_practice_feedback = () => {
   var last = jsPsych.data.get().last(1).values()[0];
@@ -87,50 +87,50 @@ const fixationDuration = 500;
 
 var possibleResponses;
 
-// TODO: Confirm ring is '/' key and not 'c' key
+// TODO: Confirm ring is 'r' key and not 'c' key
 function getKeyMappingForTask(motor_perm) {
   if (motor_perm === 0) {
     possibleResponses = [
-      ['index finger', ',', 'index finger'], // red
-      ['middle finger', '.', 'middle finger'], // blue
-      ['ring finger', '/', 'ring finger'], // green
+      ['index finger', 'y', 'index finger'], // red
+      ['middle finger', 'g', 'middle finger'], // blue
+      ['ring finger', 'r', 'ring finger'], // green
     ];
   } else if (motor_perm === 1) {
     possibleResponses = [
-      ['middle finger', '.', 'middle finger'], // red
-      ['index finger', ',', 'index finger'], // blue
-      ['ring finger', '/', 'ring finger'], // green
+      ['middle finger', 'g', 'middle finger'], // red
+      ['index finger', 'y', 'index finger'], // blue
+      ['ring finger', 'r', 'ring finger'], // green
     ];
   } else if (motor_perm === 2) {
     possibleResponses = [
-      ['middle finger', '.', 'middle finger'], // red
-      ['ring finger', '/', 'ring finger'], // blue
-      ['index finger', ',', 'index finger'], // green
+      ['middle finger', 'g', 'middle finger'], // red
+      ['ring finger', 'r', 'ring finger'], // blue
+      ['index finger', 'y', 'index finger'], // green
     ];
   } else if (motor_perm === 3) {
     possibleResponses = [
-      ['ring finger', '/', 'ring finger'], // red
-      ['index finger', ',', 'index finger'], // blue
-      ['middle finger', '.', 'middle finger'], // green
+      ['ring finger', 'r', 'ring finger'], // red
+      ['index finger', 'y', 'index finger'], // blue
+      ['middle finger', 'g', 'middle finger'], // green
     ];
   } else if (motor_perm === 4) {
     possibleResponses = [
-      ['ring finger', '/', 'ring finger'], // red
-      ['middle finger', '.', 'middle finger'], // blue
-      ['index finger', ',', 'index finger'], // green
+      ['ring finger', 'r', 'ring finger'], // red
+      ['middle finger', 'g', 'middle finger'], // blue
+      ['index finger', 'y', 'index finger'], // green
     ];
   } else if (motor_perm === 5) {
     possibleResponses = [
-      ['index finger', ',', 'index finger'], // blue
-      ['ring finger', '/', 'ring finger'], // red
-      ['middle finger', '.', 'middle finger'], // green
+      ['index finger', 'y', 'index finger'], // blue
+      ['ring finger', 'r', 'ring finger'], // red
+      ['middle finger', 'g', 'middle finger'], // green
     ];
   } else {
     throw new Error('Invalid motor perm');
   }
 }
 
-const choices = [',', '.', '/']; // TODO: Check this should not be 'c'
+const choices = ['y', 'g', 'r']; // TODO: Check this should not be 'c'
 
 var feedbackInstructText = `
   <p class="center-block-text">
@@ -194,14 +194,14 @@ const setText = () => {
     <p class='block-text'>Each word will appear in colored ink. The color of the word may not match the word itself. For example, you might see the word 'RED' in green ink, like this: <span style='color:#70FF70'>RED</span>.</p>
     <p class='block-text'>Your task is to identify the <b>color of the ink in which the word is displayed</b>, not the word itself. So, if you see the word <b>'RED'</b> in green ink, you should press the key corresponding to <b>green</b>.</p>
     <p class='block-text'>Press your <b>index finger</b> if the color is <span style='color:${
-      getColorByKey(',').color
-    }'>${getColorByKey(',').name}</span>.</p>
+      getColorByKey('y').color
+    }'>${getColorByKey('y').name}</span>.</p>
     <p class='block-text'>Press your <b>middle finger</b> if the color is <span style='color:${
-      getColorByKey('.').color
-    }'>${getColorByKey('.').name}</span>.</p>
+      getColorByKey('g').color
+    }'>${getColorByKey('g').name}</span>.</p>
     <p class='block-text'>Press your <b>ring finger</b> if the color is <span style='color:${
-      getColorByKey('/').color
-    }'>${getColorByKey('/').name}</span>.</p>
+      getColorByKey('r').color
+    }'>${getColorByKey('r').name}</span>.</p>
     <p class='block-text'>We'll start with a practice round. During practice, you will receive feedback and a reminder of the rules. These will be taken out for the test, so make sure you understand the instructions before moving on.</p>
     ${speedReminder}
     </div>
@@ -211,17 +211,17 @@ const setText = () => {
   <div class="prompt_box">
     <p class="center-block-text" style="font-size:16px; line-height:80%;">
       <span class="large" style="color:${
-        getColorByKey(',').color
+        getColorByKey('y').color
       }">WORD</span>: Index
     </p>
     <p class="center-block-text" style="font-size:16px; line-height:80%;">
       <span class="large" style="color:${
-        getColorByKey('.').color
+        getColorByKey('g').color
       }">WORD</span>: Middle
     </p>
     <p class="center-block-text" style="font-size:16px; line-height:80%;">
       <span class="large" style="color:${
-        getColorByKey('/').color
+        getColorByKey('r').color
       }">WORD</span>: Ring
     </p>
   </div>`;
@@ -230,19 +230,19 @@ const setText = () => {
   <ul class="list-text">
     <li>
     <span class="large" style="color:${
-      getColorByKey(',').color
+      getColorByKey('y').color
     };">WORD</span>: Index
   </span>
   </li>
    <li>
     <span class="large" style="color:${
-      getColorByKey('.').color
+      getColorByKey('g').color
     };">WORD</span>: Middle
   </span>
   </li>
     <li>
     <span class="large" style="color:${
-      getColorByKey('/').color
+      getColorByKey('r').color
     };">WORD</span>: Ring
   </span>
   </li>

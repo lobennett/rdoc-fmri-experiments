@@ -6822,18 +6822,18 @@ const setText = () => {
   <div style='height: 85vh !important; display:flex; flex-direction:column; justify-content: center;' class="centerbox">
     <p class="block-text">
       During this task, you will first encounter an 8x8 grid filled with black and gray cells. You have to determine if the grid is ${
-        processingChoices[0].keyname === 'left arrow'
+        processingChoices[0].keyname === 'left button'
           ? 'symmetric'
           : 'asymmetric'
       } or ${
-    processingChoices[0].keyname === 'left arrow' ? 'asymmetric' : 'symmetric'
+    processingChoices[0].keyname === 'left button' ? 'asymmetric' : 'symmetric'
   }.
-      Press the <b>left arrow</b> if the grid is <b>${
-        processingChoices[0].keyname === 'left arrow'
+      Press the <b>left button</b> if the grid is <b>${
+        processingChoices[0].keyname === 'left button'
           ? 'symmetric'
           : 'asymmetric'
-      }</b> and press the <b>right arrow</b> if it is <b>${
-    processingChoices[0].keyname === 'left arrow' ? 'asymmetric' : 'symmetric'
+      }</b> and press the <b>right button</b> if it is <b>${
+    processingChoices[0].keyname === 'left button' ? 'asymmetric' : 'symmetric'
   }</b>.
     </p>
     <p class="block-text">
@@ -6848,19 +6848,25 @@ const setText = () => {
 
   promptText = `<div class=prompt_box_operation>
     <p class = center-block-text style = "font-size:16px; line-height:80%%;">Memorize all the black colored cells.</p>
-    <p class = center-block-text style = "font-size:16px; line-height:80%%;">Press <b>"left arrow"</b> if 8x8 is <b>${
-      processingChoices[0].keyname === 'left arrow' ? 'symmetric' : 'asymmetric'
-    }</b> and <b>"right arrow"</b> if <b>${
-    processingChoices[0].keyname === 'left arrow' ? 'asymmetric' : 'symmetric'
+    <p class = center-block-text style = "font-size:16px; line-height:80%%;">Press <b>"left button"</b> if 8x8 is <b>${
+      processingChoices[0].keyname === 'left button'
+        ? 'symmetric'
+        : 'asymmetric'
+    }</b> and <b>"right button"</b> if <b>${
+    processingChoices[0].keyname === 'left button' ? 'asymmetric' : 'symmetric'
   }</b>.</p>
   </div>`;
 
   promptTextList = `<ul style="text-align:left;">
     <li>${
-      processingChoices[0].keyname === 'left arrow' ? 'Symmetric' : 'Asymmetric'
+      processingChoices[0].keyname === 'left button'
+        ? 'Symmetric'
+        : 'Asymmetric'
     }: Left</li>
     <li>${
-      processingChoices[0].keyname === 'left arrow' ? 'Asymmetric' : 'Symmetric'
+      processingChoices[0].keyname === 'left button'
+        ? 'Asymmetric'
+        : 'Symmetric'
     }: Right</li>
   </ul>`;
 
@@ -6898,13 +6904,13 @@ var processingChoices;
 function getKeyMappingForTask(motor_perm) {
   if (motor_perm === 0) {
     processingChoices = [
-      { keycode: 'ArrowLeft', keyname: 'left arrow' },
-      { keycode: 'ArrowRight', keyname: 'right arrow' },
+      { keycode: 'ArrowLeft', keyname: 'left button' },
+      { keycode: 'ArrowRight', keyname: 'right button' },
     ];
   } else {
     processingChoices = [
-      { keycode: 'ArrowRight', keyname: 'right arrow' },
-      { keycode: 'ArrowLeft', keyname: 'left arrow' },
+      { keycode: 'ArrowRight', keyname: 'right button' },
+      { keycode: 'ArrowLeft', keyname: 'left button' },
     ];
   }
 }
@@ -7181,7 +7187,9 @@ var ITIBlock = {
       condition: 'operation_only',
     };
 
-    stage === 'practice' ? commonData.ITIParams = 0.5 : commonData.ITIParams = null;
+    stage === 'practice'
+      ? (commonData.ITIParams = 0.5)
+      : (commonData.ITIParams = null);
     return commonData;
   },
   trial_duration: function () {
@@ -7396,9 +7404,8 @@ var fullscreen = {
   fullscreen_mode: true,
   on_finish: async function () {
     console.log('Reading in designs and ITIs...');
-    const base = window.location.origin
-    const design_path =
-      `${base}/static/experiments/operation_only_span_rdoc_practice__fmri/designs`;
+    const base = window.location.origin;
+    const design_path = `${base}/static/experiments/operation_only_span_rdoc_practice__fmri/designs`;
     const results = await loadDesignsAndITIs(design_perm, design_path, []);
     ITIs = results.ITIs;
   },

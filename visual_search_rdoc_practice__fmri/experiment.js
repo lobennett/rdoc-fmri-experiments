@@ -290,13 +290,13 @@ const fixationDuration = 500;
 function getKeyMappingForTask(motor_perm) {
   if (motor_perm === 0) {
     possibleResponses = [
-      ['index finger', ',', 'index finger'],
-      ['middle finger', '.', 'middle finger'],
+      ['index finger', 'y', 'index finger'],
+      ['middle finger', 'g', 'middle finger'],
     ];
   } else {
     possibleResponses = [
-      ['middle finger', '.', 'middle finger'],
-      ['index finger', ',', 'index finger'],
+      ['middle finger', 'g', 'middle finger'],
+      ['index finger', 'y', 'index finger'],
     ];
   }
 }
