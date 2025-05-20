@@ -851,7 +851,7 @@ var exitFullscreen = {
   fullscreen_mode: false,
 };
 
-var expID = 'cued_task_switching_rdoc__fmri';
+var expID = 'cued_task_switching_rdoc_practice__fmri';
 var endText = `
   <div class="centerbox" style="height: 50vh;">
     <p class="center-block-text">Thanks for completing this task!</p>
