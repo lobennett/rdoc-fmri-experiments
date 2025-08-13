@@ -18,4 +18,7 @@ static
 .Spotlight-V100
 .Trashes
 ehthumbs.db
-Thumbs.dcredentials.json
+Thumbs.db
+
+# Google Cloud Service Account credentials
+credentials.json
