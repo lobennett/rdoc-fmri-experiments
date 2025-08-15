@@ -160,13 +160,9 @@ def main() -> None:
                         practice_str = "_practice"
                         task_description = f"{mapped_task_name}_rdoc_practice__fmri (run {run_num}) [PRACTICE VERSION]"
                     else:
-                        # Use original practice flag from sheet
-                        practice_str = (
-                            "_practice" if original_practice_flag == "1" else ""
-                        )
-                        task_description = f"{mapped_task_name}_rdoc{practice_str}__fmri (run {run_num})"
-                        if original_practice_flag == "1":
-                            task_description += " [PRACTICE VERSION]"
+                        # For regular sessions, always use non-practice versions (ignore original_practice_flag)
+                        practice_str = ""
+                        task_description = f"{mapped_task_name}_rdoc__fmri (run {run_num})"
 
                     print(f"{i}. {task_description}")
 
@@ -220,8 +216,8 @@ def main() -> None:
                     # Force practice versions for anatomical and prescan runs
                     practice_str = "_practice"
                 else:
-                    # Use original practice flag from sheet
-                    practice_str = "_practice" if original_practice_flag == "1" else ""
+                    # For regular sessions, always use non-practice versions (ignore original_practice_flag)
+                    practice_str = ""
 
                 full_task_name = f"{mapped_task_name}_rdoc{practice_str}__fmri"
 
