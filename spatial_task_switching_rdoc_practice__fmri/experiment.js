@@ -451,7 +451,7 @@ var motor_and_design_perm_block = {
         type: 'multi-choice',
         prompt: 'Select the motor perm:',
         name: 'motor_perm',
-        options: [1, 2, 3, 4],
+        options: [0, 1, 2, 3],
         required: true,
       },
       {

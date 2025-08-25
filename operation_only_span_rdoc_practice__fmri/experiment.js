@@ -6849,7 +6849,13 @@ const setText = () => {
   promptText = `<div class=prompt_box_operation>
     <p class = center-block-text style = "font-size:16px; line-height:80%%;">Memorize all the black colored cells.</p>
     <p class = center-block-text style = "font-size:16px; line-height:80%%;">Press <b>"left button"</b> if 8x8 is <b>${
+<<<<<<< HEAD
       processingChoices[0].keyname === 'left button' ? 'symmetric' : 'asymmetric'
+=======
+      processingChoices[0].keyname === 'left button'
+        ? 'symmetric'
+        : 'asymmetric'
+>>>>>>> fa3617c7643570afe30591c59098b60eb604d2bf
     }</b> and <b>"right button"</b> if <b>${
     processingChoices[0].keyname === 'left button' ? 'asymmetric' : 'symmetric'
   }</b>.</p>
@@ -6857,10 +6863,21 @@ const setText = () => {
 
   promptTextList = `<ul style="text-align:left;">
     <li>${
+<<<<<<< HEAD
       processingChoices[0].keyname === 'left button' ? 'Symmetric' : 'Asymmetric'
     }: Left</li>
     <li>${
       processingChoices[0].keyname === 'left button' ? 'Asymmetric' : 'Symmetric'
+=======
+      processingChoices[0].keyname === 'left button'
+        ? 'Symmetric'
+        : 'Asymmetric'
+    }: Left</li>
+    <li>${
+      processingChoices[0].keyname === 'left button'
+        ? 'Asymmetric'
+        : 'Symmetric'
+>>>>>>> fa3617c7643570afe30591c59098b60eb604d2bf
     }: Right</li>
   </ul>`;
 
@@ -7181,7 +7198,9 @@ var ITIBlock = {
       condition: 'operation_only',
     };
 
-    stage === 'practice' ? commonData.ITIParams = 0.5 : commonData.ITIParams = null;
+    stage === 'practice'
+      ? (commonData.ITIParams = 0.5)
+      : (commonData.ITIParams = null);
     return commonData;
   },
   trial_duration: function () {
@@ -7396,9 +7415,8 @@ var fullscreen = {
   fullscreen_mode: true,
   on_finish: async function () {
     console.log('Reading in designs and ITIs...');
-    const base = window.location.origin
-    const design_path =
-      `${base}/static/experiments/operation_only_span_rdoc_practice__fmri/designs`;
+    const base = window.location.origin;
+    const design_path = `${base}/static/experiments/operation_only_span_rdoc_practice__fmri/designs`;
     const results = await loadDesignsAndITIs(design_perm, design_path, []);
     ITIs = results.ITIs;
   },

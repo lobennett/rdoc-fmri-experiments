@@ -6855,8 +6855,13 @@ var generateGrid = function () {
     let currentTime = Date.now();
     let timeDifference = currentTime - initialCallTime;
 
-    if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'ArrowUp' || key === 'ArrowDown') {
-      timestampsMovingThroughGrid.push(timeDifference); 
+    if (
+      key === 'ArrowLeft' ||
+      key === 'ArrowRight' ||
+      key === 'ArrowUp' ||
+      key === 'ArrowDown'
+    ) {
+      timestampsMovingThroughGrid.push(timeDifference);
     }
 
     // Update activeIndex based on arrow key input
@@ -6871,7 +6876,12 @@ var generateGrid = function () {
       newActiveIndex = activeIndex + 4;
     }
 
-    if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'ArrowUp' || key === 'ArrowDown') {
+    if (
+      key === 'ArrowLeft' ||
+      key === 'ArrowRight' ||
+      key === 'ArrowUp' ||
+      key === 'ArrowDown'
+    ) {
       trackingCellMovingThroughGrid.push(newActiveIndex);
     }
 
@@ -6889,7 +6899,7 @@ var generateGrid = function () {
 
     if (key === ' ') {
       event.preventDefault(); // handling default behavior on keydown event for spacebar. Prevents scrolling of the page.
-      
+
       let currentTime = Date.now();
       let timeDifference = currentTime - initialCallTime;
 
@@ -7041,7 +7051,13 @@ const setText = () => {
   promptText = `<div class=prompt_box_operation>
     <p class = center-block-text style = "font-size:16px; line-height:80%%;">Memorize all the black colored cells.</p>
     <p class = center-block-text style = "font-size:16px; line-height:80%%;">Press <b>"left button"</b> if 8x8 is <b>${
+<<<<<<< HEAD
       processingChoices[0].keyname === 'left button' ? 'symmetric' : 'asymmetric'
+=======
+      processingChoices[0].keyname === 'left button'
+        ? 'symmetric'
+        : 'asymmetric'
+>>>>>>> fa3617c7643570afe30591c59098b60eb604d2bf
     }</b> and <b>"right button"</b> if <b>${
     processingChoices[0].keyname === 'left button' ? 'asymmetric' : 'symmetric'
   }</b>.</p>
@@ -7049,10 +7065,21 @@ const setText = () => {
 
   promptTextList = `<ul style="text-align:left;">
     <li>${
+<<<<<<< HEAD
       processingChoices[0].keyname === 'left button' ? 'Symmetric' : 'Asymmetric'
     }: Left</li>
     <li>${
       processingChoices[0].keyname === 'left button' ? 'Asymmetric' : 'Symmetric'
+=======
+      processingChoices[0].keyname === 'left button'
+        ? 'Symmetric'
+        : 'Asymmetric'
+    }: Left</li>
+    <li>${
+      processingChoices[0].keyname === 'left button'
+        ? 'Asymmetric'
+        : 'Symmetric'
+>>>>>>> fa3617c7643570afe30591c59098b60eb604d2bf
     }: Right</li>
   </ul>`;
 
@@ -7436,7 +7463,7 @@ var testTrial = {
 
     if (submittedAnswers.length < 4) {
       data['correct_trial'] = null;
-    } else if(submittedAnswers.length == 4) {
+    } else if (submittedAnswers.length == 4) {
       const correct = arraysAreEqual(correctResponses, submittedAnswers);
       data['correct_trial'] = correct ? 1 : 0;
     }
@@ -7469,7 +7496,7 @@ var testTrial = {
     data['moving_through_grid_timestamps'] = timestampsMovingThroughGrid;
     data['cell_order_through_grid'] = trackingCellMovingThroughGrid;
 
-    // Reset variables 
+    // Reset variables
     trackingCellMovingThroughGrid = [];
     timestampsMovingThroughGrid = [];
     timestampsSubmissions = [];
@@ -7772,8 +7799,7 @@ var fullscreen = {
   on_finish: async function () {
     console.log('Reading in designs and ITIs...');
     const base = window.location.origin;
-    const design_path =
-      `${base}/static/experiments/operation_span_rdoc_practice__fmri/designs`;
+    const design_path = `${base}/static/experiments/operation_span_rdoc_practice__fmri/designs`;
     const results = await loadDesignsAndITIs(design_perm, design_path, []);
     ITIs = results.ITIs;
   },

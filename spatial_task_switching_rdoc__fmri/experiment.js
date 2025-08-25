@@ -270,8 +270,12 @@ const setText = () => {
     <p class = block-text>On each trial, you will see a single shape in one of the four quadrants of the screen.</p>
     <p class = block-text>In the top two quadrants, judge the shape based on its <b>form</b>. </p>
     <p class = block-text>In the bottom two quadrants, judge the shape based on its <b>color</b>. </p>
-      <li><b>Index:</b> ${responseMappings.form.circle === 'y' ? 'Circle' : 'Square'}/${responseMappings.color.blue === 'y' ? 'Blue' : 'Orange'}</li>
-      <li><b>Middle:</b> ${responseMappings.form.circle === 'g' ? 'Circle' : 'Square'}/${responseMappings.color.blue === 'g' ? 'Blue' : 'Orange'}</li>
+      <li><b>Index:</b> ${
+        responseMappings.form.circle === 'y' ? 'Circle' : 'Square'
+      }/${responseMappings.color.blue === 'y' ? 'Blue' : 'Orange'}</li>
+      <li><b>Middle:</b> ${
+        responseMappings.form.circle === 'g' ? 'Circle' : 'Square'
+      }/${responseMappings.color.blue === 'g' ? 'Blue' : 'Orange'}</li>
     </ul>
   </div>`;
 
@@ -396,7 +400,7 @@ var motor_and_design_perm_block = {
         type: 'multi-choice',
         prompt: 'Select the motor perm:',
         name: 'motor_perm',
-        options: [1, 2, 3, 4],
+        options: [0, 1, 2, 3],
         required: true,
       },
       {
@@ -421,7 +425,7 @@ var motor_and_design_perm_block = {
     quadMappings = mappings.quadMappings;
     task_switches = makeTaskSwitches(practiceLen);
     stims = createTrialTypes(task_switches);
-    // Take only the two trials 
+    // Take only the two trials
     stims = stims.slice(0, 2);
     console.log('stims', stims);
 
