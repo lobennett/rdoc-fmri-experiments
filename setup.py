@@ -245,10 +245,10 @@ def main() -> None:
                 print(f"### Subject: {subject_id}, Session: {session_path}, Run: 1 ###")
 
                 # Build the command with virtual environment activation
-                expfactory_cmd = f"expfactory_deploy_local -e {full_task_name} -raw /Users/poldracklab/do_not_use_rdoc_fmri_experiments/.output/raw -bids /Users/poldracklab/do_not_use_rdoc_fmri_experiments/.output/bids -sub {subject_id} -ses {session_path} -run 1"
+                expfactory_cmd = f"expfactory_deploy_local -e {full_task_name} -raw /Users/poldracklab/rdoc-fmri-experiments/.output/raw -bids /Users/poldracklab/rdoc-fmri-experiments/.output/bids -sub {subject_id} -ses {session_path} -run 1"
 
                 # Create a bash command that sources the virtual environment first and cleans up any existing static symlink
-                bash_cmd = f"cd /Users/poldracklab/do_not_use_rdoc_fmri_experiments && rm -f ./static && source ./.venv/bin/activate && {expfactory_cmd}"
+                bash_cmd = f"cd /Users/poldracklab/rdoc-fmri-experiments && rm -f ./static && source ./.venv/bin/activate && {expfactory_cmd}"
 
                 # Create a terminal command to open in new window (equivalent to bash run.sh)
                 terminal_title = (
