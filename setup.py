@@ -61,24 +61,26 @@ def launch_chrome_browser(url, port=5000, is_first_launch=False):
         if is_first_launch:
             # Launch Chrome with the flag to disable background timer throttling
             # This creates a new Chrome instance with the specified flags
-            subprocess.Popen([
-                chrome_path,
-                f"http://localhost:{port}",
-                "--disable-background-timer-throttling",
-                "--new-window",
-            ])
+            subprocess.Popen(
+                [
+                    chrome_path,
+                    f"http://localhost:{port}",
+                    "--disable-background-timer-throttling",
+                    "--new-window",
+                ]
+            )
             print(f"✅ Chrome instance launched with URL: http://localhost:{port}")
             print(f"   (with --disable-background-timer-throttling flag)")
         else:
             # Open URL in existing Chrome instance using AppleScript
             # This ensures it opens in the same Chrome process that has the flags
-            applescript = f'''
+            applescript = f"""
             tell application "Google Chrome"
                 activate
                 open location "http://localhost:{port}"
             end tell
-            '''
-            subprocess.run(['osascript', '-e', applescript], check=True)
+            """
+            subprocess.run(["osascript", "-e", applescript], check=True)
             print(f"✅ Opened new window in Chrome: http://localhost:{port}")
         return True
     except Exception as e:
@@ -127,7 +129,7 @@ def main() -> None:
             is_prescan = (
                 input("Are you loading prescan tasks? (y/n): ").strip().lower() == "y"
             )
-            
+
             # Normalize session input to ses-XX format
             if session_input.startswith("ses-"):
                 session_col = session_input
@@ -218,7 +220,9 @@ def main() -> None:
                     else:
                         # For regular sessions, always use non-practice versions (ignore original_practice_flag)
                         practice_str = ""
-                        task_description = f"{mapped_task_name}_rdoc__fmri (run {run_num})"
+                        task_description = (
+                            f"{mapped_task_name}_rdoc__fmri (run {run_num})"
+                        )
 
                     print(f"{i}. {task_description}")
 
@@ -254,9 +258,7 @@ def main() -> None:
             print(
                 f"This session will launch {len(tasks_array)} task(s), using {len(tasks_array)} consecutive ports."
             )
-            print(
-                f"\nIMPORTANT: If you have other tasks already running, make sure to"
-            )
+            print(f"\nIMPORTANT: If you have other tasks already running, make sure to")
             print(f"start at a port AFTER your existing tasks to avoid conflicts.")
             print(f"\nExample: If prescan tasks are using ports 8080-8087 (8 tasks),")
             print(f"         start real tasks at port 8088 or higher.")
@@ -275,9 +277,7 @@ def main() -> None:
             print(
                 f"\nWill launch Chrome browsers on ports {starting_port}-{ending_port}"
             )
-            print(
-                f"(Next available port for future sessions: {ending_port + 1})"
-            )
+            print(f"(Next available port for future sessions: {ending_port + 1})")
 
         # Execute each task in separate terminals with delays
         print(
