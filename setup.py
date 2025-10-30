@@ -12,6 +12,8 @@ import gspread
 import pandas as pd
 import subprocess
 import ast
+import os
+from pathlib import Path
 from gspread.exceptions import SpreadsheetNotFound, WorksheetNotFound
 
 
@@ -34,8 +36,62 @@ def get_task_mapping():
     }
 
 
+def get_project_dir():
+    """Get the project directory dynamically"""
+    # This returns the directory where setup.py is located
+    return Path(__file__).parent.resolve()
+
+
+def launch_chrome_browser(url, port=5000, is_first_launch=False):
+    """Launch Chrome browser with the specified URL and disable background timer throttling
+
+    Args:
+        url: The URL to open
+        port: The port number
+        is_first_launch: If True, launches a new Chrome instance with flags.
+                        If False, opens URL in existing Chrome instance.
+    """
+    chrome_path = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+
+    if not os.path.exists(chrome_path):
+        print(f"Warning: Chrome not found at {chrome_path}")
+        return False
+
+    try:
+        if is_first_launch:
+            # Launch Chrome with the flag to disable background timer throttling
+            # This creates a new Chrome instance with the specified flags
+            subprocess.Popen([
+                chrome_path,
+                f"http://localhost:{port}",
+                "--disable-background-timer-throttling",
+                "--new-window",
+            ])
+            print(f"✅ Chrome instance launched with URL: http://localhost:{port}")
+            print(f"   (with --disable-background-timer-throttling flag)")
+        else:
+            # Open URL in existing Chrome instance using AppleScript
+            # This ensures it opens in the same Chrome process that has the flags
+            applescript = f'''
+            tell application "Google Chrome"
+                activate
+                open location "http://localhost:{port}"
+            end tell
+            '''
+            subprocess.run(['osascript', '-e', applescript], check=True)
+            print(f"✅ Opened new window in Chrome: http://localhost:{port}")
+        return True
+    except Exception as e:
+        print(f"❌ Failed to launch/open Chrome: {e}")
+        return False
+
+
 def main() -> None:
     print("Hello from setup.py!")
+
+    # Get project directory dynamically
+    PROJECT_DIR = get_project_dir()
+    print(f"Project directory: {PROJECT_DIR}")
 
     CREDENTIALS_FILE = "credentials.json"
     SPREADSHEET_NAME = "r01_rdoc_participant_tracking"
@@ -184,6 +240,45 @@ def main() -> None:
             print("Execution cancelled.")
             return
 
+        # Ask if user wants to launch Chrome browsers
+        launch_chrome = (
+            input("\nLaunch Chrome browsers for each task? (y/n): ").strip().lower()
+            == "y"
+        )
+
+        starting_port = 5000
+        if launch_chrome:
+            print("\n" + "=" * 60)
+            print("PORT CONFIGURATION")
+            print("=" * 60)
+            print(
+                f"This session will launch {len(tasks_array)} task(s), using {len(tasks_array)} consecutive ports."
+            )
+            print(
+                f"\nIMPORTANT: If you have other tasks already running, make sure to"
+            )
+            print(f"start at a port AFTER your existing tasks to avoid conflicts.")
+            print(f"\nExample: If prescan tasks are using ports 8080-8087 (8 tasks),")
+            print(f"         start real tasks at port 8088 or higher.")
+            print("=" * 60 + "\n")
+
+            port_input = input(
+                f"Enter starting port number (default: {starting_port}): "
+            ).strip()
+            if port_input:
+                try:
+                    starting_port = int(port_input)
+                except ValueError:
+                    print(f"Invalid port, using default: {starting_port}")
+
+            ending_port = starting_port + len(tasks_array) - 1
+            print(
+                f"\nWill launch Chrome browsers on ports {starting_port}-{ending_port}"
+            )
+            print(
+                f"(Next available port for future sessions: {ending_port + 1})"
+            )
+
         # Execute each task in separate terminals with delays
         print(
             f"\n### Starting parallel execution for {subject_id} session {session_col} ###\n"
@@ -193,6 +288,8 @@ def main() -> None:
         )
 
         import time
+
+        chrome_launched = False  # Track if Chrome has been launched yet
 
         for i, task in enumerate(tasks_array, 1):
             if len(task) >= 3:
@@ -245,10 +342,10 @@ def main() -> None:
                 print(f"### Subject: {subject_id}, Session: {session_path}, Run: 1 ###")
 
                 # Build the command with virtual environment activation
-                expfactory_cmd = f"expfactory_deploy_local -e {full_task_name} -raw /Users/loganbennett/rdoc-fmri-experiments/.output/raw -bids /Users/loganbennett/rdoc-fmri-experiments/.output/bids -sub {subject_id} -ses {session_path} -run 1"
+                expfactory_cmd = f"expfactory_deploy_local -e {full_task_name} -raw {PROJECT_DIR}/.output/raw -bids {PROJECT_DIR}/.output/bids -sub {subject_id} -ses {session_path} -run 1"
 
                 # Create a bash command that sources the virtual environment first and cleans up any existing static symlink
-                bash_cmd = f"cd /Users/loganbennett/rdoc-fmri-experiments && rm -f ./static && source ./.venv/bin/activate && {expfactory_cmd}"
+                bash_cmd = f"cd {PROJECT_DIR} && rm -f ./static && source ./.venv/bin/activate && {expfactory_cmd}"
 
                 # Create a terminal command to open in new window (equivalent to bash run.sh)
                 terminal_title = (
@@ -269,6 +366,31 @@ def main() -> None:
                     if result.returncode == 0:
                         print(f"✅ Terminal {i} launched successfully")
                         print(f"   Terminal title: {terminal_title}")
+
+                        # Launch Chrome browser if requested
+                        if launch_chrome:
+                            task_port = starting_port + (i - 1)
+                            if not chrome_launched:
+                                print(
+                                    f"   Launching Chrome instance on port {task_port}..."
+                                )
+                                time.sleep(2)  # Wait for server to start
+                                launch_chrome_browser(
+                                    f"http://localhost:{task_port}",
+                                    task_port,
+                                    is_first_launch=True,
+                                )
+                                chrome_launched = True
+                            else:
+                                print(
+                                    f"   Opening new window in Chrome on port {task_port}..."
+                                )
+                                time.sleep(1)  # Brief wait for server to start
+                                launch_chrome_browser(
+                                    f"http://localhost:{task_port}",
+                                    task_port,
+                                    is_first_launch=False,
+                                )
                     else:
                         print(f"❌ Failed to launch terminal {i}")
                         if result.stderr:
