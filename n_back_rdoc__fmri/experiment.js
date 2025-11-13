@@ -727,7 +727,9 @@ const create_practice_trial_types = (conditions) => {
   });
 
   let filteredLetters = letters.filter(
-    (letter) => letter !== blockList[0].probe
+    (letter) =>
+      letter.toLowerCase() !== blockList[0].probe.toLowerCase() &&
+      letter.toUpperCase() !== blockList[0].probe.toUpperCase()
   );
 
   blockList.push({
@@ -738,9 +740,13 @@ const create_practice_trial_types = (conditions) => {
   });
 
   if (conditions[2] === 'match') {
+    let targetProbe = blockList[0].probe; // 2-back: compare to trial 0
     blockList.push({
       condition: conditions[2],
-      probe: blockList[1].probe,
+      probe:
+        Math.random() < 0.5
+          ? targetProbe.toLowerCase()
+          : targetProbe.toUpperCase(),
       correct_response: possibleResponses[0][1], // match
       delay: 2,
     });
@@ -850,7 +856,11 @@ const create_test_trial_types = (designs, design_perm) => {
         });
       } else if (condition === 'starter_trial' && idx === 1) {
         let lastProbe = blockStim[0].probe;
-        let filteredLetters = letters.filter((letter) => letter !== lastProbe);
+        let filteredLetters = letters.filter(
+          (letter) =>
+            letter.toLowerCase() !== lastProbe.toLowerCase() &&
+            letter.toUpperCase() !== lastProbe.toUpperCase()
+        );
         blockStim.push({
           condition: condition,
           probe: randomDraw(filteredLetters),
@@ -863,14 +873,19 @@ const create_test_trial_types = (designs, design_perm) => {
         let currentCorrectResponse;
 
         if (condition === 'match') {
-          // determine probe
-          currentProbe = targetProbe;
+          // determine probe - randomly vary case
+          currentProbe =
+            Math.random() < 0.5
+              ? targetProbe.toLowerCase()
+              : targetProbe.toUpperCase();
           // determine correct response
           currentCorrectResponse = possibleResponses[0][1];
         } else if (condition === 'mismatch') {
           // determine probe
           let filteredLetters = letters.filter(
-            (letter) => letter !== targetProbe
+            (letter) =>
+              letter.toLowerCase() !== targetProbe.toLowerCase() &&
+              letter.toUpperCase() !== targetProbe.toUpperCase()
           );
           currentProbe = randomDraw(filteredLetters);
           // determine correct response
