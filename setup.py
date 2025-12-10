@@ -114,16 +114,27 @@ def main() -> None:
 
         # Get user input
         subject_id = input("Enter subject ID (e.g., s1): ").strip()
-        session_input = input("Enter session (e.g., 1, 01, or anat): ").strip()
+        session_input = input("Enter session (e.g., 0, 00, ses-00, pretouch, ses-pretouch, 1, 01, or ses-01): ").strip()
 
         # Determine run type based on session input
-        is_anatomical = session_input.lower() == "anat"
+        session_input_lower = session_input.lower()
+        
+        # Check if input is "0", "00", "ses-00", or "ses-0" for anatomical runs
+        normalized_session = session_input_lower.replace("ses-", "").lstrip("0") or "0"
+        is_anatomical = normalized_session == "0"
+        
+        # Check if input is "pretouch" or "ses-pretouch" for pretouch runs using ses-01
+        is_pretouch = session_input_lower in ["pretouch", "ses-pretouch"]
         is_prescan = False
 
         if is_anatomical:
             # For anatomical runs, use ses-02 tasks but save with "anat" session path
             session_col = "ses-02"
             print("Anatomical run detected - loading practice tasks from ses-02")
+        elif is_pretouch:
+            # For pretouch runs, use ses-01 tasks but save with "pretouch" session path
+            session_col = "ses-01"
+            print("Pretouch run detected - loading practice tasks from ses-01")
         else:
             # Ask about prescan for non-anatomical sessions
             is_prescan = (
@@ -187,6 +198,8 @@ def main() -> None:
             task_type = ""
             if is_anatomical:
                 task_type = " (anatomical - practice versions from session 2)"
+            elif is_pretouch:
+                task_type = " (pretouch - practice versions from session 1)"
             elif is_prescan:
                 task_type = " (prescan - practice versions)"
             else:
@@ -213,8 +226,8 @@ def main() -> None:
                         mapped_task_name = sheet_task_name
 
                     # Override practice flag based on run type
-                    if is_anatomical or is_prescan:
-                        # Force practice versions for anatomical and prescan runs
+                    if is_anatomical or is_pretouch or is_prescan:
+                        # Force practice versions for anatomical, pretouch, and prescan runs
                         practice_str = "_practice"
                         task_description = f"{mapped_task_name}_rdoc_practice__fmri (run {run_num}) [PRACTICE VERSION]"
                     else:
@@ -309,8 +322,8 @@ def main() -> None:
                     mapped_task_name = sheet_task_name
 
                 # Override practice flag based on run type
-                if is_anatomical or is_prescan:
-                    # Force practice versions for anatomical and prescan runs
+                if is_anatomical or is_pretouch or is_prescan:
+                    # Force practice versions for anatomical, pretouch, and prescan runs
                     practice_str = "_practice"
                 else:
                     # For regular sessions, always use non-practice versions (ignore original_practice_flag)
@@ -320,7 +333,9 @@ def main() -> None:
 
                 # Determine session path for expfactory command
                 if is_anatomical:
-                    session_path = "anat"
+                    session_path = "00"
+                elif is_pretouch:
+                    session_path = "pretouch"
                 elif is_prescan:
                     # For prescan, extract session number from original input
                     if session_input.startswith("ses-"):
