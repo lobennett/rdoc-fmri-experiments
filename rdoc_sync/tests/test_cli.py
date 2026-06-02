@@ -68,3 +68,15 @@ def test_run_sync_missing_raw_dir_raises(tmp_path):
     with pytest.raises(FileNotFoundError, match="raw/"):
         run_sync(root=tmp_path, client=None, remote="", runner=lambda *a, **k: None,
                  hostname=None, exp_git_sha=None, report_path=tmp_path / "r.md", dry_run=True)
+
+
+def test_run_sync_skip_dropbox_upserts_but_no_rclone(tmp_path):
+    _write_run(tmp_path)
+    client = _FakeClient()
+    calls = []
+    result = run_sync(root=tmp_path, client=client, remote="remote:base",
+                      runner=_runner_factory(calls), hostname=None, exp_git_sha=None,
+                      report_path=tmp_path / "r.md", dry_run=False, skip_dropbox=True)
+    assert result["n_runs"] == 1
+    assert len(client.upserts) == 1   # still upserts to Supabase
+    assert calls == []                # but no rclone push

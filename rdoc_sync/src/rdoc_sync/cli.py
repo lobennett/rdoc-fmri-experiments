@@ -36,7 +36,7 @@ def _git_sha(cwd: Optional[Path] = None) -> Optional[str]:
 
 def run_sync(root: Path, client: Any, remote: str, runner: Callable,
              hostname: Optional[str], exp_git_sha: Optional[str],
-             report_path: Path, dry_run: bool) -> dict:
+             report_path: Path, dry_run: bool, skip_dropbox: bool = False) -> dict:
     synced_at = _dt.datetime.now(_dt.timezone.utc).isoformat()
     rows: list[dict] = []
     failures = 0
@@ -51,7 +51,8 @@ def run_sync(root: Path, client: Any, remote: str, runner: Callable,
         if not dry_run:
             try:
                 upsert_run(client, payload)
-                push_run(remote, root, rec.raw_path, rec.bids_path, runner=runner)
+                if not skip_dropbox:
+                    push_run(remote, root, rec.raw_path, rec.bids_path, runner=runner)
             except Exception as e:
                 rec.flags.append(f"push error: {e}")
                 failures += 1
@@ -67,6 +68,8 @@ def main(argv=None) -> int:
     p_sync.add_argument("--output", type=Path, default=Path("./.output"))
     p_back = sub.add_parser("backfill", help="ingest a staging dir (corpus backfill)")
     p_back.add_argument("--staging", type=Path, required=True)
+    p_back.add_argument("--skip-dropbox", action="store_true",
+                        help="Only upsert to Supabase; skip the redundant Dropbox push")
     for p in (p_sync, p_back):
         p.add_argument("--report", type=Path, default=Path("./rdoc-sync-report.md"))
         p.add_argument("--dry-run", action="store_true")
@@ -91,7 +94,8 @@ def main(argv=None) -> int:
 
     result = run_sync(root=root, client=client, remote=remote,
                       runner=subprocess.run, hostname=hostname, exp_git_sha=sha,
-                      report_path=args.report, dry_run=args.dry_run)
+                      report_path=args.report, dry_run=args.dry_run,
+                      skip_dropbox=getattr(args, "skip_dropbox", False))
     print(f"runs={result['n_runs']} flagged={result['n_flagged']} failures={result['failures']}")
     print(f"report: {args.report}")
     return 1 if result["failures"] else 0
