@@ -1,61 +1,71 @@
 # rdoc-fmri-experiments
 
-> This repository contains the tasks used in the RDOC fMRI experiments.
+This repository holds the RDoC fMRI task batteries plus the launcher (`rdoc_launch`) and data-sync (`rdoc_sync`) tooling used to run and archive sessions.
 
-## Documentation
+## Components
 
-### uv 
+### `expfactory_deploy_local`
 
-[uv](https://docs.astral.sh/uv/getting-started/installation/) is a tool for managing Python environments, dependencies, and projects. Follow the instructions there to install uv. 
-
-### expfactory deploy local
-
-To run this code, you will need to install "expfactory deploy local". This codebase uses a fork of the expfactory deploy local codebase, which can be found [here](https://github.com/lobennett/expfactory-deploy).
-
-The differences between the two codebases are:
-
-- The forked codebase outputs data in a BIDS-like format by allowing the user to specify flags when running the task (see [run.sh](./run.sh#L111)).
-- The forked codebase includes the jspsych7 [poldrack-plugins](https://github.com/lobennett/expfactory-deploy/tree/main/expfactory_deploy_local/src/expfactory_deploy_local/static/jspsych7/poldrack-plugins) used to run the fMRI tasks.
-
-
-### Designs
-
-[Jeanette](https://github.com/jmumford) created the designs for the tasks in [this repository](https://github.com/jmumford/efficiency_model_mockups). She also created a [slidedeck](https://docs.google.com/presentation/d/15qc8DHQ_8VCVIX6gASrjQIuLV7KIRNbVxNnqPzLIUC8/edit?usp=sharing) to visualize the different phases of the tasks.
-
-## Run the tasks 
-
-### Set up the environment
-
-
-First, clone the expfactory-deploy repository. 
-
-```bash
-git clone https://github.com/lobennett/expfactory-deploy.git
-```
-
-Next, create a virtual environment in this directory. 
-
-```bash
-uv venv --python 3.12.1
-```
-
-Install the expfactory-deploy package. 
+The local jsPsych battery server. Install it in editable mode from the [`expfactory-deploy`](https://github.com/lobennett/expfactory-deploy) repo:
 
 ```bash
 uv pip install -e /path/to/expfactory-deploy/expfactory_deploy_local
 ```
 
-Run the task by executing the `run.sh` script. 
+### `rdoc_launch/`
 
-```bash
-# 1. Activates virtual environment in ./.venv
-# 2. Select the task you would like to run
-# 3. Select the number of participants you would like to run
-# 4. Enter subject ID (e.g., s001)
-# 5. Enter session ID (e.g., ses-01)
-# 6. Enter run number (e.g., 1)
-# 7. Launches the task in your browser (http://0.0.0.0:8080/)
+The session launcher; replaces the old `setup.py`/`run.sh` workflow. See [`rdoc_launch/README.md`](./rdoc_launch/README.md) for full flag reference.
 
-./run.sh
+### `rdoc_sync/`
 
-```
+Pushes completed run data to Supabase and Dropbox. See [`rdoc_sync/README.md`](./rdoc_sync/README.md) for configuration details.
+
+## One-time setup
+
+1. Install [uv](https://docs.astral.sh/uv/).
+
+2. Install `expfactory_deploy_local` in editable mode (see [Components](#expfactory_deploy_local) above).
+
+3. Install the launcher and sync packages:
+
+   ```bash
+   cd rdoc_launch && uv sync
+   cd rdoc_sync && uv sync
+   ```
+
+4. Configure `rdoc_sync`: copy `.env.example` (repo root) to `.env` and fill in the Supabase credentials. Ensure rclone is configured for Dropbox — see [`rdoc_sync/README.md`](./rdoc_sync/README.md) for details.
+
+5. Place `credentials.json` (Google service account) at the repo root for counterbalancing sheet access. This file is gitignored.
+
+6. Set up the response button box: see [`karabiner/README.md`](./karabiner/README.md).
+
+## Run a session
+
+1. **If the counterbalancing sheet has changed**, pull the latest assignment and commit the result:
+
+   ```bash
+   cd rdoc_launch && uv run rdoc-launch update-counterbalancing
+   git add counterbalancing.json && git commit -m "chore: update counterbalancing"
+   ```
+
+2. Set the Karabiner profile for the task type (span vs. non-span).
+
+3. Launch the session:
+
+   ```bash
+   uv run rdoc-launch launch --subject sNN --session <menu value>
+   ```
+
+   Omit flags to be prompted interactively. One Chrome window opens; the battery auto-advances through tasks. Press **Enter** when the session is complete to trigger sync.
+
+4. **Restart a single task** — refresh the browser (partial data is never saved). **Rerun a subset of tasks** — pass `--tasks task1,task2`.
+
+5. On completion, the launcher runs `rdoc-sync` automatically (pushes to Supabase and Dropbox). Pass `--no-sync` to skip.
+
+## Designs
+
+[Jeanette](https://github.com/jmumford) created the task designs in her [`efficiency_model_mockups`](https://github.com/jmumford/efficiency_model_mockups) repository. She also produced a [slidedeck](https://docs.google.com/presentation/d/15qc8DHQ_8VCVIX6gASrjQIuLV7KIRNbVxNnqPzLIUC8/edit?usp=sharing) visualizing the different phases of each task.
+
+## Legacy
+
+`setup.py` and `run.sh` are retained as a fallback and will be retired once `rdoc-launch` is verified in a live session.
