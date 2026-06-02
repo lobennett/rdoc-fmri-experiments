@@ -22,3 +22,9 @@ Thumbs.db
 
 # Google Cloud Service Account credentials
 credentials.json
+
+# Environment variables
+.env
+
+# rdoc_sync virtual environment
+rdoc_sync/.venv/
