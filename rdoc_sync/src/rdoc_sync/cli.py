@@ -18,8 +18,11 @@ from .dropbox_push import push_run
 from .report import write_report
 
 
-def _discover(root: Path):
-    return sorted((root / "raw").rglob("*.json"))
+def _discover(root: Path) -> list[Path]:
+    raw = root / "raw"
+    if not raw.is_dir():
+        raise FileNotFoundError(f"No 'raw/' directory under {root}")
+    return sorted(raw.rglob("*.json"))
 
 
 def _git_sha(cwd: Optional[Path] = None) -> Optional[str]:
@@ -75,12 +78,18 @@ def main(argv=None) -> int:
         print(f"Root not found: {root}", file=sys.stderr)
         return 2
 
-    settings = load_settings(env_path=args.env if args.env.exists() else None)
-    client = None if args.dry_run else build_client(settings)
+    if args.dry_run:
+        client = None
+        remote = ""
+    else:
+        settings = load_settings(env_path=args.env if args.env.exists() else None)
+        client = build_client(settings)
+        remote = settings.dropbox_remote
+
     hostname = socket.gethostname() if args.cmd == "sync" else None
     sha = _git_sha() if args.cmd == "sync" else None
 
-    result = run_sync(root=root, client=client, remote=settings.dropbox_remote,
+    result = run_sync(root=root, client=client, remote=remote,
                       runner=subprocess.run, hostname=hostname, exp_git_sha=sha,
                       report_path=args.report, dry_run=args.dry_run)
     print(f"runs={result['n_runs']} flagged={result['n_flagged']} failures={result['failures']}")

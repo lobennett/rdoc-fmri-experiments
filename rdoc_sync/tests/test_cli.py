@@ -1,4 +1,5 @@
 import json
+import pytest
 from pathlib import Path
 from rdoc_sync.cli import run_sync
 
@@ -60,3 +61,10 @@ def test_run_sync_dry_run_writes_nothing(tmp_path):
     assert client.upserts == []   # dry-run: no upserts
     assert calls == []            # dry-run: no rclone
     assert result["n_flagged"] == 1  # subject '11' normalized+flagged
+
+
+def test_run_sync_missing_raw_dir_raises(tmp_path):
+    import pytest
+    with pytest.raises(FileNotFoundError, match="raw/"):
+        run_sync(root=tmp_path, client=None, remote="", runner=lambda *a, **k: None,
+                 hostname=None, exp_git_sha=None, report_path=tmp_path / "r.md", dry_run=True)
