@@ -28,3 +28,7 @@ credentials.json
 
 # rdoc_sync virtual environment
 rdoc_sync/.venv/
+
+# rdoc_launch package
+.rdoc-launch-battery.txt
+rdoc_launch/.venv/
