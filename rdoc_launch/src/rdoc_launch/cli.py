@@ -5,7 +5,7 @@ import argparse
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any, Callable, Optional
+from typing import Callable, Optional
 
 from . import config
 from .sessions import resolve_session, session_menu
@@ -36,6 +36,8 @@ def run_launch(*, subject: str, session_choice: str, cb: dict, exp_root: Path,
         wait_for_end()
     finally:
         handle.stop()
+    # Reached only on normal completion: KeyboardInterrupt/EOFError from wait_for_end
+    # propagate out (after handle.stop()) and skip sync, so aborted sessions don't push.
     sync_result = run_sync()
     return {"subject": subject, "label": plan.label, "battery": battery,
             "port": handle.port, "sync": sync_result}
@@ -52,7 +54,8 @@ def _prompt_session() -> str:
 
 
 def _real_open_browser(port: int) -> None:
-    subprocess.Popen([config.CHROME_PATH, f"http://localhost:{port}", *config.CHROME_FLAGS])
+    # Chrome is launched fire-and-forget; we intentionally don't track the process.
+    subprocess.Popen(build_chrome_cmd(port, config.CHROME_PATH, config.CHROME_FLAGS))
 
 
 def _real_run_sync() -> Optional[dict]:
@@ -60,6 +63,9 @@ def _real_run_sync() -> Optional[dict]:
     try:
         r = subprocess.run(["uv", "run", "rdoc-sync", "sync", "--output", str(config.OUTPUT_DIR)],
                            cwd=str(config.REPO_ROOT / "rdoc_sync"))
+        if r.returncode != 0:
+            print(f"[rdoc-sync exited {r.returncode}; data is saved locally, re-run sync later]",
+                  file=sys.stderr)
         return {"returncode": r.returncode}
     except Exception as e:
         print(f"[rdoc-sync skipped: {e}]", file=sys.stderr)
@@ -91,7 +97,7 @@ def main(argv=None) -> int:
     cb = load_counterbalancing(config.COUNTERBALANCING_JSON)
     subject = args.subject or _prompt_subject(cb)
     session_choice = args.session or _prompt_session()
-    tasks_filter = [t.strip() for t in args.tasks.split(",")] if args.tasks else None
+    tasks_filter = [t for t in (s.strip() for s in args.tasks.split(",")) if t] if args.tasks else None
     run_sync = (lambda: None) if args.no_sync else _real_run_sync
 
     try:

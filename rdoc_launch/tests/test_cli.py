@@ -1,3 +1,4 @@
+import pytest
 from pathlib import Path
 from rdoc_launch.cli import run_launch
 
@@ -48,7 +49,6 @@ def test_run_launch_full_battery(tmp_path):
 
 
 def test_run_launch_rejects_bad_subject(tmp_path):
-    import pytest
     calls, start_server, open_browser, wait_for_end, run_sync = _fakes()
     with pytest.raises(ValueError, match="sNN"):
         run_launch(subject="11", session_choice="3", cb=_cb(), exp_root=Path("/repo"),
@@ -65,3 +65,18 @@ def test_run_launch_tasks_subset(tmp_path):
                         start_server=start_server, open_browser=open_browser,
                         wait_for_end=wait_for_end, run_sync=run_sync, tasks_filter=["stroop"])
     assert result["battery"] == ["stroop_rdoc__fmri"]
+
+
+def test_run_launch_stops_server_and_skips_sync_on_abort(tmp_path):
+    calls, start_server, open_browser, wait_for_end, run_sync = _fakes()
+
+    def boom():
+        raise RuntimeError("aborted")
+
+    with pytest.raises(RuntimeError, match="aborted"):
+        run_launch(subject="s4", session_choice="3", cb=_cb(), exp_root=Path("/repo"),
+                   raw_dir="r", bids_dir="b", battery_path=tmp_path / "b.txt",
+                   start_server=start_server, open_browser=open_browser,
+                   wait_for_end=boom, run_sync=run_sync)
+    assert calls["stopped"] is True   # server cleaned up
+    assert calls["synced"] is False   # sync NOT run on abort
