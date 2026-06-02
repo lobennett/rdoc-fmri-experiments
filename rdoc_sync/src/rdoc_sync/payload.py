@@ -18,7 +18,7 @@ def to_payload(rec: RunRecord, hostname: Optional[str], exp_git_sha: Optional[st
         "date_time": rec.date_time,
         "design_perm": rec.design_perm,
         "motor_perm": rec.motor_perm,
-        "n_trials": rec.n_trials,
+        "n_records": rec.n_records,
         "hostname": hostname,
         "exp_git_sha": exp_git_sha,
         "raw_path": rec.raw_path,
