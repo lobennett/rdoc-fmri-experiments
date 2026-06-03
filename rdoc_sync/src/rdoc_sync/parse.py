@@ -25,7 +25,7 @@ class RunRecord:
     date_time: str            # ISO8601 UTC
     design_perm: Optional[int]
     motor_perm: Optional[int]
-    n_trials: int
+    n_records: int
     raw_path: str             # relative to output root
     bids_path: Optional[str]  # relative; None when not __fmri
     source_filename: str
@@ -94,7 +94,7 @@ def parse_run(path: Path, output_root: Path) -> RunRecord:
         date_time=dt.isoformat(),
         design_perm=_first(trials, "design_perm"),
         motor_perm=_first(trials, "motor_perm"),
-        n_trials=len(trials),
+        n_records=len(trials),
         raw_path=raw_rel,
         bids_path=_bids_rel(info, raw_rel),
         source_filename=path.name,

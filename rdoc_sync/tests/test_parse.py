@@ -37,7 +37,7 @@ def test_parse_run_dict_payload(tmp_path):
     assert rec.is_fmri is True and rec.is_practice is False
     assert rec.date_time == "2023-11-14T22:13:20+00:00"
     assert rec.design_perm == 5 and rec.motor_perm == 2
-    assert rec.n_trials == 2
+    assert rec.n_records == 2
     assert rec.raw_path == rel
     assert rec.bids_path == "bids/sub-s11/ses-1/func/sub-s11_ses-1_run-1_task-stroop_rdoc__fmri.csv"
     assert rec.trialdata == trials
@@ -48,6 +48,6 @@ def test_parse_run_bare_list_payload(tmp_path):
     rel = "raw/sub-s5/ses-pretouch/sub-s5_ses-pretouch_run-1_task-go_nogo_rdoc_practice__fmri_dateTime-100.json"
     _write_raw(tmp_path, rel, trials)
     rec = parse_run(tmp_path / rel, output_root=tmp_path)
-    assert rec.n_trials == 3 and rec.design_perm is None
+    assert rec.n_records == 3 and rec.design_perm is None
     assert rec.is_practice is True
     assert rec.bids_path is not None

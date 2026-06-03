@@ -5,7 +5,7 @@ from rdoc_sync.normalize import normalize_record
 def _rec(**kw):
     base = dict(subject_id="s11", session="1", run="1", task="stroop_rdoc__fmri",
                 is_practice=False, is_fmri=True, date_time="2023-01-01T00:00:00+00:00",
-                design_perm=5, motor_perm=2, n_trials=10, raw_path="raw/x.json",
+                design_perm=5, motor_perm=2, n_records=10, raw_path="raw/x.json",
                 bids_path="bids/x.csv", source_filename="x.json", trialdata=[])
     base.update(kw)
     return RunRecord(**base)

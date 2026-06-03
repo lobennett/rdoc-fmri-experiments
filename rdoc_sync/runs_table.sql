@@ -9,7 +9,7 @@ create table if not exists runs (
   date_time     timestamptz,
   design_perm   integer,
   motor_perm    integer,
-  n_trials      integer not null default 0,
+  n_records     integer not null default 0,
   hostname      text,
   exp_git_sha   text,
   raw_path      text,
