@@ -106,3 +106,24 @@ def test_from_dropbox_pulls_then_ingests_supabase_only(tmp_path):
     assert calls["ingest"]["client"] == "CLIENT"
     assert result["n_runs"] == 5
     assert result["staging"] == str(staging)
+
+
+def test_from_dropbox_dry_run_still_pulls_and_passes_dry_run(tmp_path):
+    from rdoc_sync.cli import from_dropbox
+    seen = {}
+
+    def rclone_runner(cmd, **kw):
+        seen["rclone"] = cmd
+        class R:
+            returncode = 0
+        return R()
+
+    def run_sync_fn(**kwargs):
+        seen["dry_run"] = kwargs["dry_run"]
+        return {"n_runs": 0, "n_flagged": 0, "failures": 0}
+
+    from_dropbox(remote="remote:base", staging=tmp_path / "s", client=None,
+                 report_path=tmp_path / "r.md", dry_run=True,
+                 rclone_runner=rclone_runner, run_sync_fn=run_sync_fn)
+    assert seen["rclone"] is not None          # pull still happens in dry-run
+    assert seen["dry_run"] is True             # upsert is skipped via run_sync dry_run

@@ -68,9 +68,14 @@ def from_dropbox(*, remote: str, staging: Path, client: Any, report_path: Path,
     staging = Path(staging)
     raw_staging = staging / "raw"
     raw_staging.mkdir(parents=True, exist_ok=True)
+    # NOTE: rclone `copy` does not delete files removed upstream; they linger in
+    # staging and keep being re-ingested (idempotent upsert, so no dup rows). Switch
+    # to `rclone sync` if you need staging to mirror upstream deletions.
+    # NOTE: dry-run still pulls so the preview reflects current Dropbox state; only
+    # the Supabase upsert is skipped (via dry_run -> run_sync).
     rclone_runner(["rclone", "copy", f"{remote}/raw", str(raw_staging)], check=True)
     result = run_sync_fn(root=staging, client=client, remote=remote,
-                         runner=subprocess.run, hostname=None, exp_git_sha=None,
+                         runner=rclone_runner, hostname=None, exp_git_sha=None,
                          report_path=report_path, dry_run=dry_run, skip_dropbox=True)
     result["staging"] = str(staging)
     return result
@@ -100,9 +105,13 @@ def main(argv=None) -> int:
     if args.cmd == "from-dropbox":
         settings = load_settings(env_path=args.env if args.env.exists() else None)
         client = None if args.dry_run else build_client(settings)
-        result = from_dropbox(remote=settings.dropbox_remote, staging=args.staging,
-                              client=client, report_path=args.report, dry_run=args.dry_run,
-                              rclone_runner=subprocess.run, run_sync_fn=run_sync)
+        try:
+            result = from_dropbox(remote=settings.dropbox_remote, staging=args.staging,
+                                  client=client, report_path=args.report, dry_run=args.dry_run,
+                                  rclone_runner=subprocess.run, run_sync_fn=run_sync)
+        except subprocess.CalledProcessError as e:
+            print(f"rclone pull failed (exit {e.returncode}); nothing ingested", file=sys.stderr)
+            return 2
         print(f"runs={result['n_runs']} flagged={result['n_flagged']} "
               f"failures={result['failures']} staging={result['staging']}")
         print(f"report: {args.report}")
