@@ -102,3 +102,70 @@ Re-running is safe:
 - **Supabase**: rows are upserted on the unique key `(subject_id, session, run, task, date_time)`. Re-running the same output tree will update existing rows in place rather than inserting duplicates.
 - **Dropbox**: rclone skips files that are already present and unchanged.
 - **Normalization**: the normalizer canonicalizes subject ids (e.g. `11` → `s11`) and flags anomalies such as unrecognized subject ids or unexpected session values. Flags are written to the anomaly report and stored in the row's `flags` column, but never block ingest.
+
+---
+
+## Recurring sync
+
+### `from-dropbox` command
+
+```bash
+uv run rdoc-sync from-dropbox
+```
+
+`from-dropbox` rclone-pulls the Dropbox `raw/` tree into a persistent local staging directory (`~/.cache/rdoc-sync/staging` by default) and upserts to Supabase. The pull is incremental — only new or changed files download after the first run, so subsequent runs are fast. Upserts are idempotent.
+
+Because the `.env` file lives at the repo root (one level above `rdoc_sync/`), pass `--env ../.env` when running from inside `rdoc_sync/`, or supply an absolute path:
+
+```bash
+uv run rdoc-sync from-dropbox --env ../.env
+```
+
+#### Flags
+
+| Flag | Default | Description |
+|---|---|---|
+| `--staging PATH` | `~/.cache/rdoc-sync/staging` | Local staging directory for the rclone pull |
+| `--report PATH` | `./rdoc-sync-report.md` | Path to write the anomaly report |
+| `--dry-run` | off | Pull files and parse runs but skip all Supabase writes; credentials not required |
+| `--env PATH` | `.env` | Path to the `.env` credentials file |
+
+---
+
+### Nightly schedule (launchd, macOS)
+
+A launchd LaunchAgent plist is provided at `rdoc_sync/launchd/com.poldracklab.rdoc-sync.plist`. It runs `rdoc-sync from-dropbox` nightly at 03:00 local time and appends stdout and stderr to `~/Library/Logs/rdoc-sync.log`. The plist passes an absolute `--env` path pointing at the repo-root `.env` so credentials are found regardless of working directory.
+
+#### Install
+
+```bash
+cp rdoc_sync/launchd/com.poldracklab.rdoc-sync.plist ~/Library/LaunchAgents/
+launchctl load ~/Library/LaunchAgents/com.poldracklab.rdoc-sync.plist
+```
+
+#### Verify and trigger manually
+
+```bash
+# confirm the agent is loaded
+launchctl list | grep rdoc-sync
+
+# trigger a run immediately (outside the scheduled window)
+launchctl start com.poldracklab.rdoc-sync
+```
+
+#### Uninstall
+
+```bash
+launchctl unload ~/Library/LaunchAgents/com.poldracklab.rdoc-sync.plist
+```
+
+#### Notes
+
+- The job runs only while the Mac is awake. If the machine is asleep at 03:00, launchd runs the missed job at the next wake.
+- On a different machine, edit the `uv` path (`/opt/homebrew/bin/uv`), `WorkingDirectory`, and the absolute `--env` path in the plist before installing.
+
+---
+
+## `n_records` column note
+
+The `n_records` column in the `runs` table stores the count of jsPsych trial objects in `trialdata` — every logged screen, not only experimental trials. `migrations/001_rename_n_trials_to_n_records.sql` records the rename from the earlier `n_trials` column name.

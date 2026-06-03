@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.poldracklab.rdoc-sync</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/opt/homebrew/bin/uv</string>
+        <string>run</string>
+        <string>rdoc-sync</string>
+        <string>from-dropbox</string>
+        <string>--env</string>
+        <string>/Users/lobennett/grants/r01_rdoc/projects/rdoc-fmri-experiments/.env</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>/Users/lobennett/grants/r01_rdoc/projects/rdoc-fmri-experiments/rdoc_sync</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>3</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>/Users/lobennett/Library/Logs/rdoc-sync.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/lobennett/Library/Logs/rdoc-sync.log</string>
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>
