@@ -80,3 +80,29 @@ def test_run_sync_skip_dropbox_upserts_but_no_rclone(tmp_path):
     assert result["n_runs"] == 1
     assert len(client.upserts) == 1   # still upserts to Supabase
     assert calls == []                # but no rclone push
+
+
+def test_from_dropbox_pulls_then_ingests_supabase_only(tmp_path):
+    from rdoc_sync.cli import from_dropbox
+    calls = {"rclone": None, "ingest": None}
+
+    def rclone_runner(cmd, **kw):
+        calls["rclone"] = cmd
+        class R:
+            returncode = 0
+        return R()
+
+    def run_sync_fn(**kwargs):
+        calls["ingest"] = kwargs
+        return {"n_runs": 5, "n_flagged": 0, "failures": 0}
+
+    staging = tmp_path / "staging"
+    result = from_dropbox(remote="remote:base", staging=staging, client="CLIENT",
+                          report_path=tmp_path / "r.md", dry_run=False,
+                          rclone_runner=rclone_runner, run_sync_fn=run_sync_fn)
+    assert calls["rclone"] == ["rclone", "copy", "remote:base/raw", str(staging / "raw")]
+    assert calls["ingest"]["root"] == staging
+    assert calls["ingest"]["skip_dropbox"] is True
+    assert calls["ingest"]["client"] == "CLIENT"
+    assert result["n_runs"] == 5
+    assert result["staging"] == str(staging)

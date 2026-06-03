@@ -61,6 +61,21 @@ def run_sync(root: Path, client: Any, remote: str, runner: Callable,
     return {"n_runs": len(rows), "n_flagged": n_flagged, "failures": failures}
 
 
+def from_dropbox(*, remote: str, staging: Path, client: Any, report_path: Path,
+                 dry_run: bool, rclone_runner: Callable, run_sync_fn: Callable) -> dict:
+    """Pull the Dropbox raw/ tree into a persistent staging dir, then upsert to
+    Supabase only (no Dropbox push -- the source IS Dropbox)."""
+    staging = Path(staging)
+    raw_staging = staging / "raw"
+    raw_staging.mkdir(parents=True, exist_ok=True)
+    rclone_runner(["rclone", "copy", f"{remote}/raw", str(raw_staging)], check=True)
+    result = run_sync_fn(root=staging, client=client, remote=remote,
+                         runner=subprocess.run, hostname=None, exp_git_sha=None,
+                         report_path=report_path, dry_run=dry_run, skip_dropbox=True)
+    result["staging"] = str(staging)
+    return result
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="Sync RDoC runs to Supabase + Dropbox")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -70,11 +85,28 @@ def main(argv=None) -> int:
     p_back.add_argument("--staging", type=Path, required=True)
     p_back.add_argument("--skip-dropbox", action="store_true",
                         help="Only upsert to Supabase; skip the redundant Dropbox push")
+    p_from = sub.add_parser("from-dropbox", help="pull Dropbox raw/ and upsert to Supabase (recurring)")
+    p_from.add_argument("--staging", type=Path,
+                        default=Path.home() / ".cache" / "rdoc-sync" / "staging")
+    p_from.add_argument("--report", type=Path, default=Path("./rdoc-from-dropbox-report.md"))
+    p_from.add_argument("--dry-run", action="store_true")
+    p_from.add_argument("--env", type=Path, default=Path(".env"))
     for p in (p_sync, p_back):
         p.add_argument("--report", type=Path, default=Path("./rdoc-sync-report.md"))
         p.add_argument("--dry-run", action="store_true")
         p.add_argument("--env", type=Path, default=Path(".env"))
     args = parser.parse_args(argv)
+
+    if args.cmd == "from-dropbox":
+        settings = load_settings(env_path=args.env if args.env.exists() else None)
+        client = None if args.dry_run else build_client(settings)
+        result = from_dropbox(remote=settings.dropbox_remote, staging=args.staging,
+                              client=client, report_path=args.report, dry_run=args.dry_run,
+                              rclone_runner=subprocess.run, run_sync_fn=run_sync)
+        print(f"runs={result['n_runs']} flagged={result['n_flagged']} "
+              f"failures={result['failures']} staging={result['staging']}")
+        print(f"report: {args.report}")
+        return 1 if result["failures"] else 0
 
     root = args.output if args.cmd == "sync" else args.staging
     if not root.exists():
