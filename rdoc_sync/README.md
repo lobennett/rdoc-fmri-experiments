@@ -107,6 +107,17 @@ Re-running is safe:
 
 ## Recurring sync
 
+### Run manually (on demand)
+
+To run the Dropbox → Supabase sync yourself at any time — the same thing the nightly agent does — from the repo root:
+
+```bash
+cd rdoc_sync
+uv run rdoc-sync from-dropbox --env ../.env
+```
+
+This pulls the latest `raw/` from Dropbox (incremental) and upserts every run to Supabase. Re-running is safe (idempotent).
+
 ### `from-dropbox` command
 
 ```bash

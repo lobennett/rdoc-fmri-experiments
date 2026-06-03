@@ -18,7 +18,11 @@ The session launcher; replaces the old `setup.py`/`run.sh` workflow. See [`rdoc_
 
 ### `rdoc_sync/`
 
-Pushes completed run data to Supabase and Dropbox. See [`rdoc_sync/README.md`](./rdoc_sync/README.md) for configuration details.
+Pushes completed run data to Supabase and Dropbox. See [`rdoc_sync/README.md`](./rdoc_sync/README.md) for configuration details. A nightly launchd agent keeps Supabase current; to run that Dropbox → Supabase sync manually at any time:
+
+```bash
+cd rdoc_sync && uv run rdoc-sync from-dropbox --env ../.env
+```
 
 ## One-time setup
 
